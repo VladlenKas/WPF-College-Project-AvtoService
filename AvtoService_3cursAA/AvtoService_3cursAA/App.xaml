@@ -1,0 +1,29 @@
+﻿<Application x:Class="AvtoService_3cursAA.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:AvtoService_3cursAA"
+             StartupUri="InterfaceWindows/Authorization.xaml"
+             
+             xmlns:DateTextBox="clr-namespace:AvtoService_3cursAA.CustomsElementsWpf">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Authorization style -->
+                <ResourceDictionary Source="/Styles/AuthStyle.xaml"/>
+
+                <!-- Menu style -->
+                <ResourceDictionary Source="/Styles/MenuStyle.xaml"/>
+
+                <!-- Actions style -->
+                <ResourceDictionary Source="/Styles/ActionStyle.xaml"/>
+                
+                <!-- User Controls style -->
+                <ResourceDictionary Source="/Styles/UserControlsStyle.xaml"/>
+
+                <!-- Create Check style -->
+                <ResourceDictionary Source="/Styles/PageCreateCheckStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

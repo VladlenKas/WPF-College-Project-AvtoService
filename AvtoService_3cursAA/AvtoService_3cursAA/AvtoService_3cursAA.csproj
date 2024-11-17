@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Images\AuthBackground.jpg" />
+    <None Remove="Images\AuthLogo.png" />
+    <None Remove="Images\IconAdmin.png" />
+    <None Remove="Images\IconMechanic.png" />
+    <None Remove="Images\iconOperator.png" />
+    <None Remove="Images\NoImagePrice.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="5.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\AuthBackground.jpg" />
+    <Resource Include="Images\AuthLogo.png" />
+    <Resource Include="Images\IconAdmin.png" />
+    <Resource Include="Images\IconMechanic.png" />
+    <Resource Include="Images\iconOperator.png" />
+    <Resource Include="Images\NoImagePrice.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="PagesMenuMechanic\ClientsMechanic.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="PagesMenuOperator\PriceOperator.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserControls\PriceUC\PriceCardEdit.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>

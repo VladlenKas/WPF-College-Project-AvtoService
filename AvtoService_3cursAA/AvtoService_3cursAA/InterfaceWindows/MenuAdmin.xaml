@@ -1,0 +1,157 @@
+﻿<Window x:Class="AvtoService_3cursAA.MenuAdmin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AvtoService_3cursAA"
+        mc:Ignorable="d"
+        
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        
+        Height="900" Width="1600" 
+        MinHeight="800" MinWidth="1500" 
+        WindowStartupLocation="CenterScreen" 
+        WindowState="Maximized"
+        Loaded="Window_Loaded" 
+        Closing="Window_Closed"
+        Icon="/Images/AuthLogo.png">
+
+    <Window.Resources>
+        <!-- Icons -->
+        <Style TargetType="materialDesign:PackIcon" 
+               BasedOn="{StaticResource IconButton}">
+        </Style>
+
+        <!-- TextBox Search -->
+        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource AuthTextBox}">
+            <Setter Property="BorderBrush" Value="#20000000"/>
+        </Style>
+        
+        <!-- Shadow for image logo -->
+        <DropShadowEffect x:Key="dropShadowLogo" 
+                          ShadowDepth="10" 
+                          BlurRadius="10" 
+                          Color="#000000" 
+                          Opacity="0.2"/>   
+
+        <!--#region Buttons -->
+        <!-- Button Base -->
+        <Style TargetType="{x:Type Button}" 
+               BasedOn="{StaticResource MenuButton}">
+        </Style>
+        
+        <!-- Button Navigation -->
+        <Style TargetType="{x:Type Button}" 
+               BasedOn="{StaticResource TransperentButton}"
+               x:Key="NavigationButton">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="10 0"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+        <!--#endregion-->
+    </Window.Resources>
+
+    <Grid Background="#F5F5F5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="5*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!--#region Navidation panel -->
+        <Grid Grid.Column="0">
+            <Border Background="{StaticResource AuthGradient}"
+                    Margin="20"
+                    CornerRadius="15"
+                    Effect="{StaticResource dropShadow}">
+
+                <DockPanel Margin="30 0">
+                    <Border DockPanel.Dock="Top"
+                            Background="#10000000"
+                            Margin="0 20"
+                            CornerRadius="25"
+                            Effect="{StaticResource dropShadow}">
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Margin="0 0 10 0">
+
+                            <Image Source="/Images/AuthLogo.png"
+                                   Width="80" Height="80"/>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="Меню"
+                               FontSize="20"
+                               Style="{StaticResource AuthTextBlock}"
+                               Margin="0 30 0 10"
+                               DockPanel.Dock="Top"/>
+
+                    <Button Style="{StaticResource NavigationButton}"
+                            Content="Автомобили"
+                            DockPanel.Dock="Top"/>
+                    
+                    <Button Style="{StaticResource NavigationButton}"
+                            Content="Детали"
+                            DockPanel.Dock="Top"/>
+                    
+                    <Button Style="{StaticResource NavigationButton}"
+                            Content="Услуги"
+                            Click="ButtonPrice_Click"
+                            DockPanel.Dock="Top"/>
+                    
+                    <TextBlock Text="Пользователи"
+                               FontSize="20"
+                               Style="{StaticResource  AuthTextBlock}"
+                               Margin="0 30 0 10"
+                               DockPanel.Dock="Top"/>
+
+                    <Button Style="{StaticResource NavigationButton}"
+                            x:Name="ButtonClients"
+                            Click="ButtonClients_Click"
+                            Content="Клиенты"
+                            DockPanel.Dock="Top"/>
+                    
+                    <Button Style="{StaticResource NavigationButton}"
+                            x:Name="ButtonEmployees"
+                            Click="ButtonEmployees_Click"
+                            Content="Сотрудники"
+                            DockPanel.Dock="Top"/>
+
+                    <TextBlock Text="Действия"
+                               FontSize="20"
+                               Style="{StaticResource  AuthTextBlock}"
+                               Margin="0 30 0 10"
+                               DockPanel.Dock="Top"/>
+
+                    <Button Style="{StaticResource NavigationButton}"
+                            x:Name="ButtonCheck"
+                            Click="ButtonCheck_Click"
+                            Content="Оформить чек"
+                            DockPanel.Dock="Top"/>
+
+                    <GridSplitter DockPanel.Dock="Top"
+                                  Width="200"
+                                  Height="0.2"
+                                  Margin="15"
+                                  Background="Black"
+                                  Opacity="1"
+                                  HorizontalAlignment="Center"/>
+
+                    <Button Style="{StaticResource NavigationButton}"
+                            x:Name="Exit"
+                            Click="Exit_Click"
+                            Content="Выход"
+                            DockPanel.Dock="Top"/>
+                    <Grid/>
+                </DockPanel>
+            </Border>
+        </Grid>
+        <!--#endregion-->
+
+        <!--#region Home page -->
+        <Frame Grid.Column="1"
+               x:Name="ContentFrame" 
+               NavigationUIVisibility="Hidden"/>
+        <!--#endregion-->
+    </Grid>
+</Window>

@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="AvtoService_3cursAA.CustomsElementsWpf.PassportTextBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AvtoService_3cursAA.CustomsElementsWpf"
+             mc:Ignorable="d" 
+             
+            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <Grid>
+        <TextBox 
+            Tag="8xxx 80xxxx"
+            MaxLength="11"
+            x:Name="passportTextBox"
+            Style="{StaticResource ActionTextBox}"
+            PreviewTextInput="PassportTextBox_PreviewTextInput"
+            TextChanged="PassportTextBox_TextChanged"
+            PreviewKeyDown="PassportTextBox_PreviewKeyDown"
+            DataObject.Pasting="PassportTextBox_Pasting"/>
+
+        <materialDesign:PackIcon 
+            Kind="Passport" 
+            Style="{StaticResource IconsActions}"/>
+    </Grid>
+</UserControl>

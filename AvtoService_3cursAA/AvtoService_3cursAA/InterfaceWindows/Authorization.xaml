@@ -1,0 +1,117 @@
+﻿<Window x:Class="AvtoService_3cursAA.Authorization"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AvtoService_3cursAA"
+        mc:Ignorable="d"
+        xmlns:MyUserControl="clr-namespace:AvtoService_3cursAA.CustomsElementsWpf"
+        
+        Title="Авторизация" 
+        Height="800" Width="600"
+        MinHeight="750" MinWidth="500"
+        WindowStartupLocation="CenterScreen"
+        Icon="/Images/AuthLogo.png">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type TextBlock}" 
+               BasedOn="{StaticResource AuthTextBlock}"/>
+
+        <Style TargetType="{x:Type TextBox}"
+               BasedOn="{StaticResource AuthTextBox}"/>
+
+        <Style TargetType="{x:Type CheckBox}"
+               BasedOn="{StaticResource AuthCheckBox}"/>
+
+        <Style TargetType="{x:Type Button}"
+               BasedOn="{StaticResource AuthButton}">
+        </Style>
+
+        <Style TargetType="{x:Type PasswordBox}"
+               BasedOn="{StaticResource AuthPassBox}"/>
+    </Window.Resources>
+    
+    <Border Background="#ffffff">
+        <Grid>
+            <Grid.Background>
+                <ImageBrush ImageSource="/Images/AuthBackground.jpg" 
+                            Stretch="UniformToFill"
+                            Opacity="0.4"/>
+            </Grid.Background>
+            
+        <!--#region Authorization -->
+            <DockPanel HorizontalAlignment="Center"
+                       Margin="0 50"
+                       Width="380"
+                       LastChildFill="False">
+                <Image Source="/Images/AuthLogo.png"
+                       Margin="0 0 0 20"
+                       Width="100"
+                       Opacity="1"
+                       DockPanel.Dock="Top"
+                       Effect="{StaticResource dropShadow}"/>
+
+                <TextBlock Text="Добро пожаловать!" 
+                           HorizontalAlignment="Center"
+                           FontSize="36"
+                           DockPanel.Dock="Top"/>
+
+                <TextBlock Text="Логин"
+                           FontSize="18"
+                           HorizontalAlignment="Left"
+                           Margin="15 70 0 15"
+                           Foreground="#80000000"
+                           DockPanel.Dock="Top"
+                           Name="EmailTextBlock"/>
+                <TextBox x:Name="TextBoxEmail"
+                         MaxLength="45"
+                         DockPanel.Dock="Top"
+                         GotFocus="TextBoxEmail_GotFocus"
+                         LostFocus="TextBoxEmail_LostFocus"/>
+
+                <TextBlock Text="Пароль"
+                           FontSize="18"
+                           HorizontalAlignment="Left"
+                           Foreground="#80000000"
+                           Margin="15 20 0 15"
+                           DockPanel.Dock="Top"
+                           Name="PassTextBlock"/>
+
+                <Grid DockPanel.Dock="Top">
+                    <TextBox x:Name="TextBoxPassVisibility"
+                                Visibility="Hidden"
+                                MaxLength="45"
+                                GotFocus="TextBoxPassVisibility_GotFocus"
+                                LostFocus="TextBoxPassVisibility_LostFocus"/>
+                    <PasswordBox x:Name="TextBoxPassHidden"
+                                    MaxLength="45"
+                                    Visibility="Visible"
+                                    GotFocus="TextBoxPassHidden_GotFocus"
+                                    LostFocus="TextBoxPassHidden_LostFocus"/>
+                </Grid>
+                
+                <CheckBox Content="Показать пароль"
+                          Margin="10 30 0 0"
+                          IsChecked="False"
+                          x:Name="ChechBoxPassView"
+                          Click="ChechBoxPassView_Click"
+                          DockPanel.Dock="Top">
+                </CheckBox>
+
+                <DockPanel DockPanel.Dock="Bottom">
+                    <Button Content="Войти"
+                            x:Name="ButtonLogin"
+                            Click="ButtonLogin_Click"
+                            DockPanel.Dock="Top"
+                            Margin="0 0 0 25"/>
+                    <Button Content="Закрыть"
+                            x:Name="ButtonExit"
+                            Click="ButtonExit_Click"
+                            DockPanel.Dock="Top"
+                            Style="{StaticResource AuythButtonExit}"/>
+                </DockPanel>
+            </DockPanel>
+        <!--#endregion-->
+        </Grid>
+    </Border>
+</Window>

@@ -1,0 +1,218 @@
+﻿<Window x:Class="AvtoService_3cursAA.ActionsEmployee.AddEmployee"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AvtoService_3cursAA"
+        mc:Ignorable="d"
+        
+        xmlns:MyUserControl="clr-namespace:AvtoService_3cursAA.CustomsElementsWpf"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        
+        Title="Добавление нового сотрудника" 
+        Height="820" Width="1000" 
+        MinHeight="820" MinWidth="900" 
+        Closed="Window_Closed"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style TargetType="{x:Type TextBox}" 
+               BasedOn="{StaticResource ActionTextBox}"/>
+
+        <Style TargetType="{x:Type TextBlock}"
+               BasedOn="{StaticResource ActionTextBlock}"/>
+
+        <Style TargetType="materialDesign:PackIcon"
+               BasedOn="{StaticResource IconsActions}"/>
+
+    </Window.Resources>
+
+    <Grid Background="#ffffff">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="70"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Область с заголовком -->
+        <RichTextBox 
+            FontSize="30" 
+            BorderThickness="0"
+            DockPanel.Dock="Top"
+            Margin="0 40"
+            IsReadOnly="True" 
+            VerticalAlignment="Top"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            Grid.Row="0">
+            
+            <FlowDocument>
+                <Paragraph TextAlignment="Center">
+                    <Run 
+                        Text="Добавление нового сотрудника" 
+                        FontFamily="Arial Rounded MT Bold"/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+
+        <!-- Область с контактной информацией -->
+        <DockPanel 
+            HorizontalAlignment="Right"
+            Width="400"
+            LastChildFill="False"
+            Grid.Row="1">
+
+            <StackPanel DockPanel.Dock="Top">
+                <TextBlock
+                    DockPanel.Dock="Top"
+                    Style="{x:Null}"
+                    FontSize="24" 
+                    Margin="0 20"
+                    HorizontalAlignment="Center"
+                    FontFamily="Calibri"
+                    FontWeight="Bold"
+                    Text="Контактная информация"/>
+                <StackPanel>
+                    <TextBlock Text="Имя *"/>
+                    <Grid>
+                        <TextBox x:Name="NameTextBox"
+                                 PreviewTextInput="TextBox_PreviewTextInput"
+                                 DataObject.Pasting="TextBox_Pasting"/>
+                        <materialDesign:PackIcon Kind="User"/>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock Text="Фамилия *"/>
+                    <Grid>
+                        <TextBox x:Name="FirstnameTextBox"
+                                 PreviewTextInput="TextBox_PreviewTextInput"
+                                 DataObject.Pasting="TextBox_Pasting"/>
+                        <materialDesign:PackIcon Kind="User"/>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock Text="Отчество (при наличии)"/>
+                    <Grid>
+                        <TextBox x:Name="PatronymicTextBox"
+                                 PreviewTextInput="TextBox_PreviewTextInput"
+                                 DataObject.Pasting="TextBox_Pasting"/>
+                        <materialDesign:PackIcon Kind="User"/>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock Text="Дата рождения (дд-мм-гггг) *"/>
+                    <MyUserControl:DateTextBox x:Name="BirthdayTextBox"/>
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock Text="Серия и номер паспорта *"/>
+                    <MyUserControl:PassportTextBox x:Name="PassportTextBox"/>
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock Text="Номер телефона *"/>
+                    <MyUserControl:PhoneTextBox x:Name="PhoneTextBox"/>
+                </StackPanel>
+            </StackPanel>
+        </DockPanel>
+
+        <!-- Область с рабочей информацией -->
+        <DockPanel 
+            HorizontalAlignment="Left"
+            Width="400"
+            LastChildFill="False"
+            Grid.Row="1"
+            Grid.Column="2">
+
+            <StackPanel DockPanel.Dock="Top">
+                <TextBlock
+                  DockPanel.Dock="Top"
+                  Style="{x:Null}"
+                  FontSize="24" 
+                  Margin="0 20"
+                  HorizontalAlignment="Center"
+                  FontFamily="Calibri"
+                  FontWeight="Bold"
+                  Text="Рабочие данные"/>
+                
+                <StackPanel>
+                    <TextBlock Text="Стаж работы (лет) *"/>
+                    <Grid>
+                        <TextBox
+                            MaxLength="2"
+                            x:Name="SeniorityTextBox"
+                            PreviewTextInput="SeniorityTextBox_PreviewTextInput"/>
+                        <materialDesign:PackIcon Kind="ChartLine"/>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock Text="Должность *"/>
+                    <Grid>
+                        <ComboBox 
+                            Style="{StaticResource ComboBoxAction}"
+                            x:Name="RoleComboBox"/>
+                        <materialDesign:PackIcon Kind="Work"/>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock Text="Логин *"/>
+                    <Grid>
+                        <TextBox x:Name="LoginTextBox"/>
+                        <materialDesign:PackIcon Kind="Email"/>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock Text="Пароль *"/>
+                    <Grid>
+                        <TextBox Visibility="Hidden" x:Name="PassVisTextBox"/>
+                        <PasswordBox Style="{StaticResource ActionPassBox}" x:Name="PassHidTextBox"/>
+                        <materialDesign:PackIcon Kind="Password"/>
+                    </Grid>
+                </StackPanel>
+
+                <CheckBox Content="Показать пароль"
+                          Margin="15 0 0 20"
+                          BorderBrush="#20000000"
+                          x:Name="HidePassCheckBox"
+                          Click="HidePassCheckBox_Click"
+                          Style="{StaticResource AuthCheckBox}"/>
+            </StackPanel>
+        </DockPanel>
+        
+        <!-- Кнопки с сохранением и выходом -->
+        <StackPanel 
+            Orientation="Horizontal"
+            HorizontalAlignment="Center"
+            Grid.Row="2"
+            Grid.ColumnSpan="3"
+            Margin="0 40">
+            
+            <Button 
+                Width="150"
+                Content="Выйти"
+                x:Name="ButtonExit"
+                Click="ButtonExit_Click"
+                DockPanel.Dock="Bottom"
+                Margin="0 0 20 0"
+                Style="{StaticResource AuythButtonExitAct}"/>
+            <Button 
+                Width="200"
+                Content="Добавить"
+                x:Name="ButtonAdd"
+                Click="ButtonAdd_Click"
+                DockPanel.Dock="Bottom"
+                Style="{StaticResource AuthButtonAct}"/>
+        </StackPanel>
+    </Grid>
+</Window>

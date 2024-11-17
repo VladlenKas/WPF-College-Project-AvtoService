@@ -1,0 +1,329 @@
+﻿<Page x:Class="AvtoService_3cursAA.PagesMenuAdmin.CheckAdmin"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:AvtoService_3cursAA.PagesMenuAdmin"
+      mc:Ignorable="d" 
+      
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:MyUserControl="clr-namespace:AvtoService_3cursAA.CustomsElementsWpf"
+      
+      Loaded="Page_Loaded">
+    
+    <Page.Resources>
+        <!-- Icons -->
+        <Style TargetType="materialDesign:PackIcon"
+               BasedOn="{StaticResource IconsActions}">
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
+        
+        <!-- TextBox Search -->
+        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource ActionTextBox}">
+            <Setter Property="BorderThickness" Value="1.5"/>
+        </Style>
+
+        <!-- Button Base -->
+        <Style TargetType="{x:Type Button}" 
+               BasedOn="{StaticResource MenuButton}">
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="Height" Value="35"/>
+        </Style>
+
+        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource ComboBoxAction}">
+            <Setter Property="Effect" Value="{x:Null}"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ActionTextBlock}" x:Key="header">
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
+        <!--#endregion-->
+    </Page.Resources>
+
+    <Grid>
+        <DockPanel 
+            Margin="20"
+            LastChildFill="True">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+            </Grid>
+            
+            <!-- Buttons -->
+            <Grid Grid.Row="0" Margin="0 0" DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <DockPanel Grid.Column="1" LastChildFill="False">
+
+                    <!-- Name page -->
+                    <TextBlock Text="Оформление чека" Style="{StaticResource HeaderTextBlock}"/>
+
+                    <!-- User's name and role-->
+                    <Grid DockPanel.Dock="Right">
+                        <DockPanel LastChildFill="False">
+                            <Border Width="50" Height="50" 
+                                        DockPanel.Dock="Left" Margin="10 0">
+                                <Border.Background>
+                                    <ImageBrush Stretch="UniformToFill"
+                                                ImageSource="/Images/IconAdmin.png"/>
+                                </Border.Background>
+                            </Border>
+
+                            <Grid VerticalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock x:Name="UserFio" Grid.Row="0"
+                                               FontFamily="Arial Rounded MT Bold"/>
+                                <TextBlock Text="Администратор" Grid.Row="1"
+                                           FontFamily="Arial Rounded MT Bold">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                    </TextBlock.Foreground>
+                                </TextBlock>
+                            </Grid>
+                        </DockPanel>
+                    </Grid>
+                </DockPanel>
+            </Grid>
+
+            <!-- Область с заполнением данных -->
+            <Grid>
+                <Border
+                    Effect="{StaticResource dropShadowBorder}"
+                    BorderBrush="{StaticResource AuthGradient}"
+                    BorderThickness="2"
+                    CornerRadius="20"
+                    Margin="0 20 0 0">
+                    <Border.Background>
+                        <SolidColorBrush Color="White" Opacity="0.95"/>
+                    </Border.Background>
+                </Border>
+                
+                <Border Margin="20">
+
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Облсть с данными для оформления чека -->
+                        <DockPanel 
+                            Effect="{x:Null}"
+                            Margin="10 0"
+                            Grid.Column="2"
+                            LastChildFill="False">
+
+                            <StackPanel DockPanel.Dock="Top">
+                                <TextBlock
+                                    DockPanel.Dock="Top"
+                                    Style="{x:Null}"
+                                    FontSize="22" 
+                                    Margin="0 20"
+                                    HorizontalAlignment="Center"
+                                    FontFamily="Calibri"
+                                    FontWeight="Bold"
+                                    Text="Данные для оформления чека"/>
+
+                                <StackPanel>
+                                    <TextBlock Text="ФИО сотрудника" Style="{StaticResource header}"/>
+                                    <Grid>
+                                        <TextBox
+                                            Name="EmployeeTextBox"
+                                            DockPanel.Dock="Top"
+                                            IsHitTestVisible="False"
+                                            Margin="0 0 0 20"/>
+                                        <materialDesign:PackIcon Kind="User"/>
+                                    </Grid>
+                                </StackPanel>
+
+                                <StackPanel>
+                                    <TextBlock Text="ФИО клиента" Style="{StaticResource header}"/>
+                                    <Grid>
+                                        <ComboBox
+                                            Name="ClientComboBox"
+                                            SelectionChanged="ClientComboBox_SelectionChanged"
+                                            SelectedIndex="0"
+                                            DockPanel.Dock="Top"
+                                            ItemsSource="{Binding ClientList}"/>
+                                        <materialDesign:PackIcon Kind="User"/>
+                                    </Grid>
+                                </StackPanel>
+
+                                <StackPanel>
+                                    <TextBlock Text="Машина клиента" Style="{StaticResource header}"/>
+                                    <Grid>
+                                        <ComboBox
+                                            Name="CarComboBox"
+                                            SelectionChanged="CarComboBox_SelectionChanged"
+                                            SelectedIndex="0"
+                                            DockPanel.Dock="Top"
+                                            ItemsSource="{Binding CarList}"/>
+                                        <materialDesign:PackIcon Kind="Car"/>
+                                    </Grid>
+                                </StackPanel>
+
+                                <StackPanel>
+                                    <TextBlock Text="Тип ремонта" Style="{StaticResource header}"/>
+                                    <Grid>
+                                        <ComboBox
+                                            Name="TypeOfRepairComboBox"
+                                            SelectionChanged="TypeOfRepairComboBox_SelectionChanged"
+                                            SelectedIndex="0"
+                                            DockPanel.Dock="Top"
+                                            ItemsSource="{Binding TypeOfRepairList}"/>
+                                        <materialDesign:PackIcon Kind="Wrench"/>
+                                    </Grid>
+                                </StackPanel>
+
+                                <StackPanel>
+                                    <TextBlock Text="Статус ремонта" Style="{StaticResource header}"/>
+                                    <Grid>
+                                        <ComboBox
+                                            Name="StatusComboBox"
+                                            SelectionChanged="StatusComboBox_SelectionChanged"
+                                            SelectedIndex="0"
+                                            DockPanel.Dock="Top"
+                                            ItemsSource="{Binding StatusList}"/>
+                                        <materialDesign:PackIcon Kind="Timelapse"/>
+                                    </Grid>
+                                </StackPanel>
+
+
+                            </StackPanel>
+                        </DockPanel>
+
+                        <!-- Облсть с выбранными услугами -->
+                        <DockPanel 
+                            Margin="10 0"
+                            Grid.Column="0">
+
+                            <DockPanel 
+                                LastChildFill="True"
+                                DockPanel.Dock="Top">
+                                
+                                <TextBlock
+                                    DockPanel.Dock="Top"
+                                    Style="{x:Null}"
+                                    FontSize="22" 
+                                    Margin="0 20"
+                                    HorizontalAlignment="Center"
+                                    FontFamily="Calibri"
+                                    FontWeight="Bold"
+                                    Text="Оказанные услуги"/>
+
+                                <Grid 
+                                    DockPanel.Dock="Bottom"
+                                    Margin="0 10 0 0">
+                                        <TextBox/>
+                                        <ComboBox
+                                            IsHitTestVisible="False"
+                                            Name="comboBoxPrices"
+                                            SelectionChanged="PriceComboBox_SelectionChanged"
+                                            SelectedIndex="0"/>
+                                    <materialDesign:PackIcon Kind="OrderBoolAscending"/>
+                                </Grid>
+
+                                <Grid DockPanel.Dock="Bottom">
+                                    <Button 
+                                        Content="Сбросить выбранные услуги" 
+                                        Click="ClearPriceList_Click"/>
+                                    <materialDesign:PackIcon Kind="loop"/>
+                                </Grid>
+
+                                <!-- Область с услугами -->
+                                <Grid 
+                                    Margin="0 0 0 20">
+                                    <Border 
+                                        Panel.ZIndex="-1"
+                                        BorderBrush="Gray"
+                                        BorderThickness="0.5"
+                                        CornerRadius="20"
+                                        Background="#ffffff"
+                                        Effect="{StaticResource dropShadowBorder}"/>
+                                    <ScrollViewer
+                                        Margin="15"
+                                        VerticalScrollBarVisibility="Auto">
+                                        <ItemsControl x:Name="ListViewPriceItems"/>
+                                    </ScrollViewer>
+                                </Grid>
+                            </DockPanel>
+                        </DockPanel>
+
+                        <!-- Облсть с выбранными деталями -->
+                        <DockPanel 
+                            Margin="10 0"
+                            Grid.Column="1">
+
+                            <DockPanel
+                                LastChildFill="True"
+                                DockPanel.Dock="Top">
+                                <TextBlock
+                                    DockPanel.Dock="Top"
+                                    Style="{x:Null}"
+                                    FontSize="22" 
+                                    Margin="0 20"
+                                    HorizontalAlignment="Center"
+                                    FontFamily="Calibri"
+                                    FontWeight="Bold"
+                                    VerticalAlignment="Center"
+                                    TextWrapping="WrapWithOverflow"
+                                    Text="Детали для ремонта"/>
+
+                                <Grid
+                                    Margin="0 10 0 0"
+                                    DockPanel.Dock="Bottom">
+                                    <ComboBox
+                                        Name="comboBoxDetail"
+                                        SelectionChanged="ComboBoxDetail_SelectionChanged"
+                                        SelectedIndex="0"/>
+                                    <materialDesign:PackIcon Kind="Nut"/>
+                                </Grid>
+
+                                <Grid DockPanel.Dock="Bottom">
+                                    <Button 
+                                        Content="Сбросить выбранные товары" 
+                                        Click="ClearDetailList_Click"/>
+                                    <materialDesign:PackIcon Kind="loop"/>
+                                </Grid>
+
+                                <!-- Область с услугами -->
+                                <Border
+                                    Effect="{StaticResource dropShadowBorder}"
+                                    BorderBrush="Gray"
+                                    BorderThickness="0.5"
+                                    CornerRadius="20"
+                                    Margin="0 0 0 20"
+                                    Background="#ffffff">
+                                    
+                                    <ScrollViewer 
+                                        Effect="{x:Null}"
+                                        Margin="15"
+                                        VerticalScrollBarVisibility="Auto">
+                                        <ItemsControl x:Name="ListViewDetailItems"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </DockPanel>
+                        </DockPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Page>
