@@ -323,4 +323,101 @@ namespace AvtoService_3cursAA.Classes
             _ascendingCheckBox.IsChecked = false;
         }
     }
+
+    public class DetailFilter : DataFilterSorter
+    {
+        public DetailFilter(TextBox searchTextBox, ComboBox sorterComboBox, CheckBox ascendingCheckBox, TextBox startCostTextBox, TextBox finishCostTextBox)
+            : base(searchTextBox, null, sorterComboBox, ascendingCheckBox, startCostTextBox, finishCostTextBox) { }
+
+        // Поиск по названию
+        public ObservableCollection<Detail> ApplySearch(ObservableCollection<Detail> details)
+        {
+            string search = _searchTextBox.Text.ToLower();
+            if (!string.IsNullOrEmpty(search))
+            {
+                details = new ObservableCollection<Detail>(details.Where(r => r.Name.ToLower().Contains(search)));
+            }
+            return details;
+        }
+
+        // Начальная точка цены
+        public ObservableCollection<Detail> ApplyStartCost(ObservableCollection<Detail> details)
+        {
+            string startCost = _startCostTextBox.Text;
+            if (!string.IsNullOrEmpty(startCost) && int.TryParse(startCost, out int parsedStartCost))
+            {
+                details = new ObservableCollection<Detail>(details.Where(r => r.Cost >= parsedStartCost));
+            }
+            return details;
+        }
+
+        // Конечная точка цены
+        public ObservableCollection<Detail> ApplyFinishCost(ObservableCollection<Detail> details)
+        {
+            string finishCost = _finishCostTextBox.Text;
+            if (!string.IsNullOrEmpty(finishCost) && int.TryParse(finishCost, out int parsedFinishCost))
+            {
+                details = new ObservableCollection<Detail>(details.Where(r => r.Cost <= parsedFinishCost));
+            }
+            return details;
+        }
+
+        // Сортировка
+        public ObservableCollection<Detail> ApplySorter(ObservableCollection<Detail> details)
+        {
+            int sortIndex = _sorterComboBox.SelectedIndex;
+
+            IEnumerable<Detail> sortedDetails;
+
+            if (!_ascending)
+            {
+                switch (sortIndex)
+                {
+                    case 2:
+                        sortedDetails = details.OrderBy(e => e.Name);
+                        break;
+                    case 3:
+                        sortedDetails = details.OrderBy(e => e.Cost);
+                        break;
+                    case 4:
+                        sortedDetails = details.OrderBy(e => e.Count);
+                        break;
+                    default:
+                        sortedDetails = details.OrderBy(e => e.IdDetail);
+                        break;
+                }
+            }
+            else
+            {
+                switch (sortIndex)
+                {
+                    case 2:
+                        sortedDetails = details.OrderByDescending(e => e.Name);
+                        break;
+                    case 3:
+                        sortedDetails = details.OrderByDescending(e => e.Cost);
+                        break;
+                    case 4:
+                        sortedDetails = details.OrderByDescending(e => e.Count);
+                        break;
+                    default:
+                        sortedDetails = details.OrderByDescending(e => e.IdDetail);
+                        break;
+                }
+            }
+
+            // Создаем новую ObservableCollection из отсортированных данных
+            return new ObservableCollection<Detail>(sortedDetails);
+        }
+
+        // Очистка
+        public void ApplyClear()
+        {
+            _searchTextBox.Text = string.Empty;
+            _startCostTextBox.Text = string.Empty;
+            _finishCostTextBox.Text = string.Empty;
+            _sorterComboBox.SelectedIndex = 0;
+            _ascendingCheckBox.IsChecked = false;
+        }
+    }
 }

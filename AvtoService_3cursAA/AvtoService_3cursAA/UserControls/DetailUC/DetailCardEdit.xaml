@@ -1,0 +1,136 @@
+﻿<UserControl x:Class="AvtoService_3cursAA.UserControls.DetailUC.DetailCardEdit"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AvtoService_3cursAA.UserControls.DetailUC"
+             mc:Ignorable="d" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             Height="400" Width="350">
+
+    <Border
+        BorderThickness="2"
+        BorderBrush="#30000000"
+        Margin="15"
+        CornerRadius="30"
+        Effect="{StaticResource dropShadowBorder}">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="150"/>
+            </Grid.RowDefinitions>
+
+            <!-- Image of item -->
+            <Border 
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                CornerRadius="30 30 0 0"
+                Height="250"
+                VerticalAlignment="Top">
+
+                <Border.Background>
+                    <ImageBrush
+                        x:Name="ImageBorder"
+                        ImageSource="{Binding Photo}"
+                        Stretch="UniformToFill"/>
+                </Border.Background>
+            </Border>
+
+            <!-- Description present -->
+            <Border
+                Grid.Row="1"
+                Background="White"
+                CornerRadius="20 20 30 30"
+                Effect="{StaticResource dropShadowBorder}">
+
+                <Grid Margin="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <DockPanel 
+                        Grid.Column="0"
+                        LastChildFill="False">
+
+                        <TextBlock
+                            TextWrapping="Wrap"
+                            FontFamily="Calibri"
+                            DockPanel.Dock="Top">
+                            
+                            <Run 
+                                Text="Наименование детали:"
+                                FontSize="14"
+                                Foreground="Gray"/>
+                            <LineBreak/>
+                            <Run 
+                                Text="{Binding Name}" 
+                                FontWeight="Bold"
+                                FontSize="18"/>
+                        </TextBlock>
+
+                        <Grid DockPanel.Dock="Bottom">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock FontFamily="Calibri">
+                                <Run
+                                    Text="Цена:"
+                                    FontSize="14"
+                                    Foreground="Gray"/>
+                                <LineBreak/>
+                                <Run 
+                                    Text="{Binding Cost, StringFormat={}{0} руб.}" 
+                                    FontWeight="Bold"
+                                    FontSize="18"/>
+                            </TextBlock>
+
+                            <TextBlock FontFamily="Calibri" Grid.Column="1">
+                                <Run
+                                    Text="Количество:"
+                                    FontSize="14"
+                                    Foreground="Gray"/>
+                                <LineBreak/>
+                                <Run 
+                                    Text="{Binding Count, StringFormat={}{0} шт.}" 
+                                    FontWeight="Bold"
+                                    FontSize="18"/>
+                            </TextBlock>
+                        </Grid>
+                    </DockPanel>
+
+                    <Grid Grid.Column="2">
+                        <DockPanel 
+                            LastChildFill="False"
+                            HorizontalAlignment="Right">
+
+                            <Grid DockPanel.Dock="Bottom">
+                                <Button 
+                                    Style="{StaticResource DeleteButton}"
+                                    Name="Delete"
+                                    Click="Delete_Click"/>
+                                <materialDesign:PackIcon 
+                                    Kind="Trash"
+                                    Style="{StaticResource CardIconStyle}"/>
+                            </Grid>
+
+                            <Grid DockPanel.Dock="Top">
+                                <Button 
+                                    Style="{StaticResource EditButton}"
+                                    Name="Edit"
+                                    Click="Edit_Click"/>
+                                <materialDesign:PackIcon 
+                                    Kind="Edit"
+                                    Style="{StaticResource CardIconStyle}"/>
+                            </Grid>
+                        </DockPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

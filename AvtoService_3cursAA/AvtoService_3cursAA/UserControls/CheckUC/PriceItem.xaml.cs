@@ -29,9 +29,9 @@ namespace AvtoService_3cursAA.UserControls.CheckUC
         }
 
         private Price _price;
-        private PriceOpertor _parentWindow;
+        private CheckAdmin _parentWindow;
 
-        public PriceItem(Price price, PriceOpertor parentWindow)
+        public PriceItem(Price price, CheckAdmin parentWindow)
         {
             _price = price;
             _parentWindow = parentWindow;

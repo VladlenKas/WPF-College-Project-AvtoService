@@ -28,7 +28,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
     /// <summary>
     /// Логика взаимодействия для CheckAdmin.xaml
     /// </summary>
-    public partial class PriceOpertor : Page
+    public partial class CheckAdmin : Page
     {
         private Client _selectClient;
         private Car _selectCar;
@@ -40,7 +40,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
         private DetailManager detailManager;
         private PriceManager priceManager;
-        public PriceOpertor(Employee employee)
+        public CheckAdmin(Employee employee)
         {
             InitializeComponent();
 

@@ -1,11 +1,10 @@
-﻿<UserControl x:Class="AvtoService_3cursAA.UserControls.PriceUC.PriceCardView"
+﻿<UserControl x:Class="AvtoService_3cursAA.UserControls.DetailUC.DetailCardView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:AvtoService_3cursAA.UserControls.PriceUC"
+             xmlns:local="clr-namespace:AvtoService_3cursAA.UserControls.DetailUC"
              mc:Ignorable="d" 
-             
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              
              Height="400" Width="350">
@@ -17,20 +16,20 @@
                       Opacity="0.1"
                       Direction="90"/>
     </UserControl.Resources>
-    
+
     <Border
         BorderThickness="2"
         BorderBrush="#30000000"
         Margin="15"
         CornerRadius="30"
         Effect="{StaticResource dropShadowBorder}">
-        
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="150"/>
             </Grid.RowDefinitions>
-            
+
             <!-- Image of item -->
             <Border 
                 Grid.Row="0"
@@ -38,7 +37,7 @@
                 CornerRadius="30 30 0 0"
                 Height="250"
                 VerticalAlignment="Top">
-                
+
                 <Border.Background>
                     <ImageBrush
                         x:Name="ImageBorder"
@@ -65,7 +64,7 @@
                             DockPanel.Dock="Top">
                             
                             <Run 
-                                Text="Название услуги:"
+                                Text="Наименование детали:"
                                 FontSize="14"
                                 Foreground="Gray"/>
                             <LineBreak/>
@@ -75,20 +74,36 @@
                                 FontSize="20"/>
                         </TextBlock>
 
-                        <TextBlock
-                            FontFamily="Calibri"
-                            DockPanel.Dock="Bottom">
-                            
-                            <Run
-                                Text="Цена:"
-                                FontSize="14"
-                                Foreground="Gray"/>
-                            <LineBreak/>
-                            <Run 
-                                Text="{Binding Cost, StringFormat={}{0} руб.}" 
-                                FontWeight="Bold"
-                                FontSize="18"/>
-                        </TextBlock>
+                        <Grid DockPanel.Dock="Bottom">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock FontFamily="Calibri">
+                                <Run
+                                    Text="Цена:"
+                                    FontSize="14"
+                                    Foreground="Gray"/>
+                                <LineBreak/>
+                                <Run 
+                                    Text="{Binding Cost, StringFormat={}{0} руб.}" 
+                                    FontWeight="Bold"
+                                    FontSize="18"/>
+                            </TextBlock>
+
+                            <TextBlock FontFamily="Calibri" Grid.Column="1">
+                                <Run
+                                    Text="Количество:"
+                                    FontSize="14"
+                                    Foreground="Gray"/>
+                                <LineBreak/>
+                                <Run 
+                                    Text="{Binding Count, StringFormat={}{0} шт.}" 
+                                    FontWeight="Bold"
+                                    FontSize="18"/>
+                            </TextBlock>
+                        </Grid>
                     </DockPanel>
                 </Grid>
             </Border>

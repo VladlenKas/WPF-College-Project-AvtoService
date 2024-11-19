@@ -47,7 +47,10 @@ namespace AvtoService_3cursAA
                     ContentFrame.Navigate(new PriceAdmin(_employee));
                     break;
                 case 3:
-                    ContentFrame.Navigate(new PriceOpertor(_employee));
+                    ContentFrame.Navigate(new CheckAdmin(_employee));
+                    break;
+                case 4:
+                    ContentFrame.Navigate(new DetailAdmin(_employee));
                     break;
             }
         }
@@ -83,6 +86,11 @@ namespace AvtoService_3cursAA
         private void ButtonCheck_Click(object sender, RoutedEventArgs e)
         {
             ChoosePage(3);
+        }
+
+        private void ButtonDetail_Click(object sender, RoutedEventArgs e)
+        {
+            ChoosePage(4);
         }
     }
 }

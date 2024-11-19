@@ -43,6 +43,9 @@ namespace AvtoService_3cursAA
                 case 1:
                     ContentFrame.Navigate(new PriceOperator(_employee));
                     break;
+                case 2:
+                    ContentFrame.Navigate(new DetailOperator(_employee));
+                    break;
             }
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -65,6 +68,11 @@ namespace AvtoService_3cursAA
         private void ButtonPrice_Click(object sender, RoutedEventArgs e)
         {
             ChoosePage(1);
+        }
+
+        private void ButtonDetail_Click(object sender, RoutedEventArgs e)
+        {
+            ChoosePage(2);
         }
     }
 }

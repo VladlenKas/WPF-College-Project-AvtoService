@@ -14,6 +14,7 @@
     <None Remove="Images\IconAdmin.png" />
     <None Remove="Images\IconMechanic.png" />
     <None Remove="Images\iconOperator.png" />
+    <None Remove="Images\NoImageDetail.jpg" />
     <None Remove="Images\NoImagePrice.jpg" />
   </ItemGroup>
 
@@ -37,6 +38,9 @@
     <Resource Include="Images\IconAdmin.png" />
     <Resource Include="Images\IconMechanic.png" />
     <Resource Include="Images\iconOperator.png" />
+    <Resource Include="Images\NoImageDetail.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\NoImagePrice.jpg" />
   </ItemGroup>
 
@@ -50,10 +54,6 @@
     <Compile Update="UserControls\PriceUC\PriceCardEdit.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="UserControls\DetailUC\" />
   </ItemGroup>
 
 </Project>

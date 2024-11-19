@@ -93,6 +93,7 @@
 
                     <Button Style="{StaticResource NavigationButton}"
                             Content="Детали"
+                            Click="ButtonDetail_Click"
                             DockPanel.Dock="Top"/>
 
                     <Button Style="{StaticResource NavigationButton}"

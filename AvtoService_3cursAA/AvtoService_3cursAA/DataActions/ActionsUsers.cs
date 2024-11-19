@@ -126,6 +126,25 @@ namespace AvtoService_3cursAA.ActionsForEmployee
             dbContext.SaveChanges();
         }
 
+        public static void EditDetail(string name, int cost, int count, ImageSource image, Detail detail)
+        {
+            using (var dbContext = new Avtoservice3cursAaContext())
+            {
+                var thisDetail = dbContext.Details.First(r => r.IdDetail == detail.IdDetail);
+
+                byte[] newImage = ImageSourceToBytes(image);
+
+                thisDetail.Name = name;
+                thisDetail.Cost = cost;
+                thisDetail.Count = count;
+                thisDetail.Photo = newImage;
+
+                MessageBox.Show($"Деталь «{thisDetail.Name}» успешно отредактирована!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                dbContext.Update(thisDetail);
+                dbContext.SaveChanges();
+            }
+        }
+
         public static void OpenImage(Image image)
         {
             var selectImage = new OpenFileDialog();

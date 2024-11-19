@@ -143,5 +143,17 @@ namespace AvtoService_3cursAA.ActionsForEmployee
             sorterList.AddRange(strings);
             return sorterList;
         }
+        public static List<object> FillSorterDetails()
+        {
+            var sorterList = new List<object>(_sorterList);
+            var strings = new List<object>
+            {
+                "По имени",
+                "По цене",
+                "По количеству"
+            };
+            sorterList.AddRange(strings);
+            return sorterList;
+        }
     }
 }

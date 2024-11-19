@@ -25,9 +25,9 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         private ItemsControl _listViewItems;
         private ComboBox _comboBoxPrices;
         private TextBlock _costPrices;
-        private PriceOpertor _parentWindow;
+        private CheckAdmin _parentWindow;
 
-        public PriceManager(ItemsControl listViewItems, ComboBox comboBoxPrices, TextBlock costPrices, PriceOpertor parentWindow)
+        public PriceManager(ItemsControl listViewItems, ComboBox comboBoxPrices, TextBlock costPrices, CheckAdmin parentWindow)
         {
             dbContext = new();
 

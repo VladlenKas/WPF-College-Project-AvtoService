@@ -11,10 +11,10 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.Collections
 {
     internal class DetailCollection
     {
-        private PriceOpertor _parentWindow;
+        private CheckAdmin _parentWindow;
         public ObservableCollection<DetailItem> Details { get; set; }
         private List<Detail> _detailList;
-        public DetailCollection(PriceOpertor parentWindow)
+        public DetailCollection(CheckAdmin parentWindow)
         {
             _parentWindow = parentWindow;
             Details = new ObservableCollection<DetailItem>();

@@ -19,12 +19,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AvtoService_3cursAA.PagesMenuAdmin
+namespace AvtoService_3cursAA.PagesMenuOperator
 {
     /// <summary>
-    /// Логика взаимодействия для DetailAdmin.xaml
+    /// Логика взаимодействия для DetailOperator.xaml
     /// </summary>
-    public partial class DetailAdmin : Page
+    public partial class DetailOperator : Page
     {
         private Avtoservice3cursAaContext dbContext;
         private Employee _selectUser;
@@ -32,7 +32,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
         private DetailFilter detailFilter;
 
-        public DetailAdmin(Employee employee)
+        public DetailOperator(Employee employee)
         {
             this._thisUser = employee;
 
@@ -46,6 +46,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             dbContext = new Avtoservice3cursAaContext();
 
             detailFilter = new DetailFilter(SearchTextBox, ComboBoxSort, SortCheckBox, StartCostTextBox, FinishCostTextBox);
+
             ObservableCollection<Detail> itemsList = new ObservableCollection<Detail>(dbContext.Details.ToList());
 
             itemsList = detailFilter.ApplySorter(itemsList);
@@ -54,9 +55,12 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             itemsList = detailFilter.ApplySearch(itemsList);
 
             ListViewItems.Items.Clear();
+
             foreach (var item in itemsList)
             {
-                ListViewItems.Items.Add(new DetailCardView(item));
+                var detailCardEdit = new DetailCardEdit(item, this);
+                detailCardEdit.RemoveDetailRequested += DetailCardEdit_RemoveDetailRequested; // Подписка на событие удаления
+                ListViewItems.Items.Add(detailCardEdit);
             }
         }
 
@@ -74,6 +78,12 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             UserFio.Text = $"{_thisUser.FullName}";
+        }
+
+        // Обработчик события удаления детали
+        private void DetailCardEdit_RemoveDetailRequested(object sender, DetailEventArgs e)
+        {
+            UpdateItemsListView(); // Обновляем список после удаления
         }
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)

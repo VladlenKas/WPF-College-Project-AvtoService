@@ -183,9 +183,7 @@ public partial class Avtoservice3cursAaContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(45)
                 .HasColumnName("name");
-            entity.Property(e => e.Photo)
-                .HasColumnType("blob")
-                .HasColumnName("photo");
+            entity.Property(e => e.Photo).HasColumnName("photo");
         });
 
         modelBuilder.Entity<Employee>(entity =>
