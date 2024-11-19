@@ -110,7 +110,7 @@ namespace AvtoService_3cursAA.ActionsForEmployee
             dbContext.SaveChanges();
         }
 
-        public static void EditPrice(string name, string cost, ImageSource image, Price price)
+        public static void EditPrice(string name, int cost, ImageSource image, Price price)
         {
             dbContext = new();
             var thisPrice = dbContext.Prices.First(r => r.IdPrice == price.IdPrice);
@@ -118,7 +118,7 @@ namespace AvtoService_3cursAA.ActionsForEmployee
             byte[] newImage = ImageSourceToBytes(image);
 
             thisPrice.Name = name;
-            thisPrice.Cost = int.Parse(cost);
+            thisPrice.Cost = cost;
             thisPrice.Photo = newImage;
 
             MessageBox.Show($"Услуга «{ thisPrice.Name}» успешно отредактирована!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);

@@ -24,16 +24,18 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
 
         private ItemsControl _listViewItems;
         private ComboBox _comboBoxPrices;
-        private CheckAdmin _parentWindow;
+        private TextBlock _costPrices;
+        private PriceOpertor _parentWindow;
 
-        public PriceManager(ItemsControl listViewItems, ComboBox comboBoxPrices, CheckAdmin parentWindow)
+        public PriceManager(ItemsControl listViewItems, ComboBox comboBoxPrices, TextBlock costPrices, PriceOpertor parentWindow)
         {
             dbContext = new();
 
             listAllPrice = dbContext.Prices.OrderBy(p => p.Name).ToList();
             _listViewItems = listViewItems;
-            _parentWindow = parentWindow;
             _comboBoxPrices = comboBoxPrices;
+            _costPrices = costPrices;
+            _parentWindow = parentWindow;
 
             FillPrices();
 
@@ -66,7 +68,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                     FillPrices();
                 }
             }
-
             _comboBoxPrices.SelectedIndex = 0;
         }
         private void FillPrices()
@@ -77,6 +78,18 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
             listPrices.AddRange(listAllPrice.Select(p => p.Name).ToList());
 
             _comboBoxPrices.ItemsSource = listPrices;
+
+            int cost = 0;
+            if (priceCollection != null)
+            {
+                foreach (var item in priceCollection.Prices)
+                {
+                    if (item != null)
+                        cost += item.Cost;
+                }
+            }
+            _costPrices.Text = null;
+            _costPrices.Text += $"\t{cost} руб.";
         }
     }
 }

@@ -28,7 +28,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
     /// <summary>
     /// Логика взаимодействия для CheckAdmin.xaml
     /// </summary>
-    public partial class CheckAdmin : Page
+    public partial class PriceOpertor : Page
     {
         private Client _selectClient;
         private Car _selectCar;
@@ -40,7 +40,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
         private DetailManager detailManager;
         private PriceManager priceManager;
-        public CheckAdmin(Employee employee)
+        public PriceOpertor(Employee employee)
         {
             InitializeComponent();
 
@@ -119,8 +119,8 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             UserFio.Text = $"{_thisUser.FullName}";
             EmployeeTextBox.Text = $"{_thisUser.FullName}";
 
-            detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, this);
-            priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, this);
+            detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, costDetails, this);
+            priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, costPrices, this);
 
             var ClientList = FillDataFilterSorter.FillListClients();
             ClientComboBox.ItemsSource = ClientList;
@@ -166,15 +166,10 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             return id;
         }
 
-        private void ClearDetailList_Click(object sender, RoutedEventArgs e)
-        {
-            detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, this);
+        private void ClearDetailList_Click(object sender, RoutedEventArgs e) => 
+            detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, costDetails, this);
 
-        }
-
-        private void ClearPriceList_Click(object sender, RoutedEventArgs e)
-        {
-            priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, this);
-        }
+        private void ClearPriceList_Click(object sender, RoutedEventArgs e) =>
+            priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, costPrices, this);
     }
 }

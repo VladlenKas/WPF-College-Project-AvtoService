@@ -47,7 +47,7 @@ namespace AvtoService_3cursAA
                     ContentFrame.Navigate(new PriceAdmin(_employee));
                     break;
                 case 3:
-                    ContentFrame.Navigate(new CheckAdmin(_employee));
+                    ContentFrame.Navigate(new PriceOpertor(_employee));
                     break;
             }
         }

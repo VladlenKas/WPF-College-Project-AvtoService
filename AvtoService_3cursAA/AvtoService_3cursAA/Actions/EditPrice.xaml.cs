@@ -27,7 +27,17 @@ namespace AvtoService_3cursAA.Actions
     public partial class EditPrice : Window
     {
         private string Name => NameTextBox.Text;
-        private string Cost => CosttextBox.Text;
+        private int Cost
+        {
+            get
+            {
+                if (int.TryParse(CostTextBox.Text, out int value))
+                {
+                    return value;
+                }
+                return 0;
+            }
+        }
         private ImageSource Image => ImagePrice.Source;
 
         string _file = "pack://application:,,,/AvtoService_3cursAA;component/Images/NoImagePrice.jpg";
@@ -61,13 +71,12 @@ namespace AvtoService_3cursAA.Actions
             this.Close();
         }
 
-
         private bool DataValidate()
         {
             dbContext = new();
             List<string> errorsList = new();
 
-            if (new[] { Name, Cost }.Any(string.IsNullOrWhiteSpace))
+            if (string.IsNullOrWhiteSpace(Name))
             {
                 errorsList.Add("Заполните все обязательные поля");
             }
@@ -78,7 +87,7 @@ namespace AvtoService_3cursAA.Actions
                 errorsList.Add("Такая услуга уже существует");
             }
 
-            if (int.Parse(Cost) < 1000 || int.Parse(Cost) > 9999)
+            if (Cost < 1000 || Cost > 9999)
             {
                 errorsList.Add("Цена должна быть в диапозоне 1000 руб. - 9999 руб.");
             }

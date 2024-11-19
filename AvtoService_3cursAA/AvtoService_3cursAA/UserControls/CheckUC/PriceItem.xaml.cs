@@ -15,7 +15,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using static MaterialDesignThemes.Wpf.Theme;
 
 namespace AvtoService_3cursAA.UserControls.CheckUC
 {
@@ -30,9 +29,9 @@ namespace AvtoService_3cursAA.UserControls.CheckUC
         }
 
         private Price _price;
-        private CheckAdmin _parentWindow;
+        private PriceOpertor _parentWindow;
 
-        public PriceItem(Price price, CheckAdmin parentWindow)
+        public PriceItem(Price price, PriceOpertor parentWindow)
         {
             _price = price;
             _parentWindow = parentWindow;

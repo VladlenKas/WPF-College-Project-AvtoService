@@ -6,6 +6,7 @@ using AvtoService_3cursAA.UserControls.PriceUC;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,7 +46,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             dbContext = new();
 
             priceFilter = new PriceFilter(SearchTextBox, ComboBoxSort, SortCheckBox, StartCostTextBox, FinishCostTextBox);
-            var itemsList = dbContext.Prices.ToList();
+            ObservableCollection<Price> itemsList = new ObservableCollection<Price>(dbContext.Prices);
 
             itemsList = priceFilter.ApplySorter(itemsList);
             itemsList = priceFilter.ApplyStartCost(itemsList);

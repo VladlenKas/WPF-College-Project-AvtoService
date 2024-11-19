@@ -52,4 +52,8 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UserControls\DetailUC\" />
+  </ItemGroup>
+
 </Project>

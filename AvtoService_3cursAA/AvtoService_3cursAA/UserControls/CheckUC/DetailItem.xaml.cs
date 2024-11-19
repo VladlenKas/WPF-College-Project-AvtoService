@@ -32,8 +32,8 @@ namespace AvtoService_3cursAA.UserControls.CheckUC
         private Detail _detail;
         private int _count = 1;
         private int _allCount;
-        private CheckAdmin _parentWindow;
-        public DetailItem(Detail detail, CheckAdmin parentWindow)
+        private PriceOpertor _parentWindow;
+        public DetailItem(Detail detail, PriceOpertor parentWindow)
         {
             _detail = detail;
             _parentWindow = parentWindow;

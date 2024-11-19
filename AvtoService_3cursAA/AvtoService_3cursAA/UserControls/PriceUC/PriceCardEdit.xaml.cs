@@ -25,11 +25,18 @@ namespace AvtoService_3cursAA.UserControls.PriceUC
     /// </summary>
     public partial class PriceCardEdit : UserControl
     {
+        public Price Price { get; private set; }
+
         private Price _price;
-        private Avtoservice3cursAaContext _dbContext;
-        public PriceCardEdit(Price price)
+        private PriceOperator _parentWindow;
+        private Avtoservice3cursAaContext dbContext;
+
+        public event EventHandler<PriceEventArgs> RemovePriceRequested; // Событие для удаления цены
+
+        public PriceCardEdit(Price price, PriceOperator priceOperator)
         {
             _price = price;
+            _parentWindow = priceOperator;
 
             InitializeComponent();
             DataLoad();
@@ -45,8 +52,8 @@ namespace AvtoService_3cursAA.UserControls.PriceUC
 
         private void DataLoad()
         {
-            _dbContext = new();
-            _price = _dbContext.Prices.First(r => r.IdPrice == _price.IdPrice);
+            dbContext = new();
+            _price = dbContext.Prices.First(r => r.IdPrice == _price.IdPrice);
             DataContext = _price;
 
             if (_price.Photo == null)
@@ -56,18 +63,27 @@ namespace AvtoService_3cursAA.UserControls.PriceUC
             }
         }
 
-        private void DeletePrice()
-        {
-
-        }
-
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Вы уверены, что хотите удалить услугу?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (MessageBox.Show("Вы уверены, что хотите удалить услугу?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) 
+                == MessageBoxResult.Yes)
             {
                 DeletePrice();
                 MessageBox.Show("Услуга успешно удалена!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                RemovePriceRequested?.Invoke(this, new PriceEventArgs { Price = this.Price }); // Уведомляем родительское окно
             }
         }
+
+        private void DeletePrice()
+        {
+            dbContext = new();
+            dbContext.Prices.Remove(_price); 
+            dbContext.SaveChanges();
+        }
+    }
+
+    public class PriceEventArgs : EventArgs
+    {
+        public Price Price { get; set; }
     }
 }

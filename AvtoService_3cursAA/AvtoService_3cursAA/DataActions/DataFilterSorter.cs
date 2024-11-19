@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Collections.ObjectModel;
 
 namespace AvtoService_3cursAA.Classes
 {
@@ -232,59 +233,64 @@ namespace AvtoService_3cursAA.Classes
             : base(searchTextBox, null, sorterComboBox, ascendingCheckBox, startCostTextBox, finishCostTextBox) { }
 
         // Поиск по названию
-        public List<Price> ApplySearch(List<Price> prices)
+        public ObservableCollection<Price> ApplySearch(ObservableCollection<Price> prices)
         {
             string search = _searchTextBox.Text.ToLower();
             if (!string.IsNullOrEmpty(search))
             {
-                prices = prices.Where(r => r.Name.ToLower().StartsWith(search)).ToList();
+                prices = new ObservableCollection<Price> (prices.Where(r => r.Name.ToLower().StartsWith(search)));
             }
             return prices;
         }
 
         // Начальная точка цены
-        public List<Price> ApplyStartCost(List<Price> prices)
+        public ObservableCollection<Price> ApplyStartCost(ObservableCollection<Price> prices)
         {
             string startCost = _startCostTextBox.Text.ToLower();
             if (!string.IsNullOrEmpty(startCost))
             {
                 if (int.TryParse(startCost, out int parsedStartCost))
                 {
-                    prices = prices.Where(r => r.Cost >= parsedStartCost).ToList();
+                    prices = new ObservableCollection<Price> (prices.Where(r => r.Cost >= parsedStartCost));
                 }
             }
             return prices;
         }
 
         // Конечная точка цены
-        public List<Price> ApplyFinishCost(List<Price> prices)
+        public ObservableCollection<Price> ApplyFinishCost(ObservableCollection<Price> prices)
         {
             string finishCost = _finishCostTextBox.Text.ToLower();
             if (!string.IsNullOrEmpty(finishCost))
             {
                 if (int.TryParse(finishCost, out int parsedFinishCost))
                 {
-                    prices = prices.Where(r => r.Cost <= parsedFinishCost).ToList();
+                    prices = new ObservableCollection<Price>(prices.Where(r => r.Cost <= parsedFinishCost));
                 }
             }
             return prices;
         }
 
         // Сортировка
-        public List<Price> ApplySorter(List<Price> prices)
+        public ObservableCollection<Price> ApplySorter(ObservableCollection<Price> prices)
         {
             int sortIndex = _sorterComboBox.SelectedIndex;
+
+            IEnumerable<Price> sortedPrices;
 
             if (!_ascending)
             {
                 switch (sortIndex)
                 {
                     case 2:
-                        return prices.OrderBy(e => e.Name).ToList();
+                        sortedPrices = prices.OrderBy(e => e.Name);
+                        break;
                     case 3:
-                        return prices.OrderBy(e => e.Cost).ToList();
+                        sortedPrices = prices.OrderBy(e => e.Cost);
+                        break;
                     default:
-                        return prices.OrderBy(e => e.IdPrice).ToList();
+                        sortedPrices = prices.OrderBy(e => e.IdPrice);
+                        break;
                 }
             }
             else
@@ -292,13 +298,19 @@ namespace AvtoService_3cursAA.Classes
                 switch (sortIndex)
                 {
                     case 2:
-                        return prices.OrderByDescending(e => e.Name).ToList();
+                        sortedPrices = prices.OrderByDescending(e => e.Name);
+                        break;
                     case 3:
-                        return prices.OrderByDescending(e => e.Cost).ToList();
+                        sortedPrices = prices.OrderByDescending(e => e.Cost);
+                        break;
                     default:
-                        return prices.OrderByDescending(e => e.IdPrice).ToList();
+                        sortedPrices = prices.OrderByDescending(e => e.IdPrice);
+                        break;
                 }
             }
+
+            // Создаем новую ObservableCollection из отсортированных данных
+            return new ObservableCollection<Price>(sortedPrices);
         }
 
         // Очистка

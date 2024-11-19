@@ -135,7 +135,7 @@
                             <TextBlock Text="Цена *"/>
                             <Grid>
                                 <TextBox 
-                                    x:Name="CosttextBox"
+                                    x:Name="CostTextBox"
                                     Text="{Binding Cost}"
                                     PreviewTextInput="NumberTextBox_PreviewTextInput"
                                     DataObject.Pasting="NumberTextBox_Pasting"/>

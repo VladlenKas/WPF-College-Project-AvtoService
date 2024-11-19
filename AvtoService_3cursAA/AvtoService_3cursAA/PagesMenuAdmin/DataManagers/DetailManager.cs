@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using static MaterialDesignThemes.Wpf.Theme.ToolBar;
 
 namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
 {
@@ -23,16 +25,18 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
 
         private ItemsControl _listViewItems;
         private ComboBox _comboBoxDetails;
-        private CheckAdmin _parentWindow;
+        private TextBlock _costDetails;
+        private PriceOpertor _parentWindow;
 
-        public DetailManager(ItemsControl listViewItems, ComboBox comboBoxDetails, CheckAdmin parentWindow)
+        public DetailManager(ItemsControl listViewItems, ComboBox comboBoxDetails, TextBlock costDetails, PriceOpertor parentWindow)
         {
             dbContext = new();
 
             listAllDetails = dbContext.Details.OrderBy(p => p.Name).ToList();
             _listViewItems = listViewItems;
-            _parentWindow = parentWindow;
             _comboBoxDetails = comboBoxDetails;
+            _costDetails = costDetails;
+            _parentWindow = parentWindow;
 
             FillDetails();
 
@@ -68,7 +72,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                     FillDetails();
                 }
             }
-
             _comboBoxDetails.SelectedIndex = 0;
         }
 
@@ -80,6 +83,18 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
             listDetails.AddRange(listAllDetails.Select(p => p.Name).ToList());
 
             _comboBoxDetails.ItemsSource = listDetails;
+
+            int cost = 0;
+            if (detailCollection != null)
+            {
+                foreach (var item in detailCollection.Details)
+                {
+                    if (item != null)
+                        cost += item.Cost;
+                }
+            }
+            _costDetails.Text = null;
+            _costDetails.Text += $"\t{cost} руб.";
         }
     }
 }

@@ -316,7 +316,6 @@
                                      Height="Auto"
                                      Margin="0"
                                      Padding="5 0"
-                                     TextChanged="FilterTextBox_TextChanged"
                                      Focusable="True"
                                      IsTabStop="True"/>
                             </Grid>

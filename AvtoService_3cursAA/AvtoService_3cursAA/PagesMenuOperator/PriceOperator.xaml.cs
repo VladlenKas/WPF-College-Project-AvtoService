@@ -6,6 +6,7 @@ using AvtoService_3cursAA.UserControls.PriceUC;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,10 +44,11 @@ namespace AvtoService_3cursAA.PagesMenuOperator
 
         private void UpdateItemsListView()
         {
-            dbContext = new();
+            dbContext = new Avtoservice3cursAaContext();
 
             priceFilter = new PriceFilter(SearchTextBox, ComboBoxSort, SortCheckBox, StartCostTextBox, FinishCostTextBox);
-            var itemsList = dbContext.Prices.ToList();
+
+            ObservableCollection<Price> itemsList = new ObservableCollection<Price>(dbContext.Prices.ToList());
 
             itemsList = priceFilter.ApplySorter(itemsList);
             itemsList = priceFilter.ApplyStartCost(itemsList);
@@ -54,18 +56,21 @@ namespace AvtoService_3cursAA.PagesMenuOperator
             itemsList = priceFilter.ApplySearch(itemsList);
 
             ListViewItems.Items.Clear();
+
             foreach (var item in itemsList)
             {
-                ListViewItems.Items.Add(new PriceCardEdit(item));
+                var priceCardEdit = new PriceCardEdit(item, this);
+                priceCardEdit.RemovePriceRequested += PriceCardEdit_RemovePriceRequested; // Подписка на событие удаления
+                ListViewItems.Items.Add(priceCardEdit);
             }
         }
+
         private void DataLoad()
         {
-            // dbContext load
-            dbContext = new();
+            dbContext = new Avtoservice3cursAaContext();
+
             dbContext.Prices.Load();
 
-            // ComboBoxes load
             var sorterList = FillDataFilterSorter.FillSorterPrices();
             ComboBoxSort.ItemsSource = sorterList;
         }
@@ -73,6 +78,12 @@ namespace AvtoService_3cursAA.PagesMenuOperator
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             UserFio.Text = $"{_thisUser.FullName}";
+        }
+
+        // Обработчик события удаления цены
+        private void PriceCardEdit_RemovePriceRequested(object sender, PriceEventArgs e)
+        {
+            UpdateItemsListView(); // Обновляем список после удаления
         }
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
