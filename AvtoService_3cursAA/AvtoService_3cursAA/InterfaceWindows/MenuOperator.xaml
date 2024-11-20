@@ -88,6 +88,7 @@
                                DockPanel.Dock="Top"/>
 
                     <Button Style="{StaticResource NavigationButton}"
+                            Click="ButtonCar_Click"
                             Content="Автомобили"
                             DockPanel.Dock="Top"/>
 

@@ -1,7 +1,7 @@
-﻿using AvtoService_3cursAA.ActionsEmployee;
-using AvtoService_3cursAA.ActionsForEmployee;
+﻿using AvtoService_3cursAA.ActionsForEmployee;
 using AvtoService_3cursAA.Classes;
 using AvtoService_3cursAA.Model;
+using AvtoService_3cursAA.UserControls.CarUC;
 using AvtoService_3cursAA.UserControls.PriceUC;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,16 +23,16 @@ using System.Windows.Shapes;
 namespace AvtoService_3cursAA.PagesMenuAdmin
 {
     /// <summary>
-    /// Логика взаимодействия для PriceAdmin.xaml
+    /// Логика взаимодействия для CarAdmin.xaml
     /// </summary>
-    public partial class PriceAdmin : Page
+    public partial class CarAdmin : Page
     {
         private Avtoservice3cursAaContext dbContext;
-        private Employee _selectUser;
         private Employee _thisUser;
 
-        private PriceFilter priceFilter;
-        public PriceAdmin(Employee employee)
+        private CarFilter carFilter; // Изменено на CarFilter
+
+        public CarAdmin(Employee employee)
         {
             this._thisUser = employee;
 
@@ -45,29 +45,27 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         {
             dbContext = new();
 
-            priceFilter = new PriceFilter(SearchTextBox, ComboBoxSort, SortCheckBox, StartCostTextBox, FinishCostTextBox);
-            ObservableCollection<Price> itemsList = new ObservableCollection<Price>(dbContext.Prices);
+            carFilter = new CarFilter(SearchTextBox, ComboBoxSort, SortCheckBox); // Используем CarFilter
+            ObservableCollection<Car> itemsList = new ObservableCollection<Car>(dbContext.Cars); // Изменено на Cars
 
-            itemsList = priceFilter.ApplySorter(itemsList);
-            itemsList = priceFilter.ApplyStartCost(itemsList);
-            itemsList = priceFilter.ApplyFinishCost(itemsList);
-            itemsList = priceFilter.ApplySearch(itemsList);
+            itemsList = carFilter.ApplySorter(itemsList); 
+            itemsList = carFilter.ApplySearch(itemsList); 
 
             ListViewItems.Items.Clear();
             foreach (var item in itemsList)
             {
-                ListViewItems.Items.Add(new PriceCardView(item));
+                ListViewItems.Items.Add(new CarCardView(item)); // Изменено на CarCardView
             }
-
         }
+
         private void DataLoad()
         {
             // dbContext load
             dbContext = new();
-            dbContext.Prices.Load();
+            dbContext.Cars.Load(); // Изменено на Cars
 
             // ComboBoxes load
-            var sorterList = FillDataFilterSorter.FillSorterPrices();
+            var sorterList = FillDataFilterSorter.FillSorterCars(); // Изменено на FillSorterCars
             ComboBoxSort.ItemsSource = sorterList;
         }
 
@@ -75,6 +73,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         {
             UserFio.Text = $"{_thisUser.FullName}";
         }
+
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (ListViewItems.Items != null)
@@ -85,41 +84,11 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         {
             if (ListViewItems.Items != null)
             {
-                priceFilter.ApplyClear();
+                carFilter.ApplyClear(); // Используем ApplyClear из CarFilter
                 UpdateItemsListView();
             }
         }
 
-        private void StartCostTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (ListViewItems.Items != null)
-            {
-                var cost = StartCostTextBox.Text;
-                if (int.TryParse(cost, out int parsedCost))
-                {
-                    if (parsedCost > 999)
-                        UpdateItemsListView();
-                }
-                else if (string.IsNullOrEmpty(cost))
-                        UpdateItemsListView();
-            }
-        }
-
-        private void FinishCostTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (ListViewItems.Items != null)
-            {
-                UpdateItemsListView();
-                var cost = FinishCostTextBox.Text;
-                if (int.TryParse(cost, out int parsedCost))
-                {
-                    if (parsedCost > 999)
-                        UpdateItemsListView();
-                }
-                else if (string.IsNullOrEmpty(cost))
-                    UpdateItemsListView();
-            }
-        }
         private void SortCheckBox_Click(object sender, RoutedEventArgs e)
         {
             if (ListViewItems.Items != null)
@@ -133,4 +102,3 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         }
     }
 }
-

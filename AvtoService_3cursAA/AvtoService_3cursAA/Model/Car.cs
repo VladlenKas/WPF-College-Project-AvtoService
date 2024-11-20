@@ -17,5 +17,7 @@ public partial class Car
 
     public string? Description { get; set; }
 
+    public byte[]? Photo { get; set; }
+
     public virtual ICollection<Carclient> Carclients { get; set; } = new List<Carclient>();
 }

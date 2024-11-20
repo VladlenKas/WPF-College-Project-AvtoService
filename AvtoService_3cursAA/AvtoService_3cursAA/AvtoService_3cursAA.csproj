@@ -14,6 +14,7 @@
     <None Remove="Images\IconAdmin.png" />
     <None Remove="Images\IconMechanic.png" />
     <None Remove="Images\iconOperator.png" />
+    <None Remove="Images\NoImageCar.jpg" />
     <None Remove="Images\NoImageDetail.jpg" />
     <None Remove="Images\NoImagePrice.jpg" />
   </ItemGroup>
@@ -41,6 +42,7 @@
     <Resource Include="Images\NoImageDetail.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Images\NoImageCar.jpg" />
     <Resource Include="Images\NoImagePrice.jpg" />
   </ItemGroup>
 
@@ -49,6 +51,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="PagesMenuOperator\PriceOperator.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserControls\CarUC\CarCardEdit.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="UserControls\PriceUC\PriceCardEdit.xaml.cs">

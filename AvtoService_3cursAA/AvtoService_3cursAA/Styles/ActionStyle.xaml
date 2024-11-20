@@ -259,7 +259,7 @@
                                                   HorizontalAlignment="Center">
                                         <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" 
                                                     TextBlock.FontFamily="Arial Rounded MT Bold"
-                                                    TextBlock.FontSize="14"/>
+                                                    TextBlock.FontSize="16"/>
     
                                     </ScrollViewer>
                                 </Grid>

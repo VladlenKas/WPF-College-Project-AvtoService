@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:AvtoService_3cursAA.PagesMenuAdmin"
       mc:Ignorable="d" 
 
-     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       
       Loaded="Page_Loaded">
 

@@ -420,4 +420,84 @@ namespace AvtoService_3cursAA.Classes
             _ascendingCheckBox.IsChecked = false;
         }
     }
+    public class CarFilter : DataFilterSorter
+    {
+        public CarFilter(TextBox searchTextBox, ComboBox sorterComboBox, CheckBox ascendingCheckBox)
+            : base(searchTextBox, null, sorterComboBox, ascendingCheckBox, null, null) { }
+
+        // поиск
+        public ObservableCollection<Car> ApplySearch(ObservableCollection<Car> cars)
+        {
+            string search = _searchTextBox.Text.ToLower();
+            if (!string.IsNullOrEmpty(search))
+            {
+                cars = new ObservableCollection<Car>(cars.Where(r =>
+                    r.Brand.ToLower().Contains(search) ||
+                    r.Model.ToLower().Contains(search) ||
+                    r.Country.ToLower().Contains(search))); 
+            }
+            return cars;
+        }
+
+        // Сортировка
+        public ObservableCollection<Car> ApplySorter(ObservableCollection<Car> cars)
+        {
+            int sortIndex = _sorterComboBox.SelectedIndex;
+
+            IEnumerable<Car> sortedCars;
+
+            if (!_ascending)
+            {
+                switch (sortIndex)
+                {
+                    case 0: // По бренду
+                        sortedCars = cars.OrderBy(e => e.Brand);
+                        break;
+                    case 1: // По модели
+                        sortedCars = cars.OrderBy(e => e.Model);
+                        break;
+                    case 2: // По стране производства
+                        sortedCars = cars.OrderBy(e => e.Country);
+                        break;
+                    case 3: // По году производства
+                        sortedCars = cars.OrderBy(e => e.Year);
+                        break;
+                    default:
+                        sortedCars = cars.OrderBy(e => e.IdCar);
+                        break;
+                }
+            }
+            else
+            {
+                switch (sortIndex)
+                {
+                    case 0: // По бренду
+                        sortedCars = cars.OrderByDescending(e => e.Brand);
+                        break;
+                    case 1: // По модели
+                        sortedCars = cars.OrderByDescending(e => e.Model);
+                        break;
+                    case 2: // По стране производства
+                        sortedCars = cars.OrderByDescending(e => e.Country);
+                        break;
+                    case 3: // По году производства
+                        sortedCars = cars.OrderByDescending(e => e.Year);
+                        break;
+                    default:
+                        sortedCars = cars.OrderByDescending(e => e.IdCar);
+                        break;
+                }
+            }
+
+            // Создаем новую ObservableCollection из отсортированных данных
+            return new ObservableCollection<Car>(sortedCars);
+        }
+
+        // Очистка (если нужно)
+        public void ApplyClear()
+        {
+            _sorterComboBox.SelectedIndex = 0; // Сбросить сортировку на первый элемент
+            _ascendingCheckBox.IsChecked = false; // Сбросить порядок сортировки
+        }
+    }
 }

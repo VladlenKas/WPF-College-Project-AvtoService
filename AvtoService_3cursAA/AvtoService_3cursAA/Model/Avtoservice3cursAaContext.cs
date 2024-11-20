@@ -74,6 +74,7 @@ public partial class Avtoservice3cursAaContext : DbContext
             entity.Property(e => e.Year)
                 .HasColumnType("year")
                 .HasColumnName("year");
+            entity.Property(e => e.Photo).HasColumnName("photo");
         });
 
         modelBuilder.Entity<Carclient>(entity =>

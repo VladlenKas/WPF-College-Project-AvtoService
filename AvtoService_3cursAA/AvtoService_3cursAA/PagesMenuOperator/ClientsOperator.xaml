@@ -178,7 +178,16 @@
                     <DataGridTextColumn Header="ФИО" Binding="{Binding FullName}"/>
                     <DataGridTextColumn Header="Дата рождения" Binding="{Binding Birthday, StringFormat={}{0:dd.MM.yyyy}}"/>
                     <DataGridTextColumn Header="Телефон" Binding="{Binding Phone, StringFormat={}{0:+7 (000) 000-00-00}}"/>
-                    <DataGridTextColumn Header="Машины" Binding="{Binding Car}"/>
+                    <DataGridTemplateColumn Header="Машины">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox 
+                                    ItemsSource="{Binding CarList}" 
+                                    Style="{StaticResource ComboBoxDataGrid}"
+                                    SelectedIndex="0"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="Действия" CellTemplate="{StaticResource ActionsTemplate}"/>
                 </DataGrid.Columns>
             </DataGrid>

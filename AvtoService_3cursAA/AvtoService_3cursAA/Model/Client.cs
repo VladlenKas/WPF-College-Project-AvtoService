@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace AvtoService_3cursAA.Model;
 
-public partial class Client
+public partial class Client : INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler PropertyChanged;
+
     public int IdClient { get; set; }
 
     public string Name { get; set; } = null!;
@@ -19,27 +23,23 @@ public partial class Client
 
     public string Phone { get; set; } = null!;
 
-    public string? Car
-    {
-        get
-        {
-            string carsListStrings = string.Empty;
-            foreach (var car in CarList)
-            {
-                carsListStrings += (car + " // ");
-            }
-
-            return carsListStrings.Remove(0, carsListStrings.Length - 3);
-        }
-    }
-
     public List<string> CarList
     {
         get
         {
-            return Carclients.Select(cc => ($"ID: [{cc.IdCar}] {cc.IdCarNavigation.Brand} {cc.IdCarNavigation.Model}")).ToList();
+            return Carclients?.Select(cc => ($"ID: [{cc.IdCar}] {cc.IdCarNavigation.Brand} {cc.IdCarNavigation.Model}")).ToList() ?? new List<string>();
         }
     }
 
+    public void UpdateCar()
+    {
+        // Это метод для обновления свойства Car после загрузки данных
+        OnPropertyChanged(nameof(Car));
+    }
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
     public virtual ICollection<Carclient> Carclients { get; set; } = new List<Carclient>();
 }

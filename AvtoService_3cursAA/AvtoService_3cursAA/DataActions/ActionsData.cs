@@ -182,6 +182,27 @@ namespace AvtoService_3cursAA.ActionsForEmployee
             }
         }
 
+        public static void EditCar(string brand, string model, string country, short year, string description, ImageSource image, Car car)
+        {
+            using (var dbContext = new Avtoservice3cursAaContext())
+            {
+                var thisCar = dbContext.Cars.First(r => r.IdCar == car.IdCar);
+
+                byte[] newImage = ImageSourceToBytes(image);
+
+                thisCar.Brand = brand;
+                thisCar.Model = model;
+                thisCar.Country = country;
+                thisCar.Year = year;
+                thisCar.Description = description;
+                thisCar.Photo = newImage;
+
+                MessageBox.Show($"Машина «{thisCar.Brand} {thisCar.Model}» успешно отредактирована!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                dbContext.Update(thisCar);
+                dbContext.SaveChanges();
+            }
+        }
+
         public static void OpenImage(Image image)
         {
             var selectImage = new OpenFileDialog();

@@ -50,6 +50,11 @@ namespace AvtoService_3cursAA.PagesMenuOperator
                             .ThenInclude(cc => cc.IdCarNavigation)
                             .ToList();
 
+            foreach (var client in clientList)
+            {
+                client.UpdateCar(); // Обновляем поле Car
+            }
+
             clientList = _dataFilterSorter.ApplySorter(clientList);
             clientList = _dataFilterSorter.ApplySearch(clientList);
 
@@ -61,7 +66,10 @@ namespace AvtoService_3cursAA.PagesMenuOperator
         {
             // dbContext load
             dbContext = new();
-            dbContext.Clients.Load();
+            dbContext.Clients
+            .Include(c => c.Carclients)
+            .ThenInclude(cc => cc.IdCarNavigation)
+            .Load();
 
             // ComboBoxes load
             var sorterList = FillDataFilterSorter.FillSorterClient();

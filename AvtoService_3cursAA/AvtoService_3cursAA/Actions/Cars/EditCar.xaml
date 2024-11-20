@@ -1,0 +1,217 @@
+﻿<Window x:Class="AvtoService_3cursAA.Actions.Cars.EditCar"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AvtoService_3cursAA.Actions.Cars"
+        
+        xmlns:MyUserControl="clr-namespace:AvtoService_3cursAA.CustomsElementsWpf"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+ 
+        Title="Редактирование услуги" 
+        Height="950" Width="1000" 
+        MinHeight="950" MinWidth="600" 
+        Closed="Window_Closed"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <Style 
+            TargetType="{x:Type TextBox}" 
+            BasedOn="{StaticResource ActionTextBox}"/>
+
+        <Style 
+            TargetType="{x:Type TextBlock}"
+            BasedOn="{StaticResource ActionTextBlock}"/>
+
+        <Style 
+            TargetType="materialDesign:PackIcon"
+            BasedOn="{StaticResource IconsActions}"/>
+
+    </Window.Resources>
+
+    <Grid Background="#ffffff">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="280"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <!-- Image of price-->
+        <Grid 
+            Grid.Row="0"
+            Grid.RowSpan="2">
+
+            <DockPanel 
+                LastChildFill="False"
+                HorizontalAlignment="Right"
+                Panel.ZIndex="1"
+                VerticalAlignment="Bottom"
+                Margin="0 0 25 60">
+
+                <Grid DockPanel.Dock="Right">
+                    <Button 
+                        Style="{StaticResource DeleteButton}"
+                        Click="Delete_Click"/>
+                    <materialDesign:PackIcon 
+                        Kind="Trash"
+                        Style="{StaticResource CardIconStyle}"/>
+                </Grid>
+
+                <Grid 
+                    DockPanel.Dock="Right"
+                    Margin="0 0 10 0">
+                    <Button 
+                        Style="{StaticResource EditButton}"
+                        Click="ImageChange_Click"/>
+                    <materialDesign:PackIcon 
+                        Kind="Edit"
+                        Style="{StaticResource CardIconStyle}"/>
+                </Grid>
+            </DockPanel>
+            <Image 
+                Source="{Binding Photo}"
+                x:Name="ImageCar"
+                Stretch="UniformToFill"
+                Panel.ZIndex="0"/>
+        </Grid>
+        <Grid 
+            Grid.Row="1" 
+            Opacity="0" 
+            IsHitTestVisible="False"/>
+        <!-- Other present -->
+        <Grid 
+            Grid.Row="1"
+            Grid.RowSpan="2">
+
+            <Border 
+                CornerRadius="30 30 0 0"
+                Background="White"
+                Effect="{StaticResource dropShadowBorder}"
+                Panel.ZIndex="2"/>
+            <Border 
+                CornerRadius="30 30 0 0"
+                BorderBrush="#30000000"
+                BorderThickness="2"
+                Panel.ZIndex="3">
+
+                <DockPanel 
+                    HorizontalAlignment="Center"
+                    Width="800"
+                    Margin="0 60"
+                    LastChildFill="False">
+
+                    <RichTextBox 
+                        FontSize="30" 
+                        BorderThickness="0"
+                        DockPanel.Dock="Top"
+                        Margin="0 0 0 30"
+                        IsReadOnly="True" 
+                        VerticalAlignment="Top">
+
+                        <FlowDocument>
+                            <Paragraph TextAlignment="Center">
+                                <Run 
+                                    Text="Редактирование авто" 
+                                    FontFamily="Arial Rounded MT Bold"/>
+                            </Paragraph>
+                        </FlowDocument>
+                    </RichTextBox>
+
+                    <Grid DockPanel.Dock="Top">
+                        
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <StackPanel Grid.Column="0">
+                            <StackPanel>
+                                <TextBlock Text="Бренд *"/>
+                                <Grid>
+                                    <TextBox 
+                                        x:Name="BrandTextBox"
+                                        Text="{Binding Brand}"/>
+                                    <materialDesign:PackIcon Kind="Edit"/>
+                                </Grid>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <TextBlock Text="Модель *"/>
+                                <Grid>
+                                    <TextBox 
+                                        x:Name="ModelTextBox"
+                                        Text="{Binding Model}"/>
+                                    <materialDesign:PackIcon Kind="Edit"/>
+                                </Grid>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <TextBlock Text="Страна производства *"/>
+                                <Grid>
+                                    <TextBox 
+                                        x:Name="CountryTextBox"
+                                        Text="{Binding Country}"
+                                        PreviewTextInput="TextBox_PreviewTextInput"
+                                        DataObject.Pasting="TextBox_Pasting"/>
+                                    <materialDesign:PackIcon Kind="World"/>
+                                </Grid>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <TextBlock Text="Год производства *"/>
+                                <Grid>
+                                    <TextBox 
+                                        x:Name="YearTextBox"
+                                        Text="{Binding Year}"
+                                        PreviewTextInput="NumberTextBox_PreviewTextInput"
+                                        DataObject.Pasting="NumberTextBox_Pasting"/>
+                                    <materialDesign:PackIcon Kind="Clock"/>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            
+                            
+                            <StackPanel>
+                                <TextBlock Text="Описание"/>
+                                <Grid>
+                                    <TextBox 
+                                        VerticalAlignment="Top"
+                                        TextWrapping="Wrap"
+                                        MaxLength="120"
+                                        Height="90"
+                                        x:Name="DescriptionTextBox"
+                                        Text="{Binding Description}"
+                                        PreviewTextInput="DescriptionTextBox_PreviewTextInput"
+                                        DataObject.Pasting="DescriptionTextBox_Pasting"/>
+                                    <materialDesign:PackIcon Kind="Edit"/>
+                                </Grid>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </Grid>
+
+
+                    <Button 
+                        Width="300"
+                        Content="Выйти"
+                        x:Name="ButtonExit"
+                        Click="ButtonExit_Click"
+                        DockPanel.Dock="Bottom"
+                        Margin="40 20"
+                        Style="{StaticResource AuythButtonExitAct}"/>
+                    <Button 
+                        Width="300"
+                        Content="Сохранить изменения"
+                        x:Name="ButtonAdd"
+                        Click="ButtonAdd_Click"
+                        DockPanel.Dock="Bottom"
+                        Margin="40 0"
+                        Style="{StaticResource AuthButtonAct}"/>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

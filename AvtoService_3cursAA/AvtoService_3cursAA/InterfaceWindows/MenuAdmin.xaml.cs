@@ -52,6 +52,9 @@ namespace AvtoService_3cursAA
                 case 4:
                     ContentFrame.Navigate(new DetailAdmin(_employee));
                     break;
+                case 5:
+                    ContentFrame.Navigate(new CarAdmin(_employee));
+                    break;
             }
         }
 
@@ -91,6 +94,11 @@ namespace AvtoService_3cursAA
         private void ButtonDetail_Click(object sender, RoutedEventArgs e)
         {
             ChoosePage(4);
+        }
+
+        private void ButtonCar_Click(object sender, RoutedEventArgs e)
+        {
+            ChoosePage(5);
         }
     }
 }
