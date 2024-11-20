@@ -1,4 +1,6 @@
-﻿using AvtoService_3cursAA.ActionsEmployee;
+﻿using AvtoService_3cursAA.Actions.Details;
+using AvtoService_3cursAA.Actions.Prices;
+using AvtoService_3cursAA.ActionsEmployee;
 using AvtoService_3cursAA.ActionsForEmployee;
 using AvtoService_3cursAA.Classes;
 using AvtoService_3cursAA.Model;
@@ -137,6 +139,14 @@ namespace AvtoService_3cursAA.PagesMenuOperator
         {
             if (ListViewItems.Items != null)
                 UpdateItemsListView();
+        }
+
+        private void AddPrice_Click(object sender, RoutedEventArgs e)
+        {
+            AddPrice window = new AddPrice();
+            window.ShowDialog();
+
+            UpdateItemsListView();
         }
     }
 }

@@ -1,11 +1,8 @@
 ﻿using AvtoService_3cursAA.ActionsForEmployee;
-using AvtoService_3cursAA.CustomsElementsWpf;
 using AvtoService_3cursAA.DataActions;
 using AvtoService_3cursAA.Model;
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,14 +14,13 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Xml.Linq;
 
-namespace AvtoService_3cursAA.Actions
+namespace AvtoService_3cursAA.Actions.Details
 {
     /// <summary>
-    /// Логика взаимодействия для EditPrice.xaml
+    /// Логика взаимодействия для AddDetail.xaml
     /// </summary>
-    public partial class EditPrice : Window
+    public partial class AddDetail : Window
     {
         private string Name => NameTextBox.Text;
         private int Cost
@@ -38,25 +34,26 @@ namespace AvtoService_3cursAA.Actions
                 return 0;
             }
         }
-        private ImageSource Image => ImagePrice.Source;
+        private int Count
+        {
+            get
+            {
+                if (int.TryParse(CountTextBox.Text, out int value))
+                {
+                    return value;
+                }
+                return 0;
+            }
+        }
+        private ImageSource Image => ImageDetail.Source;
 
-        string _file = "pack://application:,,,/AvtoService_3cursAA;component/Images/NoImagePrice.jpg";
-        public Price _selectedPriceEdit;
+        string _file = "pack://application:,,,/AvtoService_3cursAA;component/Images/NoImageDetail.jpg";
         Avtoservice3cursAaContext dbContext;
 
-        public EditPrice(Price selectedPrice)
+        public AddDetail()
         {
-            _selectedPriceEdit = selectedPrice; 
-
             dbContext = new();
             InitializeComponent();
-
-            DataContext = _selectedPriceEdit;
-
-            if (_selectedPriceEdit.Photo == null)
-            {
-                ImagePrice.Source = new BitmapImage(new Uri(_file, UriKind.Absolute));
-            }
         }
 
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
@@ -67,7 +64,7 @@ namespace AvtoService_3cursAA.Actions
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
             if (!DataValidate()) return;
-            ActionsUsers.EditPrice(Name, Cost, Image, _selectedPriceEdit);
+            ActionsData.AddDetail(Name, Cost, Count, Image);
             this.Close();
         }
 
@@ -76,20 +73,14 @@ namespace AvtoService_3cursAA.Actions
             dbContext = new();
             List<string> errorsList = new();
 
-            if (string.IsNullOrWhiteSpace(Name))
+            if (string.IsNullOrWhiteSpace(Name) || Cost == 0 || Count == 0)
             {
                 errorsList.Add("Заполните все обязательные поля");
             }
 
-            if (dbContext.Prices.Any(r => r.Name.Replace(" ", "").ToLower() == Name.Replace(" ", "").ToLower()
-            && r.IdPrice != _selectedPriceEdit.IdPrice))
+            if (dbContext.Details.Any(r => r.Name.Replace(" ", "").ToLower() == Name.Replace(" ", "").ToLower()))
             {
-                errorsList.Add("Такая услуга уже существует");
-            }
-
-            if (Cost < 1000 || Cost > 9999)
-            {
-                errorsList.Add("Цена должна быть в диапозоне 1000 руб. - 9999 руб.");
+                errorsList.Add("Такая деталь уже существует, измените наименование");
             }
 
             if (errorsList.Count > 0)
@@ -129,12 +120,12 @@ namespace AvtoService_3cursAA.Actions
 
         private void ImageChange_Click(object sender, RoutedEventArgs e)
         {
-            ActionsUsers.OpenImage(ImagePrice);
+            ActionsData.OpenImage(ImageDetail);
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            ImagePrice.Source = new BitmapImage(new Uri(_file, UriKind.Absolute));
+            ImageDetail.Source = new BitmapImage(new Uri(_file, UriKind.Absolute));
         }
     }
 }

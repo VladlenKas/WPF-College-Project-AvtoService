@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using AvtoService_3cursAA.ActionsForEmployee;
+﻿using AvtoService_3cursAA.ActionsForEmployee;
 using AvtoService_3cursAA.DataActions;
 using AvtoService_3cursAA.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,14 +15,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using AvtoService_3cursAA.CustomsElementsWpf;
 
 namespace AvtoService_3cursAA.ActionsEmployee
 {
     /// <summary>
-    /// Логика взаимодействия для EditEmployee.xaml
+    /// Логика взаимодействия для AddEmployee.xaml
     /// </summary>
-    public partial class EditEmployee : Window
+    
+    public partial class AddEmployee : Window
     {
         private string Name => NameTextBox.Text;
         private string Firstname => FirstnameTextBox.Text;
@@ -30,53 +30,46 @@ namespace AvtoService_3cursAA.ActionsEmployee
         private string Birthday => BirthdayTextBox.Text;
         private string Seniority => SeniorityTextBox.Text;
         private string Role => RoleComboBox.Text;
+        private string Login => LoginTextBox.Text;
         private string Passport => PassportTextBox.Text.Replace(" ", "");
         private string Phone => PhoneTextBox.Text.Replace(" ", "");
-        private string Login => LoginTextBox.Text;
         private string Password => PassVisTextBox.Visibility is Visibility.Visible ? PassVisTextBox.Text : PassHidTextBox.Password;
 
         private Avtoservice3cursAaContext dbContext;
-        private Employee _selectedEmployee;
-        private Employee _thisEmployee;
-
-        public EditEmployee(Employee selectedEmployee, Employee thisEmployee)
+        private Employee _thisUser;
+        public AddEmployee(Employee employee)
         {
-            _selectedEmployee = selectedEmployee;
-            _thisEmployee = thisEmployee;
+            _thisUser = employee;
 
             InitializeComponent();
+
             dbContext = new();
-
-            if (_selectedEmployee.IdEmployee == _thisEmployee.IdEmployee)
-            {
-                LoginTextBox.IsHitTestVisible = false;
-                LoginTextBox.Foreground = new SolidColorBrush(Colors.Gray);
-                RoleComboBox.IsHitTestVisible = false;
-                RoleComboBox.Foreground = new SolidColorBrush(Colors.Gray);
-            }
-
-            NameTextBox.Text = _selectedEmployee.Name;
-            FirstnameTextBox.Text = _selectedEmployee.Firstname;
-            PatronymicTextBox.Text = _selectedEmployee.Patronymic;
-            BirthdayTextBox.Text = _selectedEmployee.Birthday.ToString().Replace("/", ".");
-            SeniorityTextBox.Text = _selectedEmployee.Seniority.ToString();
-            PassportTextBox.Text = _selectedEmployee.Passport;
-            PhoneTextBox.Text = _selectedEmployee.Phone;
-            RoleComboBox.SelectedItem = _selectedEmployee.IdRoleNavigation.Name;
-            LoginTextBox.Text = _selectedEmployee.Login;
-            PassHidTextBox.Password = _selectedEmployee.Password;
-
             var rolesList = dbContext.Roles.Select(r => r.Name).ToList();
             RoleComboBox.ItemsSource = null;
             RoleComboBox.ItemsSource = rolesList;
         }
 
-        private void ButtonSave_Click(object sender, RoutedEventArgs e)
+        private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
             if (!DataValidate()) return;
-            ActionsUsers.EditEmployee(Name, Firstname, Patronymic, Birthday, Seniority, Role, Passport, Phone, Login, Password, _selectedEmployee);
+            ActionsData.AddEmployee(Name, Firstname, Patronymic, Birthday, Seniority, Role, Passport, Phone, Login, Password);
 
             this.Close();
+        }
+
+        private void ButtonExit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void HidePassCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            ActionsTextBox.HiddenPassword(HidePassCheckBox, PassHidTextBox, PassVisTextBox);
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            dbContext.Dispose();
         }
 
         private bool DataValidate()
@@ -84,7 +77,7 @@ namespace AvtoService_3cursAA.ActionsEmployee
             dbContext = new Avtoservice3cursAaContext();
             List<string> errorsList = new List<string>();
 
-            if (new[] { Name, Firstname, Birthday, Seniority, Role, Login, Password }.Any(string.IsNullOrWhiteSpace))
+            if (new[] { Name, Firstname, Birthday, Seniority, Role, Passport, Phone, Login, Password }.Any(string.IsNullOrWhiteSpace))
             {
                 errorsList.Add("Заполните все обязательные поля");
             }
@@ -108,23 +101,23 @@ namespace AvtoService_3cursAA.ActionsEmployee
 
             if (Passport.Length < 10)
             {
-                errorsList.Add("Паспорт должен состоять из 10 цифр");
+                errorsList.Add("Номер телефона должен состоять из 10 цифр");
             }
-            if (dbContext.Employees.Any(r => r.Passport == Passport && r.IdEmployee != _selectedEmployee.IdEmployee))
+            if (dbContext.Employees.Any(r => r.Passport == Passport))
             {
-                errorsList.Add("Выбранный номер телефона уже существует. Пожалуйста, выберите другой");
+                errorsList.Add("Выбранный паспорт уже существует. Пожалуйста, выберите другой");
             }
 
             if (Phone.Length < 11)
             {
                 errorsList.Add("Номер телефона должен состоять из 11 цифр");
             }
-            if (dbContext.Employees.Any(r => r.Phone == Phone && r.IdEmployee != _selectedEmployee.IdEmployee))
+            if (dbContext.Employees.Any(r => r.Phone == Phone))
             {
                 errorsList.Add("Выбранный номер телефона уже существует. Пожалуйста, выберите другой");
             }
 
-            if (dbContext.Employees.Any(r => r.Login == Login && r.IdEmployee != _selectedEmployee.IdEmployee))
+            if (dbContext.Employees.Any(r => r.Login == Login))
             {
                 errorsList.Add("Пользователь с таким логином уже существует\nПожалуйста, измените логин");
             }
@@ -137,21 +130,6 @@ namespace AvtoService_3cursAA.ActionsEmployee
                 return false;
             }
             return true;
-        }
-
-        private void ButtonExit_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void HidePassCheckBox_Click(object sender, RoutedEventArgs e)
-        {
-            ActionsTextBox.HiddenPassword(HidePassCheckBox, PassHidTextBox, PassVisTextBox);
-        }
-
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            dbContext.Dispose();
         }
 
         private void SeniorityTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)

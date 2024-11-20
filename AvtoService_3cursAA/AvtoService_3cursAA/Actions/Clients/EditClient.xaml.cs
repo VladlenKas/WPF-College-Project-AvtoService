@@ -1,6 +1,8 @@
 ﻿using AvtoService_3cursAA.ActionsForEmployee;
+using AvtoService_3cursAA.CustomsElementsWpf;
 using AvtoService_3cursAA.DataActions;
 using AvtoService_3cursAA.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +20,9 @@ using System.Windows.Shapes;
 namespace AvtoService_3cursAA.Actions
 {
     /// <summary>
-    /// Логика взаимодействия для AddClient.xaml
+    /// Логика взаимодействия для EditClient.xaml
     /// </summary>
-    public partial class AddClient : Window
+    public partial class EditClient : Window
     {
         private string Name => NameTextBox.Text;
         private string Firstname => FirstnameTextBox.Text;
@@ -28,11 +30,20 @@ namespace AvtoService_3cursAA.Actions
         private string Birthday => BirthdayTextBox.Text;
         private string Phone => PhoneTextBox.Text;
 
-        private Avtoservice3cursAaContext dbContext;
-        public AddClient()
+        Client _selectedClient;
+        Avtoservice3cursAaContext dbContext;
+        public EditClient(Client selectedClient)
         {
+            _selectedClient = selectedClient;
             dbContext = new();
+
             InitializeComponent();
+
+            NameTextBox.Text = _selectedClient.Name;
+            FirstnameTextBox.Text = _selectedClient.Firstname;
+            PatronymicTextBox.Text = _selectedClient.Patronymic;
+            BirthdayTextBox.Text = _selectedClient.Birthday.ToString().Replace("/", ".");
+            PhoneTextBox.Text = _selectedClient.Phone.ToString();
         }
 
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
@@ -43,15 +54,18 @@ namespace AvtoService_3cursAA.Actions
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
             if (!DataValidate()) return;
-            ActionsUsers.AddClient(Name, Firstname, Patronymic, Birthday, Phone);
+
+            ActionsData.EditClient(Name, Firstname, Patronymic, Birthday, Phone, _selectedClient);
 
             this.Close();
         }
 
         private bool DataValidate()
         {
-            dbContext = new Avtoservice3cursAaContext();
-            List<string> errorsList = new List<string>();
+
+
+            dbContext = new();
+            List<string> errorsList = new();
 
             if (new[] { Name, Firstname, Birthday, Phone }.Any(string.IsNullOrWhiteSpace))
             {
@@ -74,10 +88,6 @@ namespace AvtoService_3cursAA.Actions
             if (Phone.Replace(" ", "").Length < 11)
             {
                 errorsList.Add("Номер телефона должен состоять из 11 цифр");
-            }
-            if (dbContext.Clients.Any(r => r.Phone != Phone.Replace(" ", "")))
-            {
-                errorsList.Add("Выбранный номер телефона уже существует. Пожалуйста, выберите другой");
             }
 
             if (errorsList.Count > 0)

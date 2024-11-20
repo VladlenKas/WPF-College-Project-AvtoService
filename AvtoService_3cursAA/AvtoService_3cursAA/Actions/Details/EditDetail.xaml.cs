@@ -74,7 +74,7 @@ namespace AvtoService_3cursAA.Actions
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
             if (!DataValidate()) return;
-            ActionsUsers.EditDetail(Name, Cost, Count, Image, _selectedDetailEdit);
+            ActionsData.EditDetail(Name, Cost, Count, Image, _selectedDetailEdit);
             this.Close();
         }
 
@@ -131,7 +131,7 @@ namespace AvtoService_3cursAA.Actions
 
         private void ImageChange_Click(object sender, RoutedEventArgs e)
         {
-            ActionsUsers.OpenImage(ImageDetail);
+            ActionsData.OpenImage(ImageDetail);
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)

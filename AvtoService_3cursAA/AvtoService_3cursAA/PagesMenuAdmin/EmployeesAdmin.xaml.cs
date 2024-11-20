@@ -143,7 +143,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             }
             else
             {
-                ActionsUsers.DeleteUser(_selectUser);
+                ActionsData.DeleteUser(_selectUser);
                 _selectUser = null;
                 UpdateEmployeesList();
             }

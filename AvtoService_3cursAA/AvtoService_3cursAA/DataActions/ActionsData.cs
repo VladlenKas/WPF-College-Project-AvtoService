@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 
 namespace AvtoService_3cursAA.ActionsForEmployee
 {
-    public static class ActionsUsers
+    public static class ActionsData
     {
         private static Avtoservice3cursAaContext dbContext;
         public static void DeleteUser(object user)
@@ -110,6 +110,24 @@ namespace AvtoService_3cursAA.ActionsForEmployee
             dbContext.SaveChanges();
         }
 
+        public static void AddPrice(string name, int cost, ImageSource image)
+        {
+            using (var dbContext = new Avtoservice3cursAaContext())
+            {
+                var newPrice = new Price
+                {
+                    Name = name,
+                    Cost = cost,
+                    Photo = ImageSourceToBytes(image)
+                };
+
+                dbContext.Prices.Add(newPrice);
+                dbContext.SaveChanges();
+
+                MessageBox.Show($"Услуга «{newPrice.Name}» успешно добавлена!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
         public static void EditPrice(string name, int cost, ImageSource image, Price price)
         {
             dbContext = new();
@@ -124,6 +142,25 @@ namespace AvtoService_3cursAA.ActionsForEmployee
             MessageBox.Show($"Услуга «{ thisPrice.Name}» успешно отредактирована!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
             dbContext.Update(thisPrice);
             dbContext.SaveChanges();
+        }
+
+        public static void AddDetail(string name, int cost, int count, ImageSource image)
+        {
+            using (var dbContext = new Avtoservice3cursAaContext())
+            {
+                var newDetail = new Detail
+                {
+                    Name = name,
+                    Cost = cost,
+                    Count = count,
+                    Photo = ImageSourceToBytes(image)
+                };
+
+                dbContext.Details.Add(newDetail);
+                dbContext.SaveChanges();
+
+                MessageBox.Show($"Деталь «{newDetail.Name}» успешно добавлена!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         public static void EditDetail(string name, int cost, int count, ImageSource image, Detail detail)

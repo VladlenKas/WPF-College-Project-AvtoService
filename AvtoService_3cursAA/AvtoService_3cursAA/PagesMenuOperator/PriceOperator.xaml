@@ -173,6 +173,19 @@
                             IsHitTestVisible="False"
                             Foreground="#70000000"/>
                     </Grid>
+
+                    <!-- Button add -->
+                    <Button DockPanel.Dock="Right"
+                            Style="{StaticResource AuthButton}"
+                            x:Name="AddClient"
+                            Click="AddPrice_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Add"
+                                                     Margin="0"/>
+                            <TextBlock Text="Добавить" 
+                                       Style="{StaticResource MenuTextBlock}"/>
+                        </StackPanel>
+                    </Button>
                 </DockPanel>
             </Grid>
 

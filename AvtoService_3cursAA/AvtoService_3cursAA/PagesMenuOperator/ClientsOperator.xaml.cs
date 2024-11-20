@@ -102,7 +102,7 @@ namespace AvtoService_3cursAA.PagesMenuOperator
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            ActionsUsers.DeleteUser(_selectUser);
+            ActionsData.DeleteUser(_selectUser);
             _selectUser = null;
             UpdateClientsList();
         }

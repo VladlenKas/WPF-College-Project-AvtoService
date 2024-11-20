@@ -1,4 +1,6 @@
-﻿using AvtoService_3cursAA.ActionsForEmployee;
+﻿using AvtoService_3cursAA.Actions;
+using AvtoService_3cursAA.Actions.Details;
+using AvtoService_3cursAA.ActionsForEmployee;
 using AvtoService_3cursAA.Classes;
 using AvtoService_3cursAA.Model;
 using AvtoService_3cursAA.UserControls.DetailUC;
@@ -27,7 +29,6 @@ namespace AvtoService_3cursAA.PagesMenuOperator
     public partial class DetailOperator : Page
     {
         private Avtoservice3cursAaContext dbContext;
-        private Employee _selectUser;
         private Employee _thisUser;
 
         private DetailFilter detailFilter;
@@ -104,32 +105,13 @@ namespace AvtoService_3cursAA.PagesMenuOperator
         private void StartCostTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (ListViewItems.Items != null)
-            {
-                var cost = StartCostTextBox.Text;
-                if (int.TryParse(cost, out int parsedCost))
-                {
-                    if (parsedCost > 999)
-                        UpdateItemsListView();
-                }
-                else if (string.IsNullOrEmpty(cost))
-                    UpdateItemsListView();
-            }
+                UpdateItemsListView();
         }
 
         private void FinishCostTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (ListViewItems.Items != null)
-            {
                 UpdateItemsListView();
-                var cost = FinishCostTextBox.Text;
-                if (int.TryParse(cost, out int parsedCost))
-                {
-                    if (parsedCost > 999)
-                        UpdateItemsListView();
-                }
-                else if (string.IsNullOrEmpty(cost))
-                    UpdateItemsListView();
-            }
         }
 
         private void SortCheckBox_Click(object sender, RoutedEventArgs e)
@@ -142,6 +124,14 @@ namespace AvtoService_3cursAA.PagesMenuOperator
         {
             if (ListViewItems.Items != null)
                 UpdateItemsListView();
+        }
+
+        private void AddDetail_Click(object sender, RoutedEventArgs e)
+        {
+            AddDetail window = new AddDetail();
+            window.ShowDialog();
+
+            UpdateItemsListView();
         }
     }
 }

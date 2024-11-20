@@ -48,6 +48,7 @@ namespace AvtoService_3cursAA.UserControls.PriceUC
             editPrice.ShowDialog();
 
             DataLoad();
+            RemovePriceRequested?.Invoke(this, new PriceEventArgs { Price = this.Price }); // Уведомляем родительское окно
         }
 
         private void DataLoad()

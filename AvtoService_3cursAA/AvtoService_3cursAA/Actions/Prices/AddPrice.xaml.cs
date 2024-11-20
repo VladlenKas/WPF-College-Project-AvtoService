@@ -1,8 +1,6 @@
 ﻿using AvtoService_3cursAA.ActionsForEmployee;
-using AvtoService_3cursAA.CustomsElementsWpf;
 using AvtoService_3cursAA.DataActions;
 using AvtoService_3cursAA.Model;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,33 +15,34 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace AvtoService_3cursAA.Actions
+namespace AvtoService_3cursAA.Actions.Prices
 {
     /// <summary>
-    /// Логика взаимодействия для EditClient.xaml
+    /// Логика взаимодействия для AddPrice.xaml
     /// </summary>
-    public partial class EditClient : Window
+    public partial class AddPrice : Window
     {
         private string Name => NameTextBox.Text;
-        private string Firstname => FirstnameTextBox.Text;
-        private string Patronymic => PatronymicTextBox.Text;
-        private string Birthday => BirthdayTextBox.Text;
-        private string Phone => PhoneTextBox.Text;
-
-        Client _selectedClient;
-        Avtoservice3cursAaContext dbContext;
-        public EditClient(Client selectedClient)
+        private int Cost
         {
-            _selectedClient = selectedClient;
+            get
+            {
+                if (int.TryParse(CostTextBox.Text, out int value))
+                {
+                    return value;
+                }
+                return 0;
+            }
+        }
+        private ImageSource Image => ImagePrice.Source;
+
+        string _file = "pack://application:,,,/AvtoService_3cursAA;component/Images/NoImagePrice.jpg";
+        Avtoservice3cursAaContext dbContext;
+
+        public AddPrice()
+        {
             dbContext = new();
-
             InitializeComponent();
-
-            NameTextBox.Text = _selectedClient.Name;
-            FirstnameTextBox.Text = _selectedClient.Firstname;
-            PatronymicTextBox.Text = _selectedClient.Patronymic;
-            BirthdayTextBox.Text = _selectedClient.Birthday.ToString().Replace("/", ".");
-            PhoneTextBox.Text = _selectedClient.Phone.ToString();
         }
 
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
@@ -54,40 +53,23 @@ namespace AvtoService_3cursAA.Actions
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
             if (!DataValidate()) return;
-
-            ActionsUsers.EditClient(Name, Firstname, Patronymic, Birthday, Phone, _selectedClient);
-
+            ActionsData.AddPrice(Name, Cost, Image);
             this.Close();
         }
 
         private bool DataValidate()
         {
-
-
             dbContext = new();
             List<string> errorsList = new();
 
-            if (new[] { Name, Firstname, Birthday, Phone }.Any(string.IsNullOrWhiteSpace))
+            if (string.IsNullOrWhiteSpace(Name) || Cost == 0)
             {
                 errorsList.Add("Заполните все обязательные поля");
             }
 
-            if (!DateOnly.TryParseExact(Birthday, "dd.MM.yyyy", out DateOnly dateOnly))
+            if (dbContext.Prices.Any(r => r.Name.Replace(" ", "").ToLower() == Name.Replace(" ", "").ToLower()))
             {
-                errorsList.Add("Указан неверный формат даты\nПожалуйста, заполните дату в соответствии с форматом в подсказке");
-            }
-            else
-            {
-                int age = ActionsTextBox.CalculateAge(dateOnly);
-                if (age < 18 || age > 100)
-                {
-                    errorsList.Add("Возраст должен быть от 18 до 100 лет");
-                }
-            }
-
-            if (Phone.Replace(" ", "").Length < 11)
-            {
-                errorsList.Add("Номер телефона должен состоять из 11 цифр");
+                errorsList.Add("Такая услуга уже существует");
             }
 
             if (errorsList.Count > 0)
@@ -113,6 +95,26 @@ namespace AvtoService_3cursAA.Actions
         private void TextBox_Pasting(object sender, DataObjectPastingEventArgs e)
         {
             ActionsTextBox.ValidatePasteCyrillic(e);
+        }
+
+        private void NumberTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            ActionsTextBox.ValidateInputNumbers(e);
+        }
+
+        private void NumberTextBox_Pasting(object sender, DataObjectPastingEventArgs e)
+        {
+            ActionsTextBox.ValidatePasteNumbers(e);
+        }
+
+        private void ImageChange_Click(object sender, RoutedEventArgs e)
+        {
+            ActionsData.OpenImage(ImagePrice);
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            ImagePrice.Source = new BitmapImage(new Uri(_file, UriKind.Absolute));
         }
     }
 }
