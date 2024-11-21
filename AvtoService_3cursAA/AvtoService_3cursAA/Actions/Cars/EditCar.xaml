@@ -9,7 +9,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
  
         Title="Редактирование услуги" 
-        Height="950" Width="1000" 
+        Height="1000" Width="1000" 
         MinHeight="950" MinWidth="600" 
         Closed="Window_Closed"
         WindowStartupLocation="CenterScreen">
@@ -27,6 +27,9 @@
             TargetType="materialDesign:PackIcon"
             BasedOn="{StaticResource IconsActions}"/>
 
+        <Style 
+            TargetType="{x:Type ComboBox}" 
+            BasedOn="{StaticResource ComboBoxAction}"/>
     </Window.Resources>
 
     <Grid Background="#ffffff">
@@ -172,8 +175,6 @@
                         </StackPanel>
 
                         <StackPanel Grid.Column="2">
-                            
-                            
                             <StackPanel>
                                 <TextBlock Text="Описание"/>
                                 <Grid>
@@ -190,6 +191,45 @@
                                 </Grid>
                             </StackPanel>
 
+                            <DockPanel
+                                LastChildFill="True">
+                                <TextBlock 
+                                    DockPanel.Dock="Top"
+                                    Text="Все клиенты (выбор)"/>
+                                
+                                <Grid DockPanel.Dock="Top">
+                                    <ComboBox 
+                                        DisplayMemberPath="Name" 
+                                        IsTextSearchEnabled="False" 
+                                        StaysOpenOnEdit="True"
+                                        IsEditable="True"
+                                        VerticalAlignment="Top"
+                                        x:Name="ClientsComboBox"
+                                        PreviewTextInput="TextBox_PreviewTextInput"
+                                        DataObject.Pasting="TextBox_Pasting"/>
+                                    <materialDesign:PackIcon Kind="User"/>
+                                </Grid>
+
+                                <TextBlock 
+                                    DockPanel.Dock="Top"
+                                    Text="Привязанные клиенты *"/>
+                                <Grid DockPanel.Dock="Top">
+                                    <Border
+                                        MinHeight="60"
+                                        Height="Auto"
+                                        Effect="{StaticResource dropShadow}"
+                                        BorderBrush="LightGray"
+                                        BorderThickness="1.5"
+                                        CornerRadius="20"
+                                        Background="#ffffff"/>
+
+                                    <Border Margin="15">
+                                        <ItemsControl 
+                                        Name="ListSelectClients"
+                                            />
+                                    </Border>
+                                </Grid>
+                            </DockPanel>
                         </StackPanel>
                     </Grid>
 

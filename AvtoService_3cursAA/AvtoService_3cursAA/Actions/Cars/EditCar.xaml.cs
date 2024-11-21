@@ -1,6 +1,7 @@
 ﻿using AvtoService_3cursAA.ActionsForEmployee;
 using AvtoService_3cursAA.DataActions;
 using AvtoService_3cursAA.Model;
+using AvtoService_3cursAA.PagesMenuOperator.DataManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,7 @@ namespace AvtoService_3cursAA.Actions.Cars
 
         string _file = "pack://application:,,,/AvtoService_3cursAA;component/Images/NoImageCar.jpg";
         public Car _selectedCarEdit;
+        private ClientManager clientManager;
         Avtoservice3cursAaContext dbContext;
 
         public EditCar(Car selectedCar)
@@ -56,7 +58,10 @@ namespace AvtoService_3cursAA.Actions.Cars
             {
                 ImageCar.Source = new BitmapImage(new Uri(_file, UriKind.Absolute));
             }
+
+            clientManager = new ClientManager(ListSelectClients, ClientsComboBox, this, _selectedCarEdit);
         }
+        public void DeletePriceInPriceView(Client client) => clientManager.DeleteClientInDetailView(client);
 
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
         {

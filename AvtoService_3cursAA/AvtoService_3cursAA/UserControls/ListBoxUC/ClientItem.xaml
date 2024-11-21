@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="AvtoService_3cursAA.UserControls.CheckUC.ClientItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AvtoService_3cursAA.UserControls.CheckUC"
+             mc:Ignorable="d" 
+             
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             Height="Auto" Width="Auto">
+
+    <Border
+        Margin="0 2"
+        CornerRadius="10">
+
+        <DockPanel 
+            Margin="10 0"
+            VerticalAlignment="Center"
+            LastChildFill="False">
+
+            <TextBlock
+                Effect="{x:Null}"
+                VerticalAlignment="Center"
+                FontFamily="Calibri"
+                DockPanel.Dock="Left"
+                Text="{Binding FullName}" 
+                FontWeight="Bold"
+                FontSize="18"
+                Foreground="#000000"
+                Margin="0 0 5 0"/>
+            
+            <Grid DockPanel.Dock="Right" Margin="0 0 0 0">
+                <Button 
+                    Background="Transparent"
+                    Height="20"
+                    Width="20"
+                    Name="Delete"
+                    Style="{x:Null}"
+                    Click="Delete_Click"/>
+                <materialDesign:PackIcon 
+                    Foreground="{StaticResource RedFocus}"
+                    Height="15"
+                    Kind="CancelBold"
+                    Style="{StaticResource CardIconStyle}"/>
+            </Grid>
+        </DockPanel>
+    </Border>
+</UserControl>
+

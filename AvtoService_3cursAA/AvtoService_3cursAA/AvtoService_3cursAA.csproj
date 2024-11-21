@@ -56,6 +56,9 @@
     <Compile Update="UserControls\CarUC\CarCardEdit.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="UserControls\ListBoxUC\ClientItem.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="UserControls\PriceUC\PriceCardEdit.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

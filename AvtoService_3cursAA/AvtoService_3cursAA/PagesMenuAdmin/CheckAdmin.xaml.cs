@@ -48,15 +48,17 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             this._thisUser = employee;
         }
 
-        // работа с данными УСЛУГ
+        #region РАБОТА С УСЛУГАМИ
         public void DeletePriceInPriceView(Price price) => priceManager.DeletePriceInPriceView(price);
         private void PriceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) => priceManager?.PriceComboBox_SelectionChanged();
+        #endregion
 
-        // работа с данными ТОВАРОВ
+        #region РАБОТА С ДЕТАЛЯМИ
         public void DeleteDetailInDetailView(Detail detail) => detailManager.DeleteDetailInDetailView(detail);
         private void ComboBoxDetail_SelectionChanged(object sender, SelectionChangedEventArgs e) => detailManager?.ComboBoxDetails_SelectionChanged();
+        #endregion
 
-        // работа с данными ЗАЯВКАМИ
+        #region РАБОТА С ЗАЯВКАМИ
         private void ClientComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var comboBox = sender as ComboBox;
@@ -113,7 +115,9 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                 _selectStatus = dbContext.Statuses.First(c => c.Name == status);
             }
         }
+        #endregion
 
+        #region МЕТОДЫ ДЛЯ СТРАНИЦЫ
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             UserFio.Text = $"{_thisUser.FullName}";
@@ -171,5 +175,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
         private void ClearPriceList_Click(object sender, RoutedEventArgs e) =>
             priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, costPrices, this);
+        #endregion
     }
 }

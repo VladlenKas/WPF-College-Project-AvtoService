@@ -218,6 +218,18 @@
                                 </ToggleButton.Template>
                             </ToggleButton>
 
+                            <TextBox 
+                                x:Name="PART_EditableTextBox"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Margin="10 0 30 0"
+                                Padding="5 0"
+                                Focusable="True"
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                IsReadOnly="{TemplateBinding IsReadOnly}"
+                                Text="{Binding Path=Text, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"/>
+
                             <ContentPresenter Name="ContentSite"
                                               Content="{TemplateBinding SelectionBoxItem}"
                                               ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
@@ -230,7 +242,7 @@
                                             Effect="{x:Null}"   
                                             Text="{Binding}" 
                                             Style="{StaticResource MenuTextBlock}" 
-                                            IsHitTestVisible="False"/>
+                                            IsHitTestVisible="True"/>
                                     </DataTemplate>
                                 </ContentPresenter.ContentTemplate>
                             </ContentPresenter>

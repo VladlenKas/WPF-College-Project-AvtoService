@@ -1,6 +1,8 @@
 ﻿using AvtoService_3cursAA.ActionsForEmployee;
 using AvtoService_3cursAA.Classes;
 using AvtoService_3cursAA.Model;
+using AvtoService_3cursAA.PagesMenuAdmin.DataManagers;
+using AvtoService_3cursAA.PagesMenuOperator.DataManager;
 using AvtoService_3cursAA.UserControls.CarUC;
 using AvtoService_3cursAA.UserControls.DetailUC;
 using Microsoft.EntityFrameworkCore;
@@ -44,10 +46,9 @@ namespace AvtoService_3cursAA.PagesMenuOperator
         private void UpdateItemsListView()
         {
             dbContext = new Avtoservice3cursAaContext();
-
             carFilter = new CarFilter(SearchTextBox, ComboBoxSort, SortCheckBox); // Используем CarFilter
 
-            ObservableCollection<Car> itemsList = new ObservableCollection<Car>(dbContext.Cars.ToList()); // Изменено на Cars
+            ObservableCollection<Car> itemsList = new ObservableCollection<Car>(dbContext.Cars.Include(c => c.Carclients).ToList()); // Изменено на Cars
 
             itemsList = carFilter.ApplySorter(itemsList);
             itemsList = carFilter.ApplySearch(itemsList); // Удалены методы фильтрации по стоимости
@@ -65,13 +66,11 @@ namespace AvtoService_3cursAA.PagesMenuOperator
         private void DataLoad()
         {
             dbContext = new Avtoservice3cursAaContext();
-
-            dbContext.Cars.Load(); // Изменено на Cars
+            dbContext.Cars.Include(c => c.Carclients).Load(); // Изменено на Cars
 
             var sorterList = FillDataFilterSorter.FillSorterCars(); // Изменено на FillSorterCars
             ComboBoxSort.ItemsSource = sorterList;
         }
-
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             UserFio.Text = $"{_thisUser.FullName}";

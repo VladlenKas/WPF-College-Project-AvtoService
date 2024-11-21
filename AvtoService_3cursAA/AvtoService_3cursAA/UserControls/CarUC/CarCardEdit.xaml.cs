@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using AvtoService_3cursAA.Actions.Cars;
 using AvtoService_3cursAA.PagesMenuOperator;
+using Microsoft.EntityFrameworkCore;
 
 namespace AvtoService_3cursAA.UserControls.CarUC
 {
@@ -35,6 +36,9 @@ namespace AvtoService_3cursAA.UserControls.CarUC
 
         public CarCardEdit(Car car, CarOperator carOperator)
         {
+            dbContext = new();
+            dbContext.Cars.Include(c => c.Carclients).Load(); // Изменено на Cars
+
             _car = car;
             _parentWindow = carOperator;
 
@@ -44,7 +48,8 @@ namespace AvtoService_3cursAA.UserControls.CarUC
 
         private void Edit_Click(object sender, RoutedEventArgs e)
         {
-            EditCar editCar = new(_car);
+            dbContext.Cars.Include(c => c.Carclients).Load(); // Изменено на Cars
+            EditCar editCar = new EditCar(_car);
             editCar.ShowDialog();
 
             DataLoad();
@@ -78,6 +83,7 @@ namespace AvtoService_3cursAA.UserControls.CarUC
         private void DeleteCar()
         {
             dbContext = new();
+            dbContext.Cars.Include(c => c.Carclients).Load(); // Изменено на Cars
 
             // Найти все записи Carclient, связанные с удаляемой машиной
             var carClientsToRemove = dbContext.Carclients

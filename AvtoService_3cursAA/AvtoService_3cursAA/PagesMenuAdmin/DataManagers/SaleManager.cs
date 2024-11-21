@@ -13,6 +13,5 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         {
 
         }
-
     }
 }
