@@ -75,7 +75,7 @@ namespace AvtoService_3cursAA.Actions
             {
                 errorsList.Add("Номер телефона должен состоять из 11 цифр");
             }
-            if (dbContext.Clients.Any(r => r.Phone != Phone.Replace(" ", "")))
+            if (dbContext.Clients.Any(r => r.Phone == Phone.Replace(" ", "")))
             {
                 errorsList.Add("Выбранный номер телефона уже существует. Пожалуйста, выберите другой");
             }

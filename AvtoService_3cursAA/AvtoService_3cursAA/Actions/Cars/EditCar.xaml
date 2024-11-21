@@ -218,10 +218,8 @@
                                         CornerRadius="20"
                                         Background="#ffffff"/>
 
-                                    <Border Margin="15">
-                                        <ItemsControl 
-                                        Name="ListSelectClients"
-                                            />
+                                    <Border Margin="15" MaxHeight="150">
+                                        <ItemsControl Name="ListSelectClients"/>
                                     </Border>
                                 </Grid>
                             </DockPanel>

@@ -1,6 +1,7 @@
 ﻿using AvtoService_3cursAA.ActionsForEmployee;
 using AvtoService_3cursAA.DataActions;
 using AvtoService_3cursAA.Model;
+using AvtoService_3cursAA.PagesMenuAdmin.Collections;
 using AvtoService_3cursAA.PagesMenuOperator.DataManager;
 using System;
 using System.Collections.Generic;
@@ -71,7 +72,8 @@ namespace AvtoService_3cursAA.Actions.Cars
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
             if (!DataValidate()) return;
-            ActionsData.EditCar(Brand, Model, Country, Year, Description, Image, _selectedCarEdit);
+            ActionsData.EditCar(Brand, Model, Country, Year, Description, Image,
+                _selectedCarEdit, clientManager.ReturnClients());
             this.Close();
         }
 
@@ -92,6 +94,16 @@ namespace AvtoService_3cursAA.Actions.Cars
                 errorsList.Add("Такая машина уже существует");
             }
 
+            if (clientManager.ReturnClients().Count == 0)
+            {
+                errorsList.Add("Машина должна иметь хотя бы одного привязанного клиента");
+            }
+
+            if (clientManager.ReturnClients().Count > 3)
+            {
+                errorsList.Add("Машина не может иметь больше трех клиентов");
+            }
+
             if (errorsList.Count > 0)
             {
                 string errorText = errorsList.First();
@@ -99,6 +111,7 @@ namespace AvtoService_3cursAA.Actions.Cars
 
                 return false;
             }
+
             return true;
         }
 

@@ -15,6 +15,8 @@ using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using AvtoService_3cursAA.DataActions;
+using System.Xml.Linq;
 
 namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
 {
@@ -70,21 +72,30 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
 
         public ClientManager(ItemsControl listViewItems, ComboBox comboBoxClients, EditCar parentWindow, Car car)
         {
-            // Обновляем бд и подгружаем свзяи
-            dbContext = new();
-            dbContext.Cars.Include(c => c.Carclients).Load();
-
-            // Загрузка всех клиентов, кроме тех, которые уже привязаны к машине
-            var clientsAlreadyAssigned = car
-                .Carclients
-                .Select(cc => cc.IdClient)
-                .ToList();
-
             // иниализация элементов управления
             _listViewItems = listViewItems;
             _comboBoxClients = comboBoxClients;
             _parentWindow = parentWindow;
             _car = car;
+
+            ClientManager_Load();
+        }
+
+        #region МЕТОДЫ ДЛЯ РАБОЫ С КОЛЛЕКЦИЯМИ И СПИСКАМИ
+        /// <summary>
+        /// Настройка параметров для взаимодействия с коллекциями и списками
+        /// </summary>
+        private void ClientManager_Load()
+        {
+            // Обновляем бд и подгружаем свзяи
+            dbContext = new();
+            dbContext.Cars.Include(c => c.Carclients).Load();
+
+            // Загрузка всех клиентов, кроме тех, которые уже привязаны к машине
+            var clientsAlreadyAssigned = _car
+                .Carclients
+                .Select(cc => cc.IdClient)
+                .ToList();
 
             // инициализируем списки со всеми клиентами и список
             // для будущиъ отфильтрованных клиентов
@@ -93,7 +104,7 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
             FilteredClients = new ObservableCollection<Client>(listAllClients);
 
             // инициализиурем класс ClientCollection для работы с UserContol
-            clientCollection = new ClientCollection(parentWindow);
+            clientCollection = new ClientCollection(_parentWindow);
             // в качестве источника ресурсов указыаем нашу коллекицю пользователей
             // которую только что инициализировали
             _listViewItems.ItemsSource = clientCollection.Clients;
@@ -112,8 +123,8 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
 
             // ищем текстбокс внутри нашего комбобокса для того
             // чтобы обрабатывать вводимый текст
-            comboBoxClients.ApplyTemplate();
-            var textBox = comboBoxClients.Template.FindName("PART_EditableTextBox", comboBoxClients) as TextBox;
+            _comboBoxClients.ApplyTemplate();
+            var textBox = _comboBoxClients.Template.FindName("PART_EditableTextBox", _comboBoxClients) as TextBox;
             _searchTextBox = textBox;
 
             // подключаем тригеры
@@ -122,7 +133,17 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
         }
 
         /// <summary>
-        /// Метод для добавления 
+        /// Обновление списка 
+        /// </summary>
+        public void FillClients()
+        {
+            _comboBoxClients.ItemsSource = Clients; // Присваиваем список клиентов
+            _comboBoxClients.DisplayMemberPath = "FullName"; // Устанавливаем отображаемое свойство
+        }
+
+        /// <summary>
+        /// Метод для добавления клиента в коллецию UserControls и
+        /// удаления его из комбобокса
         /// </summary>
         public void AddClientInItemsView()
         {
@@ -130,46 +151,19 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
 
             if (selectedClient != null)
             {
-                clientCollection.AddClient(selectedClient); // добавляем в itemSource ItemControl
-                Clients.Remove(selectedClient); // удаляем его из комбобокса
+                if (DataValidate(selectedClient)) 
+                { 
+                    clientCollection.AddClient(selectedClient); // добавляем в itemSource ItemControl
+                    Clients.Remove(selectedClient); // удаляем его из комбобокса
+                };
                 FillClients();
             }
         }
 
-        public void FillClients()
-        {
-            _comboBoxClients.ItemsSource = Clients; // Присваиваем список клиентов
-            _comboBoxClients.DisplayMemberPath = "FullName"; // Устанавливаем отображаемое свойство
-        }
-
-        public void DeleteClientInItemsView(Client client)
-        {
-            clientCollection.RemoveClient(client); // удаляем из itemSource ItemControl 
-            Clients.Add(client); // добавляем в кмобобокс 
-            FillClients();
-            FilterText = string.Empty;
-            // Обновление не требуется, поскольку ObservableCollection автоматически обновляет представление
-        }
-
-        public void ComboBoxClients_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_comboBoxClients.SelectedItem != null)
-            {
-                if (_listViewItems != null)
-                {
-                    AddClientInItemsView();
-                }
-            }
-            FilterText = string.Empty;
-            _comboBoxClients.SelectedIndex = -1; // Сбросить индекс после выбора
-        }
-        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            FilterText = _searchTextBox.Text; // Вызываем метод фильтрации при изменении текста
-        }
-
-        // Метод для фильтрации элементов на основе текста фильтра
-        private void FilterItems()
+        /// <summary>
+        /// Метод для фильтрации элементов на основе текста фильтра
+        /// </summary>
+        private void FilterItems() 
         {
             FilteredClients.Clear(); // Очистка коллекции отфильтрованных элементов
 
@@ -196,6 +190,75 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
             _comboBoxClients.DisplayMemberPath = "FullName"; // Устанавливаем отображаемое свойство
         }
 
+        /// <summary>
+        /// Метод для удаления клиента из коллеции UserControls и
+        /// возвращения его из комбобокса
+        /// </summary>
+        public void DeleteClientInItemsView(Client client)
+        {
+            clientCollection.RemoveClient(client); // удаляем из itemSource ItemControl 
+            Clients.Add(client); // добавляем в кмобобокс 
+            FillClients();
+            FilterText = string.Empty;
+            // Обновление не требуется, поскольку ObservableCollection автоматически обновляет представление
+        }
+
+        /// <summary>
+        /// Проверка на условия
+        /// </summary>
+        /// <param name="client"></param>
+        /// <returns></returns>
+        private bool DataValidate(Client client)
+        {
+            dbContext = new Avtoservice3cursAaContext();
+
+            if (client.CarList.Count >= 3)
+            {
+                MessageBox.Show("У данного пользователя уже есть 3 автомобиля." +
+                    "\nУдалите автомобиль у выбранного клиента или выберите другого клиента",
+                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            return true;
+        }
+
+        public List<Client> ReturnClients()
+        {
+            return clientCollection._clientList;
+        }
+        #endregion
+
+        #region ОБРАБОТЧИКИ СОБЫТИЙ
+        /// <summary>
+        /// Обработчик события для того, чтобы отслеживать клиента,
+        /// которого выбрал пользователь
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ComboBoxClients_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_comboBoxClients.SelectedItem != null)
+            {
+                if (_listViewItems != null)
+                {
+                    AddClientInItemsView();
+                }
+            }
+            FilterText = string.Empty;
+            _comboBoxClients.SelectedIndex = -1; // Сбросить индекс после выбора
+        }
+
+        /// <summary>
+        /// Тригер для отслеживания вводимого текста. Обновляем списки
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            FilterText = _searchTextBox.Text; // Вызываем метод фильтрации при изменении текста
+        }
+        #endregion
 
         // Метод для оповещения участников об изменении
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

@@ -18,7 +18,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.Collections
         private static Avtoservice3cursAaContext dbContext;
         private EditCar _parentWindow;
         public ObservableCollection<ClientItem> Clients { get; set; }
-        private List<Client> _clientList;
+        internal List<Client> _clientList;
         public ClientCollection(EditCar parentWindow)
         {
             _parentWindow = parentWindow;

@@ -47,11 +47,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                             .ThenInclude(cc => cc.IdCarNavigation)
                             .ToList();
 
-            foreach (var client in clientList)
-            {
-                client.UpdateCar(); // Обновляем поле Car
-            }
-
             clientList = _dataFilterSorter.ApplySorter(clientList);
             clientList = _dataFilterSorter.ApplySearch(clientList);
 

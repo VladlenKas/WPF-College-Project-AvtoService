@@ -1,4 +1,5 @@
 ﻿using AvtoService_3cursAA.Model;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -182,7 +183,8 @@ namespace AvtoService_3cursAA.ActionsForEmployee
             }
         }
 
-        public static void EditCar(string brand, string model, string country, short year, string description, ImageSource image, Car car)
+        public static void EditCar(string brand, string model, string country, short year, string description,
+     ImageSource image, Car car, List<Client> clients)
         {
             using (var dbContext = new Avtoservice3cursAaContext())
             {
@@ -197,9 +199,39 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                 thisCar.Description = description;
                 thisCar.Photo = newImage;
 
-                MessageBox.Show($"Машина «{thisCar.Brand} {thisCar.Model}» успешно отредактирована!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                // Удаляем все существующие связи Carclient для этого автомобиля
+                AddClientsForCar(car, clients, dbContext);
+
+                // Обновляем автомобиль
                 dbContext.Update(thisCar);
+
+                // Сохраняем все изменения
                 dbContext.SaveChanges();
+
+                MessageBox.Show($"Машина «{thisCar.Brand} {thisCar.Model}» успешно отредактирована!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private static void AddClientsForCar(Car car, List<Client> clients, Avtoservice3cursAaContext aaContext)
+        {
+            var carClientsToRemove = aaContext.Carclients
+                .Where(cc => cc.IdCar == car.IdCar)
+                .ToList();
+
+            if (carClientsToRemove.Any())
+            {
+                aaContext.Carclients.RemoveRange(carClientsToRemove);
+            }
+
+            // Добавьте новые связи Carclient
+            foreach (var client in clients)
+            {
+                Carclient carclient = new Carclient()
+                {
+                    IdCar = car.IdCar,
+                    IdClient = client.IdClient,
+                };
+                aaContext.Add(carclient);
             }
         }
 
@@ -214,7 +246,7 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                 image.Source = new BitmapImage(new Uri(selectedFilePath));
             }
         }
-        public static byte[] ImageSourceToBytes(ImageSource imageSource)
+        private static byte[] ImageSourceToBytes(ImageSource imageSource)
         {
             byte[] bytes = null;
             var bitmapSource = imageSource as BitmapSource;
