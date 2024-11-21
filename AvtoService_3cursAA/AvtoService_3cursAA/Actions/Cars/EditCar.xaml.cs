@@ -61,7 +61,7 @@ namespace AvtoService_3cursAA.Actions.Cars
 
             clientManager = new ClientManager(ListSelectClients, ClientsComboBox, this, _selectedCarEdit);
         }
-        public void DeletePriceInPriceView(Client client) => clientManager.DeleteClientInDetailView(client);
+        public void DeletePriceInPriceView(Client client) => clientManager.DeleteClientInItemsView(client);
 
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
         {

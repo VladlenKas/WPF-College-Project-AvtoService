@@ -222,13 +222,12 @@
                                 x:Name="PART_EditableTextBox"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
-                                Margin="10 0 30 0"
+                                Margin="25 0 30 0"
                                 Padding="5 0"
                                 Focusable="True"
                                 Background="Transparent"
                                 BorderBrush="Transparent"
-                                IsReadOnly="{TemplateBinding IsReadOnly}"
-                                Text="{Binding Path=Text, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"/>
+                                IsReadOnly="{TemplateBinding IsReadOnly}"/>
 
                             <ContentPresenter Name="ContentSite"
                                               Content="{TemplateBinding SelectionBoxItem}"
@@ -242,7 +241,7 @@
                                             Effect="{x:Null}"   
                                             Text="{Binding}" 
                                             Style="{StaticResource MenuTextBlock}" 
-                                            IsHitTestVisible="True"/>
+                                            IsHitTestVisible="False"/>
                                     </DataTemplate>
                                 </ContentPresenter.ContentTemplate>
                             </ContentPresenter>

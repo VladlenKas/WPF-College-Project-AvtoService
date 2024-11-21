@@ -199,14 +199,9 @@
                                 
                                 <Grid DockPanel.Dock="Top">
                                     <ComboBox 
-                                        DisplayMemberPath="Name" 
-                                        IsTextSearchEnabled="False" 
-                                        StaysOpenOnEdit="True"
-                                        IsEditable="True"
+                                        DisplayMemberPath="Name"   
                                         VerticalAlignment="Top"
-                                        x:Name="ClientsComboBox"
-                                        PreviewTextInput="TextBox_PreviewTextInput"
-                                        DataObject.Pasting="TextBox_Pasting"/>
+                                        x:Name="ClientsComboBox"/>
                                     <materialDesign:PackIcon Kind="User"/>
                                 </Grid>
 
