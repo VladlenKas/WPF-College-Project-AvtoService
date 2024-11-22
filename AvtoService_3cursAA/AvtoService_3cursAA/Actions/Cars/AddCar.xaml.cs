@@ -1,7 +1,6 @@
 ﻿using AvtoService_3cursAA.ActionsForEmployee;
 using AvtoService_3cursAA.DataActions;
 using AvtoService_3cursAA.Model;
-using AvtoService_3cursAA.PagesMenuAdmin.Collections;
 using AvtoService_3cursAA.PagesMenuOperator.DataManager;
 using System;
 using System.Collections.Generic;
@@ -20,10 +19,11 @@ using System.Windows.Shapes;
 namespace AvtoService_3cursAA.Actions.Cars
 {
     /// <summary>
-    /// Логика взаимодействия для EditCar.xaml
+    /// Логика взаимодействия для AddCar.xaml
     /// </summary>
-    public partial class EditCar : Window
+    public partial class AddCar : Window
     {
+
         private string Brand => BrandTextBox.Text;
         private string Model => ModelTextBox.Text;
         private string Country => CountryTextBox.Text;
@@ -43,6 +43,7 @@ namespace AvtoService_3cursAA.Actions.Cars
                     }
                 }
 
+                // Если значение не валидно, можно выбросить исключение или вернуть значение по умолчанию
                 return 0;
             }
         }
@@ -50,25 +51,16 @@ namespace AvtoService_3cursAA.Actions.Cars
         private ImageSource Image => ImageCar.Source;
 
         string _file = "pack://application:,,,/AvtoService_3cursAA;component/Images/NoImageCar.jpg";
-        public Car _selectedCarEdit;
-        private ClientManager clientManager;
+        private ClientsManagerForAdd clientManager;
         Avtoservice3cursAaContext dbContext;
 
-        public EditCar(Car selectedCar)
+        public AddCar()
         {
-            _selectedCarEdit = selectedCar;
 
             dbContext = new();
             InitializeComponent();
 
-            DataContext = _selectedCarEdit;
-
-            if (_selectedCarEdit.Photo == null)
-            {
-                ImageCar.Source = new BitmapImage(new Uri(_file, UriKind.Absolute));
-            }
-
-            clientManager = new ClientManager(ListSelectClients, ClientsComboBox, this, _selectedCarEdit);
+            clientManager = new ClientsManagerForAdd(ListSelectClients, ClientsComboBox, this);
         }
         public void DeletePriceInPriceView(Client client) => clientManager.DeleteClientInItemsView(client);
 
@@ -80,8 +72,7 @@ namespace AvtoService_3cursAA.Actions.Cars
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
             if (!DataValidate()) return;
-            ActionsData.EditCar(Brand, Model, Country, Year, Description, Image,
-                _selectedCarEdit, clientManager.ReturnClients());
+            ActionsData.AddCar(Brand, Model, Country, Year, Description, Image, clientManager.ReturnClients());
             this.Close();
         }
 
@@ -96,8 +87,7 @@ namespace AvtoService_3cursAA.Actions.Cars
             }
 
             if (dbContext.Cars.Any(r => r.Brand.Replace(" ", "").ToLower() == Brand.Replace(" ", "").ToLower()
-                && r.Model.Replace(" ", "").ToLower() == Model.Replace(" ", "").ToLower()
-                && r.IdCar != _selectedCarEdit.IdCar))
+                && r.Model.Replace(" ", "").ToLower() == Model.Replace(" ", "").ToLower()))
             {
                 errorsList.Add("Такая машина уже существует");
             }
@@ -174,3 +164,4 @@ namespace AvtoService_3cursAA.Actions.Cars
         }
     }
 }
+

@@ -129,7 +129,7 @@
 
                         <ComboBox 
                             Name="ComboBoxSort"
-                            Width="350"
+                            Width="400"
                             SelectedIndex="0"
                             Style="{StaticResource ComboBoxSupportive}"
                             SelectionChanged="ComboBoxSort_SelectionChanged"/>

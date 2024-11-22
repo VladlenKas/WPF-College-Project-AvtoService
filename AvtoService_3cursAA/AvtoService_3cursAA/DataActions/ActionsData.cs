@@ -17,17 +17,96 @@ namespace AvtoService_3cursAA.ActionsForEmployee
     public static class ActionsData
     {
         private static Avtoservice3cursAaContext dbContext;
-        public static void DeleteUser(object user)
+        public static void DeleteClient(Client user)
+        {
+            using (var context = new Avtoservice3cursAaContext())
+            {
+                context.Carclients
+                    .Include(cc => cc.IdCarNavigation)
+                    .Include(cc => cc.IdClientNavigation);
+
+                var res = MessageBox.Show("Вы точно хотите удалить данного клиента?\n\nЕсли у автомобилей, " +
+                    "которые привязаны к данному клиенту, отсутствуют другие автовладельцы, то данные автомобили" +
+                    " будут автоматичски удалены из базы данных", "Подтверждение",
+                            MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                if (res == MessageBoxResult.Yes)
+                {
+                    string carsStr = "";
+                    var client = user as Client;
+                    List<Car> carsToRemove = new List<Car>();
+
+                    // Получаем все автомобили, связанные с данным клиентом
+                    var carClients = context.Carclients
+                        .Where(cc => cc.IdClient == client.IdClient)
+                        .ToList();
+
+                    // Перебираем каждый автомобиль клиента
+                    if (carClients.Count > 0)
+                    {
+                        foreach (var carClient in carClients)
+                        {
+                            // Находим автомобиль
+                            int carId = carClient.IdCar;
+                            Car car = context.Cars.Include(c => c.Carclients).First(c => c.IdCar == carId);
+
+                            // Находим всех клиентов этого автомобиля
+                            var clientsAlreadyAssigned = car
+                                .Carclients
+                                .Select(cc => cc.IdClient)
+                                .ToList();
+
+                            // Если данный клиент единственный владелец авто,
+                            // то сохраняем его авто и связку в список для удаления
+                            if (clientsAlreadyAssigned.Count == 1)
+                            {
+                                carsToRemove.Add(car);
+                            }
+                        }
+                    }
+
+                    // Удаляем все записи
+                    context.Carclients.RemoveRange(carClients);
+
+                    // Удаляем все авто
+                    foreach (var car in carsToRemove)
+                    {
+                        carsStr += $"{car.Brand} {car.Model}, ";
+                        var carToRemove = context.Cars.Find(car.IdCar);
+                        context.Cars.Remove(carToRemove);
+                    }
+
+                    // Удаляем клиента
+                    var clientToRemove = context.Clients.Find(client.IdClient);
+                    context.Remove(clientToRemove);
+                    context.SaveChanges();
+
+                    if (carsToRemove.Count > 0)
+                    {
+                        MessageBox.Show($"Клиент {client.FullName} и привязанные авто - {carsStr.Remove(carsStr.Length - 2)} - успешно удалены!", 
+                            "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Клиент {client.FullName} успешно удален!",
+                           "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+            }
+        }
+
+        public static void DeleteEmployee(Employee employee)
         {
             dbContext = new();
-
-            MessageBoxResult result = MessageBox.Show("Вы точно хотите удалить данного пользователя?", "Подтверждение",
-                       MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            var result = MessageBox.Show("Вы точно хотите удалить данного сотрудника?", "Подтверждение",
+                        MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
-                dbContext.Remove(user);
+                dbContext.Remove(employee);
                 dbContext.SaveChanges();
+
+                MessageBox.Show($"Сотрудник {employee.FullName} успешно удален!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -209,6 +288,56 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                 dbContext.SaveChanges();
 
                 MessageBox.Show($"Машина «{thisCar.Brand} {thisCar.Model}» успешно отредактирована!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+        public static void AddCar(string brand, string model, string country, short year, string description,
+    ImageSource image, List<Client> clients)
+        {
+            using (var context = new Avtoservice3cursAaContext())
+            {
+                var newCar = new Car
+                {
+                    Brand = brand,
+                    Model = model,
+                    Country = country,
+                    Year = year,
+                    Description = description,
+                    Photo = ImageSourceToBytes(image)
+                };
+
+                // Добавляем новый автомобиль в контекст базы данных
+                context.Cars.Add(newCar);
+                context.SaveChanges(); // Сохраняем автомобиль, чтобы получить IdCar
+
+                // Проверяем, что все клиенты существуют в базе данных
+                foreach (var client in clients)
+                {
+                    if (!context.Clients.Any(c => c.IdClient == client.IdClient))
+                    {
+                        throw new Exception($"Клиент с IdClient {client.IdClient} не существует в базе данных.");
+                    }
+                }
+
+                // Добавляем связи между автомобилем и клиентами
+                AddClientsForCarAdd(newCar, clients, context);
+
+                // Сохраняем все изменения
+                context.SaveChanges();
+
+                MessageBox.Show($"Машина «{newCar.Brand} {newCar.Model}» успешно добавлена!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private static void AddClientsForCarAdd(Car car, List<Client> clients, Avtoservice3cursAaContext aaContext)
+        {
+            foreach (var client in clients)
+            {
+                Carclient carclient = new Carclient()
+                {
+                    IdCar = car.IdCar,
+                    IdClient = client.IdClient,
+                };
+                aaContext.Carclients.Add(carclient);
             }
         }
 

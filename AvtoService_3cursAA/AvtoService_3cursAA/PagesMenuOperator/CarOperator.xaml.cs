@@ -1,4 +1,5 @@
-﻿using AvtoService_3cursAA.ActionsForEmployee;
+﻿using AvtoService_3cursAA.Actions.Cars;
+using AvtoService_3cursAA.ActionsForEmployee;
 using AvtoService_3cursAA.Classes;
 using AvtoService_3cursAA.Model;
 using AvtoService_3cursAA.PagesMenuAdmin.DataManagers;
@@ -111,9 +112,9 @@ namespace AvtoService_3cursAA.PagesMenuOperator
 
         private void AddCar_Click(object sender, RoutedEventArgs e) // Изменено на AddCar
         {
-            /*AddCar window = new AddCar(); // Изменено на AddCar
+            AddCar window = new AddCar(); // Изменено на AddCar
             window.ShowDialog();
-*/
+
             UpdateItemsListView();
         }
     }
