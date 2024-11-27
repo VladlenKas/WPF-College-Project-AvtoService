@@ -28,7 +28,7 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
         private ObservableCollection<Client> _filteredClients;// отфильтрованный список клиентов в комбобокс
         private TextBox _searchTextBox; // текстбокс внутри комбобокса
 
-        private ClientCollection clientCollection; // юзер контролы клиентов для ClientCollection
+        private ClientCollection ClientCollection; // юзер контролы клиентов для ClientCollection
 
         // поля для конструктора
         private ItemsControl _listViewItems; 
@@ -76,14 +76,14 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
             _parentWindow = parentWindow;
             _car = car;
 
-            ClientManagerEdit_Load();
+            ClientManagerEditLoad();
         }
 
         #region МЕТОДЫ ДЛЯ РАБОТЫ С КОЛЛЕКЦИЯМИ И СПИСКАМИ 
         /// <summary>
         /// Настройка параметров для взаимодействия с коллекциями и списками
         /// </summary>
-        private void ClientManagerEdit_Load()
+        private void ClientManagerEditLoad()
         {
             // Обновляем бд и подгружаем свзяи
             dbContext = new();
@@ -96,23 +96,23 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
                 .ToList();
 
             // инициализируем списки со всеми клиентами и список
-            // для будущиъ отфильтрованных клиентов
+            // для будущих отфильтрованных клиентов
             var listAllClients = dbContext.Clients.ToList();
             Clients = new ObservableCollection<Client>(listAllClients);
             FilteredClients = new ObservableCollection<Client>(listAllClients);
 
             // инициализиурем класс ClientCollection для работы с UserContol
-            clientCollection = new ClientCollection(_parentWindow);
+            ClientCollection = new ClientCollection(_parentWindow);
             // в качестве источника ресурсов указыаем нашу коллекицю пользователей
             // которую только что инициализировали
-            _listViewItems.ItemsSource = clientCollection.Clients;
+            _listViewItems.ItemsSource = ClientCollection.Clients;
 
             // Удаляем уже привязанных клиентов с комбобокса и возвращаем их в коллекцию выбранных клиентов
             foreach (var client in listAllClients)
             {
                 if (clientsAlreadyAssigned.Contains(client.IdClient))
                 {
-                    clientCollection.AddClient(client); // добавляем в itemSource ItemControl
+                    ClientCollection.AddClient(client); // добавляем в itemSource ItemControl
                     Clients.Remove(client); // удаляем его из комбобокса
                 }   
             }
@@ -150,7 +150,7 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
             {
                 if (DataValidate(selectedClient)) 
                 { 
-                    clientCollection.AddClient(selectedClient); // добавляем в itemSource ItemControl
+                    ClientCollection.AddClient(selectedClient); // добавляем в itemSource ItemControl
                     Clients.Remove(selectedClient); // удаляем его из комбобокса
                 };
                 FillClients();
@@ -193,7 +193,7 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
         /// </summary>
         public void DeleteClientInItemsView(Client client)
         {
-            clientCollection.RemoveClient(client); // удаляем из itemSource ItemControl 
+            ClientCollection.RemoveClient(client); // удаляем из itemSource ItemControl 
             Clients.Add(client); // добавляем в кмобобокс 
             FillClients();
             FilterText = string.Empty;
@@ -222,7 +222,7 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
 
         public List<Client> ReturnClients()
         {
-            return clientCollection._clientList;
+            return ClientCollection._clientList;
         }
         #endregion
 

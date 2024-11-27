@@ -112,6 +112,20 @@
     </Style>
     
     <!--#region Buttons -->
+    <Style TargetType="{x:Type Button}" x:Key="AuthButtonClear"
+           BasedOn="{StaticResource AuthButton}">
+        <Setter Property="Background" Value="{StaticResource AuthGradientNoneRed}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource RedFocus}"/>
+            </Trigger>
+
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{StaticResource RedPressed}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <!-- Button base -->
     <Style TargetType="{x:Type Button}" x:Key="ImageClick">
         <Setter Property="Background" Value="Transparent"/>

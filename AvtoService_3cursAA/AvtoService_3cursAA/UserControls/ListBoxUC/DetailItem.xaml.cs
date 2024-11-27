@@ -2,8 +2,10 @@
 using AvtoService_3cursAA.PagesMenuAdmin;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -59,6 +61,7 @@ namespace AvtoService_3cursAA.UserControls.CheckUC
             {
                 _parentWindow.DeleteDetailInDetailView(_detail);
             }
+            _parentWindow.LoadInDetailView(_detail);
         }
 
         private void AddCount_Click(object sender, RoutedEventArgs e) 
@@ -69,6 +72,7 @@ namespace AvtoService_3cursAA.UserControls.CheckUC
                 _count++;
                 CostTextBlock.Text = $"{(_detail.Cost * _count)} руб.";
                 CountTextBlock.Text = $"{_count} шт.";
+                _parentWindow.LoadInDetailView(_detail);
             }
             else MessageBox.Show("Вы уже выбрали все детали, доступные на складе!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
         }

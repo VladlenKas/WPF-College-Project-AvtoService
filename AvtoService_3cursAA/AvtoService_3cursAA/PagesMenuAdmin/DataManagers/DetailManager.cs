@@ -2,7 +2,12 @@
 using AvtoService_3cursAA.PagesMenuAdmin.Collections;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,89 +17,208 @@ using static MaterialDesignThemes.Wpf.Theme.ToolBar;
 
 namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
 {
-    internal class DetailManager
+    internal class DetailManager : INotifyPropertyChanged
     {
-        private static Avtoservice3cursAaContext dbContext;
-        private readonly List<object> startItemsInList = new List<object>
+        public event PropertyChangedEventHandler? PropertyChanged; // реализуем интерфейс
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
-            "Выберите деталь",
-            new Separator { Margin = new Thickness(0, 5, 0, 5), Width = 150 }
-        };
-        private List<Detail> listAllDetails; 
-        private DetailCollection detailCollection;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
+        private static Avtoservice3cursAaContext dbContext;
+
+        private ObservableCollection<Detail> _details; // исходный список деталей в комбобокс
+        private ObservableCollection<Detail> _filteredDetails; // отфильтрованный список услуг в комбобокс
+        private TextBox _searchTextBox; // текстбокс внутри комбобокса
+
+        private DetailCollection DetailCollection; // коллеция с добавленными юзерконтролами 
+
+        // поля для констуктора
         private ItemsControl _listViewItems;
         private ComboBox _comboBoxDetails;
         private TextBlock _costDetails;
         private CheckAdmin _parentWindow;
+        internal int costDetail = 0;
+
+        // Свойство для доступа к коллекции исходных элементов
+        public ObservableCollection<Detail> Details
+        {
+            get { return _details; }
+            set
+            {
+                _details = value;
+                OnPropertyChanged(); // Оповещаем участников об изменении
+            }
+        }
+        // Свойство для доступа к отфильтрованным элементам
+        public ObservableCollection<Detail> FilteredDetails
+        {
+            get { return _filteredDetails; }
+            set
+            {
+                _filteredDetails = value;
+                OnPropertyChanged(); // Оповещаем участников об изменении
+            }
+        }
+        public string FilterText
+        {
+            get { return _searchTextBox.Text; }
+            set
+            {
+                _searchTextBox.Text = value;
+                OnPropertyChanged(); // Оповещаем участников об изменении
+                FilterItems(); // Вызываем метод фильтрации при изменении текста
+            }
+        }
+
 
         public DetailManager(ItemsControl listViewItems, ComboBox comboBoxDetails, TextBlock costDetails, CheckAdmin parentWindow)
         {
             dbContext = new();
 
-            listAllDetails = dbContext.Details.OrderBy(p => p.Name).ToList();
             _listViewItems = listViewItems;
             _comboBoxDetails = comboBoxDetails;
             _costDetails = costDetails;
             _parentWindow = parentWindow;
 
+            DetailManagerLoad();
+        }
+
+        #region МЕТОДЫ ДЛЯ РАБОТЫ С КОЛЛЕКЦИЯМИ И СПИСКАМИ
+        private void DetailManagerLoad()
+        {
+            // инициализируем списки со всеми элементами и список
+            var listAllPrices = dbContext.Details.ToList();
+            Details = new ObservableCollection<Detail>(listAllPrices);
+            FilteredDetails = new ObservableCollection<Detail>(listAllPrices);
+
+            // инициализиурем класс ClientCollection для работы с UserContol
+            DetailCollection = new DetailCollection(_parentWindow);
+            // в качестве источника ресурсов указыаем нашу коллекицю пользователей
+            // которую только что инициализировали
+            _listViewItems.ItemsSource = DetailCollection.Details;
+
+            // обновление комбобокса
             FillDetails();
 
-            detailCollection = new(parentWindow);
-            _listViewItems.ItemsSource = detailCollection.Details;
+            // чтобы обрабатывать вводимый текст
+            _comboBoxDetails.ApplyTemplate();
+            var textBox = _comboBoxDetails.Template.FindName("PART_EditableTextBox", _comboBoxDetails) as TextBox;
+            _searchTextBox = textBox;
+
+            // подключаем тригеры
+            _searchTextBox.TextChanged += SearchTextBox_TextChanged;
+            _comboBoxDetails.SelectionChanged += ComboBoxClients_SelectionChanged;
         }
+
 
         public void DeleteDetailInDetailView(Detail detail)
         {
-            detailCollection.RemoveDetail(detail); // удаляем из itemSource ItemControl
-            listAllDetails.Add(detail); // добавляем в комбобокс
+            DetailCollection.RemoveDetail(detail); // удаляем из itemSource ItemControl 
+            Details.Add(detail); // добавляем в кмобобокс 
             FillDetails();
+            FilterText = string.Empty;
             // Обновление не требуется, поскольку ObservableCollection автоматически обновляет представление
         }
 
-        private void AddDetailInDetailView()
+        private void AddDetailnDetailView()
         {
-            var nameSelectDetail = _comboBoxDetails.SelectedItem as string; // инициализируем выбранный элемент в строку
-            var selectDetail = dbContext.Details.First(p => p.Name == nameSelectDetail); // находим его в бд
+            var selectedDetail = _comboBoxDetails.SelectedItem as Detail; // инициализируем выбранный клиент
 
-            detailCollection.AddDetail(selectDetail); // добавляем в itemSource ItemControl
-            listAllDetails.RemoveAt(_comboBoxDetails.SelectedIndex - 2); // удаляем его из комбобокса
+            if (selectedDetail != null)
+            {
+                DetailCollection.AddDetail(selectedDetail); // добавляем в itemSource ItemControl
+                Details.Remove(selectedDetail); // удаляем его из комбобокса
+                FillDetails();
+            }
         }
 
-        public void ComboBoxDetails_SelectionChanged()
+        private void FilterItems()
+        {
+            FilteredDetails.Clear(); // Очистка коллекции отфильтрованных элементов
+
+            if (string.IsNullOrEmpty(FilterText)) // Если текст фильтра пуст или null
+            {
+                foreach (var product in Details) // Добавляем все элементы из исходной коллекции
+                {
+                    FilteredDetails.Add(product);
+                }
+            }
+            else // Если текст фильтра не пустой
+            {
+                foreach (var product in Details)
+                {
+                    // Проверяем, содержится ли текст фильтра в элементе (без учета регистра)
+                    if (product.Name.ToLower().Contains(FilterText.ToLower()))
+                    {
+                        FilteredDetails.Add(product); // Добавляем совпадающий элемент в отфильтрованную коллекцию
+                    }
+                }
+            }
+
+            _comboBoxDetails.ItemsSource = FilteredDetails; // Обновляем источник данных комбобокса
+            _comboBoxDetails.DisplayMemberPath = "Name"; // Устанавливаем отображаемое свойство
+        }
+
+        public List<Detail> ReturnPrices()
+        {
+            return DetailCollection._detailList;
+        }
+        #endregion
+
+        #region ОБРАБОТЧИКИ СОБЫТИЙ
+        /// <summary>
+        /// Обработчик события для того, чтобы отслеживать элемент,
+        /// который выбрал пользователь
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ComboBoxClients_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_comboBoxDetails.SelectedItem != null)
             {
                 if (_listViewItems != null)
                 {
-                    if (_comboBoxDetails.SelectedIndex == 0 || _comboBoxDetails.SelectedIndex == 1) return;
-                    AddDetailInDetailView();
-                    FillDetails();
+                    AddDetailnDetailView();
                 }
             }
-            _comboBoxDetails.SelectedIndex = 0;
+            FilterText = string.Empty;
+            _comboBoxDetails.SelectedIndex = -1; // Сбросить индекс после выбора
         }
+
+        /// <summary>
+        /// Тригер для отслеживания вводимого текста. Обновляем списки
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            FilterText = _searchTextBox.Text; // Вызываем метод фильтрации при изменении текста
+        }
+        #endregion
 
         private void FillDetails()
         {
-            var listDetails = new List<object>(startItemsInList);
+            _comboBoxDetails.ItemsSource = FilteredDetails; // Обновляем источник данных комбобокса
+            _comboBoxDetails.DisplayMemberPath = "Name"; // Устанавливаем отображаемое свойство
 
-            listAllDetails = listAllDetails.OrderBy(p => p.Name).ToList();
-            listDetails.AddRange(listAllDetails.Select(p => p.Name).ToList());
-
-            _comboBoxDetails.ItemsSource = listDetails;
-
+            var selectedPrices = ReturnPrices();
             int cost = 0;
-            if (detailCollection != null)
+
+            if (selectedPrices != null)
             {
-                foreach (var item in detailCollection.Details)
+                foreach (var item in selectedPrices)
                 {
                     if (item != null)
                         cost += item.Cost;
                 }
             }
             _costDetails.Text = null;
-            _costDetails.Text += $"\t{cost} руб.";
+            _costDetails.Text += $" {cost} руб.";
+
+            costDetail = 0;
+            costDetail += cost;
+            _parentWindow.UpdateFinalCost();
         }
     }
 }

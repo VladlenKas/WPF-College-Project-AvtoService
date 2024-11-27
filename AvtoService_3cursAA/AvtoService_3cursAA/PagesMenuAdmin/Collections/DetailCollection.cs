@@ -13,7 +13,8 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.Collections
     {
         private CheckAdmin _parentWindow;
         public ObservableCollection<DetailItem> Details { get; set; }
-        private List<Detail> _detailList;
+        internal List<Detail> _detailList;
+
         public DetailCollection(CheckAdmin parentWindow)
         {
             _parentWindow = parentWindow;

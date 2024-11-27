@@ -13,7 +13,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.Collections
     {
         private CheckAdmin _parentWindow;
         public ObservableCollection<PriceItem> Prices { get; set; }
-        private List<Price> _pricesList;
+        internal List<Price> _pricesList;
         public PriceCollection(CheckAdmin parentWindow)
         {
             _parentWindow = parentWindow;

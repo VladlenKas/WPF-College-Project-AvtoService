@@ -2,6 +2,7 @@
 using AvtoService_3cursAA.Model;
 using AvtoService_3cursAA.PagesMenuAdmin.Collections;
 using AvtoService_3cursAA.PagesMenuAdmin.DataManagers;
+using AvtoService_3cursAA.PagesMenuAdmin.ViewModel;
 using AvtoService_3cursAA.UserControls.CheckUC;
 using AvtoService_3cursAA.UserControls.PriceUC;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -40,61 +42,75 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
         private DetailManager detailManager;
         private PriceManager priceManager;
+
+        private int _finalCost;
+        public int FinalCost
+        {
+            get
+            {
+                if (detailManager != null && priceManager != null)
+                {
+                    _finalCost = 0;
+                    var cost = detailManager.costDetail + priceManager.costPrice;
+                    return cost;
+                }
+                return 0;
+            }
+            private set
+            {
+                _finalCost = 0;
+                _finalCost = value;
+                finalCostTextBox.Text = _finalCost.ToString();
+            }
+        }
+
         public CheckAdmin(Employee employee)
         {
             InitializeComponent();
 
-            dbContext = new();
+            dbContext = new Avtoservice3cursAaContext();
+
             this._thisUser = employee;
+            finalCostTextBox.Text = FinalCost.ToString();
         }
 
         #region РАБОТА С УСЛУГАМИ
-        public void DeletePriceInPriceView(Price price) => priceManager.DeletePriceInPriceView(price);
-        private void PriceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) => priceManager?.PriceComboBox_SelectionChanged();
+        public void DeletePriceInPriceView(Price price)
+        {
+            priceManager.DeletePriceInPriceView(price);
+            UpdateFinalCost();
+        }
         #endregion
 
         #region РАБОТА С ДЕТАЛЯМИ
-        public void DeleteDetailInDetailView(Detail detail) => detailManager.DeleteDetailInDetailView(detail);
-        private void ComboBoxDetail_SelectionChanged(object sender, SelectionChangedEventArgs e) => detailManager?.ComboBoxDetails_SelectionChanged();
+        public void DeleteDetailInDetailView(Detail detail)
+        {
+            detailManager.DeleteDetailInDetailView(detail);
+            UpdateFinalCost();
+        }
+
+        public void LoadInDetailView(Detail detail)
+        {
+            //detailManager.LoadDetailInDetailView(detail);
+        }
         #endregion
 
         #region РАБОТА С ЗАЯВКАМИ
         private void ClientComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var comboBox = sender as ComboBox;
-            if (comboBox != null)
-            {
-                CarComboBox.SelectedIndex = 0;
+            
 
-                if (comboBox.SelectedIndex != 0)
-                {
-                    dbContext.Clients
-                            .Include(c => c.Carclients)
-                            .ThenInclude(cc => cc.IdCarNavigation).Load();
-
-                    string fullname = comboBox.SelectedValue.ToString();
-                    _selectClient = dbContext.Clients.AsEnumerable().First(r => r.FullName == fullname);
-
-                    var CarList = FillDataFilterSorter.FillListCars(_selectClient);
-                    CarComboBox.ItemsSource = CarList;
-                }
-                else
-                {
-                    var CarList = FillDataFilterSorter.FillListCars();
-                    CarComboBox.ItemsSource = CarList;
-                }
-            }
         }
         private void CarComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var comboBox = sender as ComboBox;
+            /*var comboBox = sender as ComboBox;
             if (comboBox != null && comboBox.SelectedIndex != 0)
             {
                 string car = comboBox.SelectedValue.ToString();
                 int idCar = ConvertStringToId(car);
 
                 _selectCar = dbContext.Cars.First(c => c.IdCar == idCar);
-            }
+            }*/
         }
         private void TypeOfRepairComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -107,7 +123,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         }
         private void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
             var comboBox = sender as ComboBox;
             if (comboBox != null && comboBox.SelectedIndex != 0)
             {
@@ -118,6 +133,8 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         #endregion
 
         #region МЕТОДЫ ДЛЯ СТРАНИЦЫ
+
+        // Первоначальная подгрузка данных
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             UserFio.Text = $"{_thisUser.FullName}";
@@ -126,14 +143,8 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, costDetails, this);
             priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, costPrices, this);
 
-            var ClientList = FillDataFilterSorter.FillListClients();
-            ClientComboBox.ItemsSource = ClientList;
-
-            var CarList = FillDataFilterSorter.FillListCars();
-            CarComboBox.ItemsSource = CarList;
-
             var TypeOfRepairList = FillDataFilterSorter.FillTypeOfStatusRepair();
-            TypeOfRepairComboBox.ItemsSource = TypeOfRepairList;
+            TypeOfRepairComboBox.ItemsSource = TypeOfRepairList;    
 
             var StatusList = FillDataFilterSorter.FillStatus();
             StatusComboBox.ItemsSource = StatusList;
@@ -170,11 +181,74 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             return id;
         }
 
-        private void ClearDetailList_Click(object sender, RoutedEventArgs e) => 
+         // Очистка листа с деталями
+        private void ClearDetailList_Click(object sender, RoutedEventArgs e)
+        {
             detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, costDetails, this);
+            UpdateFinalCost();
+        }
 
-        private void ClearPriceList_Click(object sender, RoutedEventArgs e) =>
+         // Очистка листа с услугами
+        private void ClearPriceList_Click(object sender, RoutedEventArgs e)
+        {
             priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, costPrices, this);
+            UpdateFinalCost();
+        }
+
+        // Очистка комобоксов с данными
+        private void ClearDataButton_Click(object sender, RoutedEventArgs e)
+        {
+            ClientComboBox.SelectedIndex = -1;
+            CarComboBox.SelectedIndex = -1;
+            TypeOfRepairComboBox.SelectedIndex = 0;
+            StatusComboBox.SelectedIndex = 0;
+        }
+
+        // Очистка всех полей и комбобоксов
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, costDetails, this);
+            UpdateFinalCost();
+
+            priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, costPrices, this);
+            UpdateFinalCost();
+
+            ClientComboBox.SelectedIndex = -1;
+            CarComboBox.SelectedIndex = -1;
+            TypeOfRepairComboBox.SelectedIndex = 0;
+            StatusComboBox.SelectedIndex = 0;
+        }
+
+        // Обновление итоговой цены
+        internal void UpdateFinalCost()
+        {
+            finalCostTextBox.Text = FinalCost.ToString();
+        }
+
         #endregion
+
+        #region РАБОТА С ФАЙЛАМИ
+        private void pdfButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void wordButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void excelButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        #endregion
+
+        // Оформление чеков
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
 }
+    

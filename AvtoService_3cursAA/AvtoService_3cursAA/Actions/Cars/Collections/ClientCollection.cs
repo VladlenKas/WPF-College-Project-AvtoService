@@ -16,21 +16,20 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.Collections
     // Редактирование
     internal class ClientCollection
     {
-        private static Avtoservice3cursAaContext dbContext;
         private EditCar _parentWindow;
-        public ObservableCollection<ClientItem> Clients { get; set; }
+        public ObservableCollection<ClientItemForEditCar> Clients { get; set; }
         internal List<Client> _clientList;
 
         public ClientCollection(EditCar parentWindow)
         {
             _parentWindow = parentWindow;
-            Clients = new ObservableCollection<ClientItem>();
+            Clients = new ObservableCollection<ClientItemForEditCar>();
             _clientList = new List<Client>();
         }
 
         public void AddClient(Client client)
         {
-            Clients.Add(new ClientItem(client, _parentWindow));
+            Clients.Add(new ClientItemForEditCar(client, _parentWindow));
             _clientList.Add(client);
         }
 
@@ -47,19 +46,19 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.Collections
     {
         private static Avtoservice3cursAaContext dbContext;
         private AddCar _parentWindow;
-        public ObservableCollection<ClientItemForAdd> Clients { get; set; }
+        public ObservableCollection<ClientItemForAddCar> Clients { get; set; }
         internal List<Client> _clientList;
 
         public ClientCollectionForAdd(AddCar parentWindow)
         {
             _parentWindow = parentWindow;
-            Clients = new ObservableCollection<ClientItemForAdd>();
+            Clients = new ObservableCollection<ClientItemForAddCar>();
             _clientList = new List<Client>();
         }
 
         public void AddClient(Client client)
         {
-            Clients.Add(new ClientItemForAdd(client, _parentWindow));
+            Clients.Add(new ClientItemForAddCar(client, _parentWindow));
             _clientList.Add(client);
         }
 

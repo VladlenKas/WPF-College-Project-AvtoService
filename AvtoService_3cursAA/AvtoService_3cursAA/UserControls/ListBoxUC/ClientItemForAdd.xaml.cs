@@ -20,7 +20,7 @@ namespace AvtoService_3cursAA.UserControls.ListBoxUC
     /// <summary>
     /// Логика взаимодействия для ClientItemForAdd.xaml
     /// </summary>
-    public partial class ClientItemForAdd : UserControl
+    public partial class ClientItemForAddCar : UserControl
     {
         public Client Client
         {
@@ -30,7 +30,7 @@ namespace AvtoService_3cursAA.UserControls.ListBoxUC
         private Client _client;
         private AddCar _parentWindow;
 
-        public ClientItemForAdd(Client client, AddCar parentWindow)
+        public ClientItemForAddCar(Client client, AddCar parentWindow)
         {
             _client = client;
             _parentWindow = parentWindow;

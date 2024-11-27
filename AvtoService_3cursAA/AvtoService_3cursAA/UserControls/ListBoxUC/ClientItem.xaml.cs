@@ -23,7 +23,7 @@ namespace AvtoService_3cursAA.UserControls.CheckUC
     /// <summary>
     /// Логика взаимодействия для ClientItem.xaml
     /// </summary>
-    public partial class ClientItem : UserControl
+    public partial class ClientItemForEditCar : UserControl
     {
         public Client Client
         {
@@ -33,7 +33,7 @@ namespace AvtoService_3cursAA.UserControls.CheckUC
         private Client _client;
         private EditCar _parentWindow;
 
-        public ClientItem(Client client, EditCar parentWindow)
+        public ClientItemForEditCar(Client client, EditCar parentWindow)
         {
             _client = client;
             _parentWindow = parentWindow;

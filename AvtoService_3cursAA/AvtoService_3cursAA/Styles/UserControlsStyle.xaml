@@ -45,6 +45,19 @@
         </Style.Triggers>
     </Style>
 
+    <Style TargetType="{x:Type Button}" x:Key="ResetButton" BasedOn="{StaticResource NextButton}">
+        <Setter Property="Background" Value="{StaticResource AuthGradientNoneRed}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource RedFocus}"/>
+            </Trigger>
+
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{StaticResource RedPressed}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <Style TargetType="{x:Type Button}" x:Key="EditButton" BasedOn="{StaticResource NextButton}">
         <Setter Property="Background" Value="{StaticResource GreenNone}"/>
         <Style.Triggers>

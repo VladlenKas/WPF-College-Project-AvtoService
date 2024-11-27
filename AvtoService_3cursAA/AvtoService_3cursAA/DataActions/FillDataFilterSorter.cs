@@ -60,7 +60,6 @@ namespace AvtoService_3cursAA.ActionsForEmployee
             }
             return list;
         }
-        public static List<object> FillListCars() => _carsList;
         public static List<object> FillListCars(Client client)
         {
             var list = new List<object>(_carsList);
