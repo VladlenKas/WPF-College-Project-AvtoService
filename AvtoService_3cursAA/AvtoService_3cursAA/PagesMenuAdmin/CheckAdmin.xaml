@@ -4,7 +4,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:local="clr-namespace:AvtoService_3cursAA.PagesMenuAdmin"
-        xmlns:vm="clr-namespace:AvtoService_3cursAA.PagesMenuAdmin.ViewModel"
         mc:Ignorable="d" 
       
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -247,12 +246,21 @@
                                         <TextBlock Text="Машина клиента" Style="{StaticResource header}"/>
                                         <Grid>
                                             <ComboBox
+                                                DisplayMemberPath="Title"
+                                                ItemsSource="{Binding FilteredCars}"
                                                 Name="CarComboBox"
-                                                SelectionChanged="CarComboBox_SelectionChanged"
                                                 SelectedIndex="-1"
-                                                DockPanel.Dock="Top"
-                                                ItemsSource="{Binding CarsList}"/>
+                                                DockPanel.Dock="Top"/>
                                             <materialDesign:PackIcon Kind="Car"/>
+                                            <TextBlock 
+                                                IsHitTestVisible="False"
+                                                Name="TextForCars"
+                                                Style="{StaticResource MenuTextBlock}"
+                                                Margin="35 0 0 20"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Left"
+                                                Text="Сначала выберите клиента"
+                                                Visibility="Visible"/>
                                         </Grid>
                                     </StackPanel>
 
@@ -291,7 +299,7 @@
                                         Margin="0 0 0 10">
                                         <Button 
                                             Name="wordButton"
-                                            Content="Сохранить чек в формате WORD" 
+                                            Content="Сохранить чеки в формате WORD" 
                                             Click="wordButton_Click"/>
                                         <materialDesign:PackIcon 
                                             Kind="FileWordBox"
@@ -303,7 +311,7 @@
                                         Margin="0 0 0 10">
                                         <Button 
                                             Name="excelButton"
-                                            Content="Сохранить чек в формате EXCEL" 
+                                            Content="Сохранить чеки в формате EXCEL" 
                                             Click="excelButton_Click"/>
                                         <materialDesign:PackIcon 
                                             Kind="FileExcelBox"
@@ -315,7 +323,7 @@
                                         Margin="0 0 0 10">
                                         <Button 
                                             Name="pdfButton"
-                                            Content="Сохранить чек в формате PDF" 
+                                            Content="Сохранить чеки в формате PDF" 
                                             Click="pdfButton_Click"/>
                                         <materialDesign:PackIcon 
                                             Kind="FilePdfBox"

@@ -2,7 +2,6 @@
 using AvtoService_3cursAA.Model;
 using AvtoService_3cursAA.PagesMenuAdmin.Collections;
 using AvtoService_3cursAA.PagesMenuAdmin.DataManagers;
-using AvtoService_3cursAA.PagesMenuAdmin.ViewModel;
 using AvtoService_3cursAA.UserControls.CheckUC;
 using AvtoService_3cursAA.UserControls.PriceUC;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +42,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         private static Avtoservice3cursAaContext dbContext;
         private DetailManager detailManager;
         private PriceManager priceManager;
-        private ClientsManager clientManager;
+        private ClientsAndCarsManager clientManager;
 
         private int _finalCost;
         public int FinalCost
@@ -139,7 +138,8 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
             detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, costDetails, TextForDetails, this);
             priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, costPrices, TextForPrices, this);
-            clientManager = new ClientsManager(ClientComboBox, TextForClients, this);
+
+            clientManager = new ClientsAndCarsManager(ClientComboBox, TextForClients, CarComboBox, TextForCars, this);
 
             var TypeOfRepairList = FillDataFilterSorter.FillTypeOfStatusRepair();
             TypeOfRepairComboBox.ItemsSource = TypeOfRepairList;    

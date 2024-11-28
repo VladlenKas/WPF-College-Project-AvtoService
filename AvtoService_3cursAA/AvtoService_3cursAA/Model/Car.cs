@@ -11,6 +11,8 @@ public partial class Car
 
     public string Model { get; set; } = null!;
 
+    public string Title => $"{Brand} {Model}";
+
     public string Country { get; set; } = null!;
 
     public short Year { get; set; }
