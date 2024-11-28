@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace AvtoService_3cursAA.Model;
 
-public partial class Client
+public class Client
 {
     public int IdClient { get; set; }
 

@@ -34,9 +34,11 @@
     <Border Background="#ffffff">
         <Grid>
             <Grid.Background>
-                <ImageBrush ImageSource="/Images/AuthBackground.jpg" 
-                            Stretch="UniformToFill"
-                            Opacity="0.4"/>
+                <LinearGradientBrush StartPoint="0 0.0" EndPoint="1 1.1">
+                    <GradientStop Color="#457f8c" Offset="-0.1"/>
+                    <GradientStop Color="#ffffff" Offset="0.8"/>
+                    <GradientStop Color="#000000" Offset="1.2"/>
+                </LinearGradientBrush>
             </Grid.Background>
             
         <!--#region Authorization -->

@@ -226,6 +226,7 @@
                                         <Grid>
                                             <ComboBox
                                                 DisplayMemberPath = "FullName"
+                                                ItemsSource="{Binding FilteredClients}"
                                                 Name="ClientComboBox"
                                                 SelectedIndex="-1"
                                                 DockPanel.Dock="Top"/>

@@ -33,8 +33,9 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         // поля для конструктора
         private ItemsControl _listViewItems;
         private ComboBox _comboBoxClients;
-        internal TextBlock _placeHolder;
+        private TextBlock _placeHolder;
         private CheckAdmin _parentWindow;
+        private Client _selectedClient;
 
         // Свойство для доступа к коллекции исходных элементов
         public ObservableCollection<Client> Clients
@@ -67,6 +68,12 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
             }
         }
 
+        public Client SelectedClient
+        {
+            get { return _selectedClient; }
+            set { _selectedClient = value; }
+        }
+
         public ClientsManager(ComboBox comboBoxClients, TextBlock placeHolder, CheckAdmin parentWindow)
         {
             dbContext = new();
@@ -84,7 +91,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         private void ClientsManagerLoad()
         {
             // ииициализируем коллекции
-            _clients = new ObservableCollection<Client>(dbContext.Clients);
+            _clients = new ObservableCollection<Client>(dbContext.Clients.ToList());
             _filteredClients = new ObservableCollection<Client>(dbContext.Clients);
 
             // чтобы обрабатывать вводимый текст
@@ -130,12 +137,20 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         {
             if (_comboBoxClients != null)
             {
-                if (_comboBoxClients.SelectedValue == null) return;
+                if (_comboBoxClients.SelectedItem == null) return;
 
-                _placeHolder.Visibility = Visibility.Hidden;
-
+                _comboBoxClients.SelectionChanged -= ComboBoxClients_SelectionChanged;
                 _searchTextBox.TextChanged -= SearchTextBox_TextChanged;
+
+                SelectedClient = _comboBoxClients.SelectedItem as Client;
+                _comboBoxClients.SelectedIndex = -1;
+
+                _placeHolder.Visibility = Visibility.Visible;
+                _placeHolder.Text = SelectedClient.FullName;
+
                 _searchTextBox.Text = string.Empty;
+
+                _comboBoxClients.SelectionChanged += ComboBoxClients_SelectionChanged;
                 _searchTextBox.TextChanged += SearchTextBox_TextChanged;
             }
         }
@@ -143,6 +158,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         {
             if (_comboBoxClients == null) return;
 
+            _placeHolder.Text = "Выберите клиента";
             _placeHolder.Visibility = string.IsNullOrWhiteSpace(_searchTextBox.Text) ? Visibility.Visible : Visibility.Hidden;
             FilterText = _searchTextBox.Text; // Вызываем метод фильтрации при изменении текста
         }
