@@ -43,6 +43,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         private static Avtoservice3cursAaContext dbContext;
         private DetailManager detailManager;
         private PriceManager priceManager;
+        private ClientsManager clientManager;
 
         private int _finalCost;
         public int FinalCost
@@ -97,11 +98,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         #endregion
 
         #region РАБОТА С ЗАЯВКАМИ
-        private void ClientComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            
-
-        }
         private void CarComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             /*var comboBox = sender as ComboBox;
@@ -143,6 +139,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
             detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, costDetails, TextForDetails, this);
             priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, costPrices, TextForPrices, this);
+            clientManager = new ClientsManager(ClientComboBox, TextForClients, this);
 
             var TypeOfRepairList = FillDataFilterSorter.FillTypeOfStatusRepair();
             TypeOfRepairComboBox.ItemsSource = TypeOfRepairList;    
@@ -185,14 +182,14 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
          // Очистка листа с деталями
         private void ClearDetailList_Click(object sender, RoutedEventArgs e)
         {
-            detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, costDetails, TextForDetails, this);
+            detailManager.ClearListView();
             UpdateFinalCost();
         }
 
-         // Очистка листа с услугами
+        // Очистка листа с услугами
         private void ClearPriceList_Click(object sender, RoutedEventArgs e)
         {
-            priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, costPrices, TextForPrices, this);
+            priceManager.ClearListView();
             UpdateFinalCost();
         }
 
@@ -208,10 +205,10 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         // Очистка всех полей и комбобоксов
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, costDetails, TextForDetails, this);
+            detailManager.ClearListView();
             UpdateFinalCost();
 
-            priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, costPrices, TextForPrices, this);
+            priceManager.ClearListView(); 
             UpdateFinalCost();
 
             ClientComboBox.SelectedIndex = -1;

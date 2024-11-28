@@ -29,9 +29,9 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.Collections
 
         public void RemovePrice(Price price)
         {
-            int index = _pricesList.FindIndex(p => p.IdPrice == price.IdPrice);
-            Prices.RemoveAt(index);
-            _pricesList.RemoveAt(index);
+            PriceItem delete = Prices.First(p => p.IdPrice == price.IdPrice);
+            Prices.Remove(delete);
+            _pricesList.Remove(price);
         }
     }
 }

@@ -28,6 +28,11 @@ namespace AvtoService_3cursAA.UserControls.CheckUC
             get => _price.Cost;
         }
 
+        public int IdPrice
+        {
+            get => _price.IdPrice;
+        }
+
         private Price _price;
         private CheckAdmin _parentWindow;
 

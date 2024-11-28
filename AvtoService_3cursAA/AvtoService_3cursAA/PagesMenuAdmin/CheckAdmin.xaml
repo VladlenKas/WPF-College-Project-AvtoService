@@ -225,17 +225,20 @@
                                         <TextBlock Text="ФИО клиента" Style="{StaticResource header}"/>
                                         <Grid>
                                             <ComboBox
+                                                DisplayMemberPath = "FullName"
                                                 Name="ClientComboBox"
                                                 SelectedIndex="-1"
-                                                DockPanel.Dock="Top"
-                                                ItemsSource="{Binding ClientsList}"
-                                                DisplayMemberPath="FullName"
-                                                Text="{Binding ClientsListText, UpdateSourceTrigger=PropertyChanged}"
-                                                SelectedItem="{Binding SelectedClient, Mode=TwoWay}"
-                                                IsEditable="True" 
-                                                IsTextSearchEnabled="False" 
-                                                StaysOpenOnEdit="True"/>
+                                                DockPanel.Dock="Top"/>
                                             <materialDesign:PackIcon Kind="User"/>
+                                            <TextBlock 
+                                                IsHitTestVisible="False"
+                                                Name="TextForClients"
+                                                Style="{StaticResource MenuTextBlock}"
+                                                Margin="35 0 0 20"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Left"
+                                                Text="Выберите клиента"
+                                                Visibility="Visible"/>
                                         </Grid>
                                     </StackPanel>
 
@@ -256,9 +259,10 @@
                                         <TextBlock Text="Тип ремонта" Style="{StaticResource header}"/>
                                         <Grid>
                                             <ComboBox
+                                                IsHitTestVisible="True"
                                                 Name="TypeOfRepairComboBox"
                                                 SelectionChanged="TypeOfRepairComboBox_SelectionChanged"
-                                                SelectedIndex="-1"
+                                                SelectedIndex="0"
                                                 DockPanel.Dock="Top"
                                                 ItemsSource="{Binding TypeOfRepairsList}"/>
                                             <materialDesign:PackIcon Kind="Wrench"/>
@@ -269,9 +273,10 @@
                                         <TextBlock Text="Статус ремонта" Style="{StaticResource header}"/>
                                         <Grid>
                                             <ComboBox
+                                                IsHitTestVisible="True"
                                                 Name="StatusComboBox"
                                                 SelectionChanged="StatusComboBox_SelectionChanged"
-                                                SelectedIndex="-1"
+                                                SelectedIndex="0"
                                                 DockPanel.Dock="Top"
                                                 ItemsSource="{Binding StatusesList}"/>
                                             <materialDesign:PackIcon Kind="Timelapse"/>
@@ -322,19 +327,18 @@
                                         Margin="0 0 0 10"
                                         DockPanel.Dock="Bottom">
                                         <Button 
-                                            Content="Сбросить товары" 
-                                            Click="ClearDetailList_Click"/>
+                                            Content="Сбросить услуги" 
+                                            Click="ClearPriceList_Click"/>
                                         <materialDesign:PackIcon 
                                             Kind="loop"/>
                                     </Grid>
-
-
+                                    
                                     <Grid 
                                         Margin="0 0 0 10"
                                         DockPanel.Dock="Bottom">
                                         <Button 
-                                            Content="Сбросить услуги" 
-                                            Click="ClearPriceList_Click"/>
+                                            Content="Сбросить товары" 
+                                            Click="ClearDetailList_Click"/>
                                         <materialDesign:PackIcon 
                                             Kind="loop"/>
                                     </Grid>
@@ -441,7 +445,7 @@
                                         FontWeight="Bold"
                                         VerticalAlignment="Center"
                                         TextWrapping="WrapWithOverflow"
-                                        Text="Детали для ремонта"/>
+                                        Text="Товары для ремонта"/>
 
                                     <Grid DockPanel.Dock="Top">
                                         <StackPanel>
@@ -458,7 +462,7 @@
                                                     Margin="35 0 0 20"
                                                     VerticalAlignment="Center"
                                                     HorizontalAlignment="Left"
-                                                    Text="Выберите услугу"
+                                                    Text="Выберите товар"
                                                     Visibility="Visible"/>
                                             </Grid>
                                         </StackPanel>

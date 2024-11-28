@@ -30,6 +30,11 @@ namespace AvtoService_3cursAA.UserControls.CheckUC
             get => _count * _detail.Cost;
         }
 
+        public int IdDetail
+        {
+            get => _detail.IdDetail;
+        }
+
         private Avtoservice3cursAaContext dbContext;
         private Detail _detail;
         private int _count = 1;

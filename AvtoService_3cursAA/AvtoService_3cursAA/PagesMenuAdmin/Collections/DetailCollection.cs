@@ -12,7 +12,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.Collections
     internal class DetailCollection
     {
         private CheckAdmin _parentWindow;
-        public ObservableCollection<DetailItem> Details { get; set; }
+        public ObservableCollection<DetailItem> Details { get; set; } // здесь хранятся выбранные детали
         internal List<Detail> _detailList;
 
         public DetailCollection(CheckAdmin parentWindow)
@@ -30,9 +30,9 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.Collections
 
         public void RemoveDetail(Detail detail)
         {
-            int index = _detailList.FindIndex(d => d.IdDetail == detail.IdDetail);
-            Details.RemoveAt(index);
-            _detailList.RemoveAt(index);
+            DetailItem delete = Details.First(d => d.IdDetail == detail.IdDetail);
+            Details.Remove(delete);
+            _detailList.Remove(detail);
         }
     }
 }

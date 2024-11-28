@@ -108,9 +108,8 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
 
             // подключаем тригеры
             _searchTextBox.TextChanged += SearchTextBox_TextChanged;
-            _comboBoxPrices.SelectionChanged += ComboBoxClients_SelectionChanged;
+            _comboBoxPrices.SelectionChanged += ComboBoxPrices_SelectionChanged;
         }
-
 
         public void DeletePriceInPriceView(Price price)
         {
@@ -164,6 +163,21 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         {
             return PriceCollection._pricesList;
         }
+
+        // Очистка всех выбранных услуг
+        public void ClearListView()
+        {
+            List<Price> prices = new List<Price>(PriceCollection._pricesList);
+            if (prices.Count == 0) return;
+
+            foreach (var price in prices)
+            {
+                PriceCollection.RemovePrice(price);
+                Prices.Add(price); // добавляем в комбобокс 
+            }
+
+            FillPrices();
+        }
         #endregion
 
         #region ОБРАБОТЧИКИ СОБЫТИЙ
@@ -173,7 +187,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void ComboBoxClients_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        public void ComboBoxPrices_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_comboBoxPrices.SelectedItem != null)
             {

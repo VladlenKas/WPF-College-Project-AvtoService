@@ -111,7 +111,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
 
             // подключаем тригеры
             _searchTextBox.TextChanged += SearchTextBox_TextChanged;
-            _comboBoxDetails.SelectionChanged += ComboBoxClients_SelectionChanged;
+            _comboBoxDetails.SelectionChanged += ComboBoxDetails_SelectionChanged;
         }
 
         public void DeleteDetailInDetailView(Detail detail)
@@ -167,9 +167,23 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
             FillDetails();
         }
 
-        public ObservableCollection<DetailItem> ReturnPrices()
+        public ObservableCollection<DetailItem> ReturnDetails()
         {
             return DetailCollection.Details;
+        }
+
+        // Очистка всех выбранных деталей
+        public void ClearListView()
+        {
+            List<Detail> details = new List<Detail>(DetailCollection._detailList);
+            if (details.Count == 0) return;
+
+            foreach (var detail in details)
+            {
+                DetailCollection.RemoveDetail(detail);
+                Details.Add(detail); // добавляем в комбобокс 
+            }
+            FillDetails();
         }
         #endregion
 
@@ -180,7 +194,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void ComboBoxClients_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        public void ComboBoxDetails_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_comboBoxDetails.SelectedItem != null)
             {
@@ -207,10 +221,10 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
 
         internal void FillDetails()
         {
-            _comboBoxDetails.ItemsSource = FilteredDetails; // Обновляем источник данных комбобокса
+            _comboBoxDetails.ItemsSource = Details; // Обновляем источник данных комбобокса
             _comboBoxDetails.DisplayMemberPath = "Name"; // Устанавливаем отображаемое свойство
 
-            var selectedPrices = ReturnPrices();
+            var selectedPrices = ReturnDetails();
             int cost = 0;
 
             if (selectedPrices != null)
