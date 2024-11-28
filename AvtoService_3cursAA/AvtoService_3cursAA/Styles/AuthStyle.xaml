@@ -151,7 +151,7 @@
     </Style>
     <!--#endregion-->
     
-    <!-- ChechBox -->
+    <!--#region ChechBox -->
     <Style TargetType="{x:Type CheckBox}" x:Key="AuthCheckBox">
         <Setter Property="BorderBrush" Value="#80000000"/>
         <Setter Property="BorderThickness" Value="1"/>
@@ -221,7 +221,8 @@
             </Setter.Value>
         </Setter>
     </Style>
-
+    <!--#endregion-->
+    
     <!--#region Button -->
     <Style TargetType="{x:Type Button}" x:Key="AuthButton">
         <Setter Property="Height" Value="50"/>

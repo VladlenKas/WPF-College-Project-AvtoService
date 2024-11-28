@@ -1,5 +1,6 @@
 ﻿using AvtoService_3cursAA.Model;
 using AvtoService_3cursAA.PagesMenuAdmin.Collections;
+using AvtoService_3cursAA.UserControls.CheckUC;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -37,6 +38,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         private ItemsControl _listViewItems;
         private ComboBox _comboBoxDetails;
         private TextBlock _costDetails;
+        internal TextBlock _placeHolder;
         private CheckAdmin _parentWindow;
         internal int costDetail = 0;
 
@@ -72,13 +74,14 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         }
 
 
-        public DetailManager(ItemsControl listViewItems, ComboBox comboBoxDetails, TextBlock costDetails, CheckAdmin parentWindow)
+        public DetailManager(ItemsControl listViewItems, ComboBox comboBoxDetails, TextBlock costDetails, TextBlock placeHolder, CheckAdmin parentWindow)
         {
             dbContext = new();
 
             _listViewItems = listViewItems;
             _comboBoxDetails = comboBoxDetails;
             _costDetails = costDetails;
+            _placeHolder = placeHolder;
             _parentWindow = parentWindow;
 
             DetailManagerLoad();
@@ -110,7 +113,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
             _searchTextBox.TextChanged += SearchTextBox_TextChanged;
             _comboBoxDetails.SelectionChanged += ComboBoxClients_SelectionChanged;
         }
-
 
         public void DeleteDetailInDetailView(Detail detail)
         {
@@ -160,9 +162,14 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
             _comboBoxDetails.DisplayMemberPath = "Name"; // Устанавливаем отображаемое свойство
         }
 
-        public List<Detail> ReturnPrices()
+        public void LoadDetailInDetailView(Detail detail)
         {
-            return DetailCollection._detailList;
+            FillDetails();
+        }
+
+        public ObservableCollection<DetailItem> ReturnPrices()
+        {
+            return DetailCollection.Details;
         }
         #endregion
 
@@ -193,11 +200,12 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         /// <param name="e"></param>
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            _placeHolder.Visibility = string.IsNullOrWhiteSpace(_searchTextBox.Text) ? Visibility.Visible : Visibility.Hidden;
             FilterText = _searchTextBox.Text; // Вызываем метод фильтрации при изменении текста
         }
         #endregion
 
-        private void FillDetails()
+        internal void FillDetails()
         {
             _comboBoxDetails.ItemsSource = FilteredDetails; // Обновляем источник данных комбобокса
             _comboBoxDetails.DisplayMemberPath = "Name"; // Устанавливаем отображаемое свойство

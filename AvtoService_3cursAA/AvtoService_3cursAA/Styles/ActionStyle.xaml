@@ -71,6 +71,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <!--#endregion-->
     
     <!-- PassBox -->
     <Style TargetType="{x:Type PasswordBox}" 
@@ -185,6 +186,7 @@
            BasedOn="{StaticResource ComboBoxSupportive}"
            x:Key="ComboBoxAction">
         <Setter Property="Height" Value="35"/>
+        <Setter Property="IsEditable" Value="False"/>
         <Setter Property="BorderBrush" Value="#20000000"/>
         <Setter Property="Background" Value="#ffffff"/>
         <Setter Property="Margin" Value="0 0 0 20"/>
@@ -224,10 +226,13 @@
                                 VerticalAlignment="Center"
                                 Margin="25 0 30 0"
                                 Padding="5 0"
+                                Width="200"
                                 Focusable="True"
                                 Background="Transparent"
                                 BorderBrush="Transparent"
                                 IsReadOnly="{TemplateBinding IsReadOnly}"/>
+                            
+                            
 
                             <ContentPresenter Name="ContentSite"
                                               Content="{TemplateBinding SelectionBoxItem}"

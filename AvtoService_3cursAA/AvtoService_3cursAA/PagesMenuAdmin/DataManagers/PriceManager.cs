@@ -34,6 +34,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         private ItemsControl _listViewItems;
         private ComboBox _comboBoxPrices;
         internal TextBlock _costPrices;
+        internal TextBlock _placeHolder;
         private CheckAdmin _parentWindow;
 
         // Свойство для доступа к коллекции исходных элементов
@@ -70,13 +71,14 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         }
 
         internal int costPrice = 0;
-        public PriceManager(ItemsControl listViewItems, ComboBox comboBoxPrices, TextBlock costPrices, CheckAdmin parentWindow)
+        public PriceManager(ItemsControl listViewItems, ComboBox comboBoxPrices, TextBlock costPrices, TextBlock placeHolder, CheckAdmin parentWindow)
         {
             dbContext = new();
 
             _listViewItems = listViewItems;
             _comboBoxPrices = comboBoxPrices;
             _costPrices = costPrices;
+            _placeHolder = placeHolder;
             _parentWindow = parentWindow;
 
             PriceManagerLoad();
@@ -191,6 +193,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         /// <param name="e"></param>
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            _placeHolder.Visibility = string.IsNullOrWhiteSpace(_searchTextBox.Text) ? Visibility.Visible : Visibility.Hidden;
             FilterText = _searchTextBox.Text; // Вызываем метод фильтрации при изменении текста
         }
         #endregion

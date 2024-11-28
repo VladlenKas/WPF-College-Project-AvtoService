@@ -69,6 +69,7 @@
     </Style>
     <!--#endregion-->
 
+    <!--#region TextBoxes-->
     <Style TargetType="{x:Type TextBox}" x:Key="SearchTextBox" BasedOn="{StaticResource AuthTextBox}">
         <Setter Property="BorderBrush" Value="#20000000"/>
         <Setter Property="Template">
@@ -110,6 +111,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <!--#endregion-->
     
     <!--#region Buttons -->
     <Style TargetType="{x:Type Button}" x:Key="AuthButtonClear"
@@ -300,7 +302,7 @@
     </Style>
     <!--#endregion-->
 
-    <!-- ChechBox -->
+    <!--#region ChechBox -->
     <Style TargetType="{x:Type CheckBox}" x:Key="CheckBoxSortButton">
         <Setter Property="HorizontalAlignment" Value="Right"/>
         <Setter Property="Effect" Value="{StaticResource dropShadow}"/>
@@ -339,7 +341,8 @@
             </Setter.Value>
         </Setter>
     </Style>
-
+    <!--#endregion-->
+    
     <!--#region ComboBoxes -->
     <Style TargetType="{x:Type ComboBox}" x:Key="ComboBoxSupportive">
         <Setter Property="Height" Value="40"/>
@@ -535,7 +538,7 @@
     <!--#endregion-->
 
     <!--#region DataGrid-->
-    <!-- DataGrid -->
+    
     <Style TargetType="{x:Type DataGrid}" x:Key="MenuDataGrid">
         <Setter Property="Background">
             <Setter.Value>

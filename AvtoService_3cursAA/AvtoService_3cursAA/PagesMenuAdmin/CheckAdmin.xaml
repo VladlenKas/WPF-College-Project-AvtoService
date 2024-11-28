@@ -11,10 +11,7 @@
         xmlns:MyUserControl="clr-namespace:AvtoService_3cursAA.CustomsElementsWpf"
       
         Loaded="Page_Loaded">
-    <Page.DataContext>
-        <vm:CheckAdminViewModel/>
-    </Page.DataContext>
-    
+
     <Page.Resources>
         <!-- Icons -->
         <Style TargetType="materialDesign:PackIcon"
@@ -362,14 +359,14 @@
                                 DockPanel.Dock="Top">
 
                                     <TextBlock
-                                    DockPanel.Dock="Top"
-                                    Style="{x:Null}"
-                                    FontSize="26" 
-                                    Margin="0 20"
-                                    HorizontalAlignment="Center"
-                                    FontFamily="Calibri"
-                                    FontWeight="Bold"
-                                    Text="Оказанные услуги"/>
+                                        DockPanel.Dock="Top"
+                                        Style="{x:Null}"
+                                        FontSize="26" 
+                                        Margin="0 20"
+                                        HorizontalAlignment="Center"
+                                        FontFamily="Calibri"
+                                        FontWeight="Bold"
+                                        Text="Оказанные услуги"/>
 
                                     <Grid DockPanel.Dock="Top">
                                         <StackPanel>
@@ -379,6 +376,15 @@
                                                     Name="comboBoxPrices"
                                                     SelectedIndex="-1"/>
                                                 <materialDesign:PackIcon Kind="OrderBoolAscending"/>
+                                                <TextBlock 
+                                                    IsHitTestVisible="False"
+                                                    Name="TextForPrices"
+                                                    Style="{StaticResource MenuTextBlock}"
+                                                    Margin="35 0 0 20"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Left"
+                                                    Text="Выберите услугу"
+                                                    Visibility="Visible"/>
                                             </Grid>
                                         </StackPanel>
                                     </Grid>
@@ -445,6 +451,15 @@
                                                     Name="comboBoxDetail"
                                                     SelectedIndex="-1"/>
                                                 <materialDesign:PackIcon Kind="Nut"/>
+                                                <TextBlock 
+                                                    IsHitTestVisible="False"
+                                                    Name="TextForDetails"
+                                                    Style="{StaticResource MenuTextBlock}"
+                                                    Margin="35 0 0 20"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Left"
+                                                    Text="Выберите услугу"
+                                                    Visibility="Visible"/>
                                             </Grid>
                                         </StackPanel>
                                     </Grid>

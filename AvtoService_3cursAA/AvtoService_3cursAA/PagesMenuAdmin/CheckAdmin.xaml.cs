@@ -9,9 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -30,7 +32,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
     /// <summary>
     /// Логика взаимодействия для CheckAdmin.xaml
     /// </summary>
-    public partial class CheckAdmin : Page
+    public partial class CheckAdmin 
     {
         private Client _selectClient;
         private Car _selectCar;
@@ -39,7 +41,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         private Employee _thisUser;
 
         private static Avtoservice3cursAaContext dbContext;
-
         private DetailManager detailManager;
         private PriceManager priceManager;
 
@@ -91,7 +92,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
         public void LoadInDetailView(Detail detail)
         {
-            //detailManager.LoadDetailInDetailView(detail);
+            detailManager.LoadDetailInDetailView(detail);
         }
         #endregion
 
@@ -140,8 +141,8 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             UserFio.Text = $"{_thisUser.FullName}";
             EmployeeTextBox.Text = $"{_thisUser.FullName}";
 
-            detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, costDetails, this);
-            priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, costPrices, this);
+            detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, costDetails, TextForDetails, this);
+            priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, costPrices, TextForPrices, this);
 
             var TypeOfRepairList = FillDataFilterSorter.FillTypeOfStatusRepair();
             TypeOfRepairComboBox.ItemsSource = TypeOfRepairList;    
@@ -184,14 +185,14 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
          // Очистка листа с деталями
         private void ClearDetailList_Click(object sender, RoutedEventArgs e)
         {
-            detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, costDetails, this);
+            detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, costDetails, TextForDetails, this);
             UpdateFinalCost();
         }
 
          // Очистка листа с услугами
         private void ClearPriceList_Click(object sender, RoutedEventArgs e)
         {
-            priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, costPrices, this);
+            priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, costPrices, TextForPrices, this);
             UpdateFinalCost();
         }
 
@@ -207,10 +208,10 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         // Очистка всех полей и комбобоксов
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, costDetails, this);
+            detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, costDetails, TextForDetails, this);
             UpdateFinalCost();
 
-            priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, costPrices, this);
+            priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, costPrices, TextForPrices, this);
             UpdateFinalCost();
 
             ClientComboBox.SelectedIndex = -1;
