@@ -42,7 +42,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         private static Avtoservice3cursAaContext dbContext;
         private DetailManager detailManager;
         private PriceManager priceManager;
-        private ClientsAndCarsManager clientManager;
+        private ClientsAndCarsManager clientsAndCarsManager;
 
         private int _finalCost;
         public int FinalCost
@@ -139,7 +139,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             detailManager = new DetailManager(ListViewDetailItems, comboBoxDetail, costDetails, TextForDetails, this);
             priceManager = new PriceManager(ListViewPriceItems, comboBoxPrices, costPrices, TextForPrices, this);
 
-            clientManager = new ClientsAndCarsManager(ClientComboBox, TextForClients, CarComboBox, TextForCars, this);
+            clientsAndCarsManager = new ClientsAndCarsManager(ClientComboBox, TextForClients, CarComboBox, TextForCars, this);
 
             var TypeOfRepairList = FillDataFilterSorter.FillTypeOfStatusRepair();
             TypeOfRepairComboBox.ItemsSource = TypeOfRepairList;    
@@ -196,8 +196,9 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         // Очистка комобоксов с данными
         private void ClearDataButton_Click(object sender, RoutedEventArgs e)
         {
-            ClientComboBox.SelectedIndex = -1;
-            CarComboBox.SelectedIndex = -1;
+            TextForCars.Text = "Сначала выберите клиента";
+            TextForClients.Text = "Выберите клиента";
+            clientsAndCarsManager = new ClientsAndCarsManager(ClientComboBox, TextForClients, CarComboBox, TextForCars, this);
             TypeOfRepairComboBox.SelectedIndex = 0;
             StatusComboBox.SelectedIndex = 0;
         }
@@ -211,8 +212,9 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             priceManager.ClearListView(); 
             UpdateFinalCost();
 
-            ClientComboBox.SelectedIndex = -1;
-            CarComboBox.SelectedIndex = -1;
+            TextForCars.Text = "Сначала выберите клиента";
+            TextForClients.Text = "Выберите клиента";
+            clientsAndCarsManager = new ClientsAndCarsManager(ClientComboBox, TextForClients, CarComboBox, TextForCars, this);
             TypeOfRepairComboBox.SelectedIndex = 0;
             StatusComboBox.SelectedIndex = 0;
         }
@@ -225,7 +227,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
         #endregion
 
-        #region РАБОТА С ФАЙЛАМИ
+        #region МЕТОДЫ С ФАЙЛАМИ
         private void pdfButton_Click(object sender, RoutedEventArgs e)
         {
 

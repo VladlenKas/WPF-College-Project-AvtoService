@@ -301,12 +301,13 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                     _filteredCars = new ObservableCollection<Car>(filteredCars);
 
                     // Подключаем триггеры
+                    _searchTextBox.Visibility = Visibility.Visible;
                     _searchTextBox.TextChanged += SearchTextBox_TextChanged;
                     _comboBoxCars.SelectionChanged += ComboBoxCars_SelectionChanged;
 
                     _comboBoxCars.ItemsSource = FilteredCars; // Передаем источник данных комбобокса
 
-                    _placeHolder.Text = "Выберите машину";
+                    _placeHolder.Text = "Выберите автомобиль";
                 }
                 else
                 {
@@ -314,8 +315,11 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                     _cars = new ObservableCollection<Car>();
                     _filteredCars = new ObservableCollection<Car>();
 
+                    _searchTextBox.Visibility = Visibility.Hidden;
                     _searchTextBox.TextChanged -= SearchTextBox_TextChanged;
                     _comboBoxCars.SelectionChanged -= ComboBoxCars_SelectionChanged;
+
+                    _comboBoxCars.ItemsSource = FilteredCars; // Передаем источник данных комбобокса
 
                     _placeHolder.Text = "Сначала выберите клиента";
                 }
@@ -332,6 +336,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                 _comboBoxCars.ApplyTemplate();
                 var textBox = _comboBoxCars.Template.FindName("PART_EditableTextBox", _comboBoxCars) as TextBox;
                 _searchTextBox = textBox;
+                _searchTextBox.Visibility = Visibility.Hidden;
 
                 _comboBoxCars.ItemsSource = FilteredCars; // Передаем источник данных комбобокса
             }
