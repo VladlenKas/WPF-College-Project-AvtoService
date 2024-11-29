@@ -25,6 +25,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static AvtoService_3cursAA.PagesMenuAdmin.DataManagers.ClientsAndCarsManager;
 
 namespace AvtoService_3cursAA.PagesMenuAdmin
 {
@@ -65,6 +66,28 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             }
         }
 
+        public Client? SelectedClient
+        {
+            get 
+            { 
+                if (clientsAndCarsManager != null)
+                    return clientsAndCarsManager.SelectedClient; 
+                return null;
+            }
+            set { clientsAndCarsManager.SelectedClient = value; }
+        }
+
+        public Car? SelectedCar
+        {
+            get 
+            {
+                if (clientsAndCarsManager != null)
+                    return clientsAndCarsManager.SelectedCar; 
+                return null;
+            }
+            set { clientsAndCarsManager.SelectedCar = value; }
+        }
+
         public CheckAdmin(Employee employee)
         {
             InitializeComponent();
@@ -96,18 +119,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         }
         #endregion
 
-        #region РАБОТА С ЗАЯВКАМИ
-        private void CarComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            /*var comboBox = sender as ComboBox;
-            if (comboBox != null && comboBox.SelectedIndex != 0)
-            {
-                string car = comboBox.SelectedValue.ToString();
-                int idCar = ConvertStringToId(car);
-
-                _selectCar = dbContext.Cars.First(c => c.IdCar == idCar);
-            }*/
-        }
+        #region РАБОТА С ДАННЫМИ
         private void TypeOfRepairComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var comboBox = sender as ComboBox;
@@ -116,6 +128,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                 string type = comboBox.SelectedValue.ToString();
                 _selectTypeofrepair = dbContext.Typeofrepairs.First(c => c.Name == type);
             }
+            CheckFields();
         }
         private void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -125,6 +138,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                 string status = comboBox.SelectedValue.ToString();
                 _selectStatus = dbContext.Statuses.First(c => c.Name == status);
             }
+            CheckFields();
         }
         #endregion
 
@@ -146,37 +160,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
             var StatusList = FillDataFilterSorter.FillStatus();
             StatusComboBox.ItemsSource = StatusList;
-        }
-
-        // Метод удалаяет все символы в строке кроме тех, что в квадртаных скобках
-        private int ConvertStringToId(string str)
-        {
-            string idStr = string.Empty;
-            string strNew = str;
-
-            foreach(char c in strNew)
-            {
-                if (c == '[')
-                {
-                    strNew = strNew.Substring(1, strNew.Length - 1);
-                    foreach (char c2 in strNew)
-                    {
-                        if (c2 == ']')
-                        {
-                            break;
-                        }
-
-                        idStr += c2;
-                        strNew = strNew.Substring(1, strNew.Length - 1);
-                    }
-                    break;
-                };
-
-                strNew = strNew.Substring(1, strNew.Length - 1);
-            }
-
-            int id = int.Parse(idStr);
-            return id;
         }
 
          // Очистка листа с деталями
@@ -224,7 +207,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         {
             finalCostTextBox.Text = FinalCost.ToString();
         }
-
         #endregion
 
         #region МЕТОДЫ С ФАЙЛАМИ
@@ -248,6 +230,34 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
             
+        }
+
+        internal void CheckFields()
+        {
+            // Проверяем, заполнены ли все необходимые поля
+            bool allFieldsFilled = SelectedClient != null &&
+                                   SelectedCar != null &&
+                                   StatusComboBox.SelectedIndex != 0 &&
+                                   TypeOfRepairComboBox.SelectedIndex != 0 &&
+                                   ListViewPriceItems.Items.Count != 0 &&
+                                   ListViewDetailItems.Items.Count != 0;
+
+
+            // Включаем или отключаем кнопку в зависимости от состояния полей
+            if (allFieldsFilled)
+            {
+                // Добавляем обработчик события
+                AddButton.Click += AddButton_Click;
+            }
+            else
+            {
+                // Удаляем обработчик события
+                AddButton.Click -= AddButton_Click;
+            }
+
+            // Устанавливаем подсказку для кнопки
+            AddButton.Opacity = allFieldsFilled ? 1 : 0.5;
+            AddButton.ToolTip = allFieldsFilled ? null : "Пожалуйста, заполните все поля перед созданием заказа.";
         }
     }
 }

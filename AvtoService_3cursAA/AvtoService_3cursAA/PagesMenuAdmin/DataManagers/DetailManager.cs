@@ -74,7 +74,8 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         }
 
 
-        public DetailManager(ItemsControl listViewItems, ComboBox comboBoxDetails, TextBlock costDetails, TextBlock placeHolder, CheckAdmin parentWindow)
+        public DetailManager(ItemsControl listViewItems, ComboBox comboBoxDetails, TextBlock costDetails, 
+            TextBlock placeHolder, CheckAdmin parentWindow)
         {
             dbContext = new();
 
@@ -241,6 +242,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
             costDetail = 0;
             costDetail += cost;
             _parentWindow.UpdateFinalCost();
+            _parentWindow.CheckFields();
         }
     }
 }

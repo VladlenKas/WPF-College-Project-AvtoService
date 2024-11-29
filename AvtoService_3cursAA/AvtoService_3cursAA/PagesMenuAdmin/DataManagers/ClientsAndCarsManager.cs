@@ -14,11 +14,12 @@ using System.Windows.Controls;
 
 namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
 {
-    internal class ClientsAndCarsManager
+    public class ClientsAndCarsManager
     {
         // Окна для работы с классами
         public static ClientsManager _clientsManager = null!;
         public static CarsManager _carsManager = null!;
+        public static CheckAdmin _parentWindow = null!;
 
         // Свойство для передачи клиента в авто
         private static Client? _client;
@@ -28,9 +29,21 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
             set { _client = value; }
         }
 
+        public Client? SelectedClient 
+        {
+            get { return _clientsManager.SelectedClient; }
+            set { _clientsManager.SelectedClient = value; } 
+        }
+
+        public Car? SelectedCar
+        {
+            get { return _carsManager.SelectedCar; }
+            set { _carsManager.SelectedCar = value; }
+        }
         public ClientsAndCarsManager(ComboBox comboBoxClients, TextBlock placeHolderClient,
             ComboBox comboBoxCars, TextBlock placeHolderCar, CheckAdmin parentWindow)
         {
+            _parentWindow = parentWindow; 
             _clientsManager = new ClientsManager(comboBoxClients, placeHolderClient, parentWindow);
             _carsManager = new CarsManager(comboBoxCars, placeHolderCar, parentWindow);
         }
@@ -39,7 +52,10 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         {
             _carsManager.SelectedClient = ClientCars;
             _carsManager.UpdateClient();
+
+            _parentWindow.CheckFields();
         }
+
 
         public class ClientsManager
         {

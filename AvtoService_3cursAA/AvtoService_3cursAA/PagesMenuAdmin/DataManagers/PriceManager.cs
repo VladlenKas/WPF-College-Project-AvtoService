@@ -235,6 +235,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
             costPrice = 0;
             costPrice += cost;
             _parentWindow.UpdateFinalCost();
+            _parentWindow.CheckFields();
         }
     }
 }
