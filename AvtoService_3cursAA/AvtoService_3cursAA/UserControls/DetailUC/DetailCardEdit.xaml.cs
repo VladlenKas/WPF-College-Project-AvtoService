@@ -77,10 +77,10 @@ namespace AvtoService_3cursAA.UserControls.DetailUC
         private void DeleteDetail()
         {
             dbContext = new();
-            var detailToRemove = dbContext.Details.Find(_detail.IdDetail);
+            var detailToRemove = dbContext.Details.First(d => d.IdDetail == _detail.IdDetail);
             if (detailToRemove != null)
             {
-                dbContext.Details.Remove(detailToRemove);
+                detailToRemove.IsDeleted = true;
                 dbContext.SaveChanges();
             }
         }

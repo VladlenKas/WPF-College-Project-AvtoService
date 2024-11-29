@@ -78,7 +78,8 @@ namespace AvtoService_3cursAA.UserControls.PriceUC
         private void DeletePrice()
         {
             dbContext = new();
-            dbContext.Prices.Remove(_price); 
+            var deletePrice = dbContext.Prices.First(r => r.IdPrice == _price.IdPrice);
+            deletePrice.IsDeleted = true; 
             dbContext.SaveChanges();
         }
     }

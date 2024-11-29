@@ -97,10 +97,10 @@ namespace AvtoService_3cursAA.UserControls.CarUC
             }
 
             // Найти саму машину для удаления
-            var carToRemove = dbContext.Cars.Find(_car.IdCar);
+            var carToRemove = dbContext.Cars.First(c => c.IdCar == _car.IdCar);
             if (carToRemove != null)
             {
-                dbContext.Cars.Remove(carToRemove);
+                carToRemove.IsDeleted = true;
                 dbContext.SaveChanges();
             }
         }

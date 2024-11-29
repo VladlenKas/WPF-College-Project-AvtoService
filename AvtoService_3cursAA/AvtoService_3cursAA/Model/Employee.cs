@@ -29,6 +29,8 @@ public partial class Employee
 
     public string Phone { get; set; } = null!;
 
+    public bool IsDeleted { get; set; }
+    
     public virtual Role IdRoleNavigation { get; set; } = null!;
 
     public virtual ICollection<Sale> Sales { get; set; } = new List<Sale>();

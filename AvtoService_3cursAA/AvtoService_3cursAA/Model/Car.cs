@@ -21,5 +21,7 @@ public partial class Car
 
     public byte[]? Photo { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public virtual ICollection<Carclient> Carclients { get; set; } = new List<Carclient>();
 }

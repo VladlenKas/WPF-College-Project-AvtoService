@@ -21,6 +21,8 @@ public class Client
 
     public string Phone { get; set; } = null!;
 
+    public bool IsDeleted { get; set; }
+
     public List<string> CarList
     {
         get

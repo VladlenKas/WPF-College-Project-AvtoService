@@ -72,13 +72,13 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                     foreach (var car in carsToRemove)
                     {
                         carsStr += $"{car.Brand} {car.Model}, ";
-                        var carToRemove = context.Cars.Find(car.IdCar);
-                        context.Cars.Remove(carToRemove);
+                        var carToRemove = context.Cars.First(c => c.IdCar == car.IdCar);
+                        carToRemove.IsDeleted = true;
                     }
 
                     // Удаляем клиента
-                    var clientToRemove = context.Clients.Find(client.IdClient);
-                    context.Remove(clientToRemove);
+                    var clientToRemove = context.Clients.First(c => c.IdClient == client.IdClient);
+                    clientToRemove.IsDeleted = true;
                     context.SaveChanges();
 
                     if (carsToRemove.Count > 0)
@@ -103,7 +103,8 @@ namespace AvtoService_3cursAA.ActionsForEmployee
 
             if (result == MessageBoxResult.Yes)
             {
-                dbContext.Remove(employee);
+                var deleteEmployee = dbContext.Employees.First(c => c.IdEmployee == employee.IdEmployee);
+                deleteEmployee.IsDeleted = true;
                 dbContext.SaveChanges();
 
                 MessageBox.Show($"Сотрудник {employee.FullName} успешно удален!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -201,7 +202,7 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                     Photo = ImageSourceToBytes(image)
                 };
 
-                dbContext.Prices.Add(newPrice);
+                dbContext.Add(newPrice);
                 dbContext.SaveChanges();
 
                 MessageBox.Show($"Услуга «{newPrice.Name}» успешно добавлена!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -236,7 +237,7 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                     Photo = ImageSourceToBytes(image)
                 };
 
-                dbContext.Details.Add(newDetail);
+                dbContext.Add(newDetail);
                 dbContext.SaveChanges();
 
                 MessageBox.Show($"Деталь «{newDetail.Name}» успешно добавлена!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -306,7 +307,7 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                 };
 
                 // Добавляем новый автомобиль в контекст базы данных
-                context.Cars.Add(newCar);
+                context.AllCars.Add(newCar);
                 context.SaveChanges(); // Сохраняем автомобиль, чтобы получить IdCar
 
                 // Проверяем, что все клиенты существуют в базе данных

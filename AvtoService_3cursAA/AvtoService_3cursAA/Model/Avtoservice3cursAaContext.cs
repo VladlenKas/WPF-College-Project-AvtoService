@@ -16,7 +16,8 @@ public partial class Avtoservice3cursAaContext : DbContext
     {
     }
 
-    public virtual DbSet<Car> Cars { get; set; }
+    #region Все записи
+    public virtual DbSet<Car> AllCars { get; set; } // Все автомобили
 
     public virtual DbSet<Carclient> Carclients { get; set; }
 
@@ -24,13 +25,13 @@ public partial class Avtoservice3cursAaContext : DbContext
 
     public virtual DbSet<Checkprice> Checkprices { get; set; }
 
-    public virtual DbSet<Client> Clients { get; set; }
+    public virtual DbSet<Client> AllClients { get; set; } // Все клиенты
 
-    public virtual DbSet<Detail> Details { get; set; }
+    public virtual DbSet<Detail> AllDetails { get; set; } // Все детали
 
-    public virtual DbSet<Employee> Employees { get; set; }
+    public virtual DbSet<Employee> AllEmployees { get; set; } // Все сотрудники
 
-    public virtual DbSet<Price> Prices { get; set; }
+    public virtual DbSet<Price> AllPrices { get; set; } // Все услуги
 
     public virtual DbSet<Role> Roles { get; set; }
 
@@ -38,7 +39,18 @@ public partial class Avtoservice3cursAaContext : DbContext
 
     public virtual DbSet<Status> Statuses { get; set; }
 
-    public virtual DbSet<Typeofrepair> Typeofrepairs { get; set; }
+    public virtual DbSet<Typeofrepair> Typeofrepairs { get; set; } 
+    #endregion
+
+    #region Активные записи
+    public IQueryable<Car> Cars => AllCars.Where(car => !car.IsDeleted); // Только активные автомобили
+    public IQueryable<Client> Clients => AllClients.Where(client => !client.IsDeleted); // Только активные клиенты
+    public IQueryable<Detail> Details => AllDetails.Where(detail => !detail.IsDeleted); // Только существующие детали
+    public IQueryable<Employee> Employees => AllEmployees.Where(employee => !employee.IsDeleted); // Только активные сотрудники
+    public IQueryable<Price> Prices => AllPrices.Where(price => !price.IsDeleted); // Только существующие услуги
+
+    #endregion
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -75,6 +87,10 @@ public partial class Avtoservice3cursAaContext : DbContext
                 .HasColumnType("year")
                 .HasColumnName("year");
             entity.Property(e => e.Photo).HasColumnName("photo");
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
         });
 
         modelBuilder.Entity<Carclient>(entity =>
@@ -170,6 +186,10 @@ public partial class Avtoservice3cursAaContext : DbContext
             entity.Property(e => e.Phone)
                 .HasMaxLength(12)
                 .HasColumnName("phone");
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
         });
 
         modelBuilder.Entity<Detail>(entity =>
@@ -185,6 +205,10 @@ public partial class Avtoservice3cursAaContext : DbContext
                 .HasMaxLength(45)
                 .HasColumnName("name");
             entity.Property(e => e.Photo).HasColumnName("photo");
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
         });
 
         modelBuilder.Entity<Employee>(entity =>
@@ -220,6 +244,10 @@ public partial class Avtoservice3cursAaContext : DbContext
                 .HasMaxLength(11)
                 .HasColumnName("phone");
             entity.Property(e => e.Seniority).HasColumnName("seniority");
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
 
             entity.HasOne(d => d.IdRoleNavigation).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.IdRole)
@@ -239,6 +267,10 @@ public partial class Avtoservice3cursAaContext : DbContext
                 .HasMaxLength(45)
                 .HasColumnName("name");
             entity.Property(e => e.Photo).HasColumnName("photo");
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
         });
 
         modelBuilder.Entity<Role>(entity =>

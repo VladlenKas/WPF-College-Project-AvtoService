@@ -13,5 +13,7 @@ public partial class Price
 
     public byte[]? Photo { get; set; }
 
+    public bool IsDeleted { get; set; }
+    
     public virtual ICollection<Checkprice> Checkprices { get; set; } = new List<Checkprice>();
 }

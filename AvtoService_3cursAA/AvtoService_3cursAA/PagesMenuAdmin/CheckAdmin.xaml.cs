@@ -229,7 +229,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         // Оформление чеков
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            
         }
 
         internal void CheckFields()

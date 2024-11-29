@@ -15,5 +15,7 @@ public partial class Detail
 
     public byte[]? Photo { get; set; }
 
+    public bool IsDeleted { get; set; }
+    
     public virtual ICollection<Checkdetail> Checkdetails { get; set; } = new List<Checkdetail>();
 }
