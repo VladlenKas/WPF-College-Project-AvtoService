@@ -27,5 +27,9 @@ public partial class Sale
 
     public virtual Status IdStatusNavigation { get; set; } = null!;
 
+    public int CostForClient { get; set; }
+
+    public int CostTotal { get; set; }
+
     public virtual Typeofrepair IdTypeofrepairNavigation { get; set; } = null!;
 }

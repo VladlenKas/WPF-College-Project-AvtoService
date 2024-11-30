@@ -14,4 +14,6 @@ public partial class Checkdetail
     public virtual Detail IdDetailNavigation { get; set; } = null!;
 
     public virtual Sale? IdSaleNavigation { get; set; }
+
+    public int DetailsCount { get; set; }
 }

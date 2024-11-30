@@ -25,15 +25,9 @@ namespace AvtoService_3cursAA.UserControls.CheckUC
     /// </summary>
     public partial class DetailItem : UserControl
     {
-        public int Cost
-        {
-            get => _count * _detail.Cost;
-        }
-
-        public int IdDetail
-        {
-            get => _detail.IdDetail;
-        }
+        public int Cost => _count * _detail.Cost;
+        public int Count => _count;
+        public int IdDetail => _detail.IdDetail;
 
         private Avtoservice3cursAaContext dbContext;
         private Detail _detail;

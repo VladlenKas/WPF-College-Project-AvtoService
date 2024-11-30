@@ -55,7 +55,10 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
 
             _parentWindow.CheckFields();
         }
-
+        public static void UpdateSelectedItemsForCar()
+        {
+            _parentWindow.CheckFields();
+        }
 
         public class ClientsManager
         {
@@ -278,7 +281,11 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
             public Car? SelectedCar
             {
                 get { return _selectedCar; }
-                set { _selectedCar = value; }
+                set 
+                {
+                    _selectedCar = value; 
+                    UpdateSelectedItemsForCar();
+                }
             }
 
             // в этом свойстве храним текущего клиента,

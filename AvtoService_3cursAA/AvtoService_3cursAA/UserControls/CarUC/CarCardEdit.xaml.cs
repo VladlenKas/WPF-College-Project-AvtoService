@@ -91,9 +91,14 @@ namespace AvtoService_3cursAA.UserControls.CarUC
                 .ToList();
 
             // Удалить все связанные записи Carclient
-            if (carClientsToRemove.Any())
+            if (carClientsToRemove.Count != 0)
             {
-                dbContext.Carclients.RemoveRange(carClientsToRemove);
+                foreach (var item in carClientsToRemove)
+                {
+                    var carclient = dbContext.Carclients.First(cc => cc.IdCar == item.IdCar);
+                    carclient.IsDeleted = true;
+                    dbContext.Update(carclient);
+                }
             }
 
             // Найти саму машину для удаления

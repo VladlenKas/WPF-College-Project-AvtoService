@@ -66,7 +66,12 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                     }
 
                     // Удаляем все записи
-                    context.Carclients.RemoveRange(carClients);
+                    foreach (var item in carsToRemove)
+                    {
+                        var carclient = context.Carclients.First(cc => cc.IdCar == item.IdCar);
+                        carclient.IsDeleted = true;
+                        context.Update(carclient);
+                    }
 
                     // Удаляем все авто
                     foreach (var car in carsToRemove)
@@ -329,7 +334,7 @@ namespace AvtoService_3cursAA.ActionsForEmployee
             }
         }
 
-        private static void AddClientsForCarAdd(Car car, List<Client> clients, Avtoservice3cursAaContext aaContext)
+        private static void AddClientsForCarAdd(Car car, List<Client> clients, Avtoservice3cursAaContext context)
         {
             foreach (var client in clients)
             {
@@ -338,19 +343,19 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                     IdCar = car.IdCar,
                     IdClient = client.IdClient,
                 };
-                aaContext.Carclients.Add(carclient);
+                context.AllCarclients.Add(carclient);
             }
         }
 
-        private static void AddClientsForCar(Car car, List<Client> clients, Avtoservice3cursAaContext aaContext)
+        private static void AddClientsForCar(Car car, List<Client> clients, Avtoservice3cursAaContext context)
         {
-            var carClientsToRemove = aaContext.Carclients
+            var carClientsToRemove = context.Carclients
                 .Where(cc => cc.IdCar == car.IdCar)
                 .ToList();
 
-            if (carClientsToRemove.Any())
+            if (carClientsToRemove.Count != 0)
             {
-                aaContext.Carclients.RemoveRange(carClientsToRemove);
+                context.AllCarclients.RemoveRange(carClientsToRemove);
             }
 
             // Добавьте новые связи Carclient
@@ -361,7 +366,83 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                     IdCar = car.IdCar,
                     IdClient = client.IdClient,
                 };
-                aaContext.Add(carclient);
+                context.Add(carclient);
+            }
+        }
+
+        public static void AddOrder(Employee employee, Client client, Car car, 
+            Typeofrepair typeofrepair, Status status, List<Price> prices, List<(int IdDetail, int Count)> details,
+            int costForClient, int costTotal)
+        {
+            using (var context = new Avtoservice3cursAaContext())
+            {
+                // Находим перечисление связки машина-клиент
+                var carclientIQueryable = context.Carclients
+                    .Where(c => (c.IdCar == car.IdCar) && (c.IdClient == client.IdClient));
+                // Находим айди связки перечисления
+                var carclientId = carclientIQueryable
+                    .Select(cc => cc.IdCarclient)
+                    .Single(); 
+
+                // Создаем новый ордер
+                Sale sale = new Sale()
+                {
+                    IdEmployee = employee.IdEmployee,
+                    IdCarclient = carclientId,
+                    IdTypeofrepair = typeofrepair.IdTypeofrepair,
+                    IdStatus = status.IdStatus,
+                    Date = DateTime.Now,
+                    CostForClient = costForClient,
+                    CostTotal = costTotal
+                };
+
+                // Добавляем и сохраняем ордер в бд
+                context.Add(sale);
+                context.SaveChanges();
+
+                // Перебираем все детали для создания чека деталей
+                // И сохраняем чек в бд
+                foreach (var detail in details)
+                {
+                    Checkdetail checkdetail = new Checkdetail()
+                    {
+                        IdSale = sale.IdSale,
+                        IdDetail = detail.IdDetail,
+                        DetailsCount = detail.Count
+                    };
+
+                    context.Add(checkdetail);
+                }
+
+                // Перебираем все услуги для создания чека услуг
+                // И сохраняем чек в бд
+                foreach (var price in prices)
+                {
+                    Checkprice checkprice = new Checkprice()
+                    {
+                        IdSale = sale.IdSale,
+                        IdPrice = price.IdPrice,
+                    };
+                    context.Add(checkprice);
+                }
+
+                // Сохраняем все изменения
+                context.SaveChanges();
+
+                // Перебираем все детали для изменения их количества
+                foreach (var detail in details)
+                {
+                    var newDetail = context.Details.First(d => d.IdDetail == detail.IdDetail);
+                    newDetail.Count -= detail.Count;
+
+                    context.Update(newDetail);
+                }
+
+                // Сохраняем все изменения
+                context.SaveChanges();
+
+                MessageBox.Show($"Чек, оформленный на клиента {client.FullName} успешно сохранен!", "Закрыть",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 

@@ -11,6 +11,8 @@ public partial class Carclient
 
     public int IdClient { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public virtual Car IdCarNavigation { get; set; } = null!;
 
     public virtual Client IdClientNavigation { get; set; } = null!;

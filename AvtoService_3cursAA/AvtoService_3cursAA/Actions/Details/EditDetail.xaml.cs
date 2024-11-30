@@ -83,7 +83,7 @@ namespace AvtoService_3cursAA.Actions
             dbContext = new();
             List<string> errorsList = new();
 
-            if (string.IsNullOrWhiteSpace(Name) || Cost == 0 || Count == 0)
+            if (string.IsNullOrWhiteSpace(Name) || Cost == 0)
             {
                 errorsList.Add("Заполните все обязательные поля");
             }

@@ -45,24 +45,50 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         private PriceManager priceManager;
         private ClientsAndCarsManager clientsAndCarsManager;
 
-        private int _finalCost;
-        public int FinalCost
+        // Общая стоимость
+        private int _costTotal;
+        public int CostTotal
+        {
+            get { return _costTotal; }
+            set {  _costTotal = value; }
+        }
+
+        // Стоимость для клиента
+        private int _costForClient;
+        public int CostForClient
         {
             get
             {
                 if (detailManager != null && priceManager != null)
                 {
-                    _finalCost = 0;
-                    var cost = detailManager.costDetail + priceManager.costPrice;
+                    _costForClient = 0;
+                    int cost = detailManager.costDetail + priceManager.costPrice; // Складываем все суммы
+
+                    _costTotal = cost; // Передаем общую стоимость
+
+                    // Если гарант, то делаем скидку
+                    if (_selectTypeofrepair != null && 
+                        _selectTypeofrepair.Name is "Гарантийный случай" &&
+                        TypeOfRepairComboBox.SelectedIndex != 0)
+                    {
+                        cost = Convert.ToInt32((Convert.ToDouble(cost) * 0.8));
+                    }
+                     
                     return cost;
                 }
                 return 0;
             }
             private set
             {
-                _finalCost = 0;
-                _finalCost = value;
-                finalCostTextBox.Text = _finalCost.ToString();
+                // Сбрасываем старую цену для клиента и присваиваем новую
+                _costForClient = 0;
+                _costForClient = value;
+
+                // Сбрасываем старую итоговую стоимость и присваиваем новую
+                _costTotal = 0;
+                _costTotal = value;
+
+                finalCostTextBlock.Text = _costForClient.ToString();
             }
         }
 
@@ -71,10 +97,15 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             get 
             { 
                 if (clientsAndCarsManager != null)
+                {
                     return clientsAndCarsManager.SelectedClient; 
+                }
                 return null;
             }
-            set { clientsAndCarsManager.SelectedClient = value; }
+            set 
+            {
+                clientsAndCarsManager.SelectedClient = value;
+            }
         }
 
         public Car? SelectedCar
@@ -82,10 +113,15 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             get 
             {
                 if (clientsAndCarsManager != null)
+                {
                     return clientsAndCarsManager.SelectedCar; 
+                }
                 return null;
             }
-            set { clientsAndCarsManager.SelectedCar = value; }
+            set 
+            {
+                clientsAndCarsManager.SelectedCar = value;
+            }
         }
 
         public CheckAdmin(Employee employee)
@@ -95,7 +131,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             dbContext = new Avtoservice3cursAaContext();
 
             this._thisUser = employee;
-            finalCostTextBox.Text = FinalCost.ToString();
+            finalCostTextBlock.Text = CostForClient.ToString();
         }
 
         #region РАБОТА С УСЛУГАМИ
@@ -128,6 +164,8 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                 string type = comboBox.SelectedValue.ToString();
                 _selectTypeofrepair = dbContext.Typeofrepairs.First(c => c.Name == type);
             }
+
+            UpdateFinalCost();
             CheckFields();
         }
         private void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -189,23 +227,22 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         // Очистка всех полей и комбобоксов
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            detailManager.ClearListView();
-            UpdateFinalCost();
-
-            priceManager.ClearListView(); 
-            UpdateFinalCost();
-
-            TextForCars.Text = "Сначала выберите клиента";
-            TextForClients.Text = "Выберите клиента";
-            clientsAndCarsManager = new ClientsAndCarsManager(ClientComboBox, TextForClients, CarComboBox, TextForCars, this);
-            TypeOfRepairComboBox.SelectedIndex = 0;
-            StatusComboBox.SelectedIndex = 0;
+            ClearFields();
         }
 
         // Обновление итоговой цены
         internal void UpdateFinalCost()
         {
-            finalCostTextBox.Text = FinalCost.ToString();
+            if (_selectTypeofrepair != null && 
+                _selectTypeofrepair.Name is "Гарантийный случай" &&
+                TypeOfRepairComboBox.SelectedIndex != 0)
+            {
+                finalCostTextBlock.Text = $"{CostForClient} руб + 20% скидка";
+            }
+            else
+            {
+                finalCostTextBlock.Text = $"{CostForClient} руб.";
+            }
         }
         #endregion
 
@@ -229,8 +266,38 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         // Оформление чеков
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
+            var result = MessageBox.Show("Вы действительно заполнили все поля верно?", "Подтверждение оформления чека",
+                        MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                List<(int IdDetail, int count)> details = new(detailManager.GetDetails());
+                List <Price> prices = new List<Price>(priceManager.ReturnPrices());
+
+                ActionsData.AddOrder(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
+                    _selectStatus, prices, details, CostForClient, CostTotal);
+            }
+
+            ClearFields();
         }
 
+        // Очистка всех полей
+        private void ClearFields()
+        {
+            detailManager.ClearListView();
+            UpdateFinalCost();
+
+            priceManager.ClearListView();
+            UpdateFinalCost();
+
+            TextForCars.Text = "Сначала выберите клиента";
+            TextForClients.Text = "Выберите клиента";
+            clientsAndCarsManager = new ClientsAndCarsManager(ClientComboBox, TextForClients, CarComboBox, TextForCars, this);
+            TypeOfRepairComboBox.SelectedIndex = 0;
+            StatusComboBox.SelectedIndex = 0;
+        }
+
+        // Проверка на то, что все поля заполнены
         internal void CheckFields()
         {
             // Проверяем, заполнены ли все необходимые поля

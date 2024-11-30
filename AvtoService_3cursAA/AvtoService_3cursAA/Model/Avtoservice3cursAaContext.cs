@@ -19,7 +19,7 @@ public partial class Avtoservice3cursAaContext : DbContext
     #region Все записи
     public virtual DbSet<Car> AllCars { get; set; } // Все автомобили
 
-    public virtual DbSet<Carclient> Carclients { get; set; }
+    public virtual DbSet<Carclient> AllCarclients { get; set; }
 
     public virtual DbSet<Checkdetail> Checkdetails { get; set; }
 
@@ -48,6 +48,7 @@ public partial class Avtoservice3cursAaContext : DbContext
     public IQueryable<Detail> Details => AllDetails.Where(detail => !detail.IsDeleted); // Только существующие детали
     public IQueryable<Employee> Employees => AllEmployees.Where(employee => !employee.IsDeleted); // Только активные сотрудники
     public IQueryable<Price> Prices => AllPrices.Where(price => !price.IsDeleted); // Только существующие услуги
+    public IQueryable<Carclient> Carclients => AllCarclients.Where(carclient => !carclient.IsDeleted); // Только существующие услуги
 
     #endregion
 
@@ -106,6 +107,10 @@ public partial class Avtoservice3cursAaContext : DbContext
             entity.Property(e => e.IdCarclient).HasColumnName("id_carclient");
             entity.Property(e => e.IdCar).HasColumnName("id_car");
             entity.Property(e => e.IdClient).HasColumnName("id_client");
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
 
             entity.HasOne(d => d.IdCarNavigation).WithMany(p => p.Carclients)
                 .HasForeignKey(d => d.IdCar)
@@ -131,6 +136,7 @@ public partial class Avtoservice3cursAaContext : DbContext
             entity.Property(e => e.IdCheckdetail).HasColumnName("id_checkdetail");
             entity.Property(e => e.IdDetail).HasColumnName("id_detail");
             entity.Property(e => e.IdSale).HasColumnName("id_sale");
+            entity.Property(e => e.DetailsCount).HasColumnName("details_count");
 
             entity.HasOne(d => d.IdDetailNavigation).WithMany(p => p.Checkdetails)
                 .HasForeignKey(d => d.IdDetail)
@@ -307,6 +313,8 @@ public partial class Avtoservice3cursAaContext : DbContext
             entity.Property(e => e.IdEmployee).HasColumnName("id_employee");
             entity.Property(e => e.IdStatus).HasColumnName("id_status");
             entity.Property(e => e.IdTypeofrepair).HasColumnName("id_typeofrepair");
+            entity.Property(e => e.CostForClient).HasColumnName("cost_for_client");
+            entity.Property(e => e.CostTotal).HasColumnName("cost_total");
 
             entity.HasOne(d => d.IdCarclientNavigation).WithMany(p => p.Sales)
                 .HasForeignKey(d => d.IdCarclient)

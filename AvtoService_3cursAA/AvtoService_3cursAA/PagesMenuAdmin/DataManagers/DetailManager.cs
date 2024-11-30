@@ -98,7 +98,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
 
             // инициализиурем класс ClientCollection для работы с UserContol
             DetailCollection = new DetailCollection(_parentWindow);
-            // в качестве источника ресурсов указыаем нашу коллекицю пользователей
+            // в качестве источника ресурсов указыаем нашу коллекицию пользователей
             // которую только что инициализировали
             _listViewItems.ItemsSource = DetailCollection.Details;
 
@@ -130,6 +130,15 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
 
             if (selectedDetail != null)
             {
+                if (selectedDetail.Count == 0)
+                {
+                    MessageBox.Show("Данные детали отсутствуют на складе!", "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                    _comboBoxDetails.ItemsSource = null;
+                    return;
+                }
+
                 DetailCollection.AddDetail(selectedDetail); // добавляем в itemSource ItemControl
                 Details.Remove(selectedDetail); // удаляем его из комбобокса
                 FillDetails();
@@ -168,7 +177,18 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
             FillDetails();
         }
 
-        public ObservableCollection<DetailItem> ReturnDetails()
+        internal List<(int IdDetail, int Count)> GetDetails()
+        {
+            List <(int IdDetail, int Count)> list = new();
+            foreach (var item in DetailCollection.Details)
+            {
+                list.Add((item.IdDetail, item.Count));
+            }
+
+            return list;
+        }
+
+        private ObservableCollection<DetailItem> ReturnDetails()
         {
             return DetailCollection.Details;
         }
