@@ -53,11 +53,11 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
             _carsManager.SelectedClient = ClientCars;
             _carsManager.UpdateClient();
 
-            _parentWindow.CheckFields();
+            _parentWindow.VisibilityButtonAdd();
         }
         public static void UpdateSelectedItemsForCar()
         {
-            _parentWindow.CheckFields();
+            _parentWindow.VisibilityButtonAdd();
         }
 
         public class ClientsManager

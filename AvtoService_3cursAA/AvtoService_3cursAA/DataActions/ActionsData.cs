@@ -371,7 +371,7 @@ namespace AvtoService_3cursAA.ActionsForEmployee
         }
 
         public static void AddOrder(Employee employee, Client client, Car car, 
-            Typeofrepair typeofrepair, Status status, List<Price> prices, List<(int IdDetail, int Count)> details,
+            Typeofrepair typeofrepair, List<Price> prices, List<(int IdDetail, int Count)> details,
             int costForClient, int costTotal)
         {
             using (var context = new Avtoservice3cursAaContext())
@@ -390,7 +390,6 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                     IdEmployee = employee.IdEmployee,
                     IdCarclient = carclientId,
                     IdTypeofrepair = typeofrepair.IdTypeofrepair,
-                    IdStatus = status.IdStatus,
                     Date = DateTime.Now,
                     CostForClient = costForClient,
                     CostTotal = costTotal

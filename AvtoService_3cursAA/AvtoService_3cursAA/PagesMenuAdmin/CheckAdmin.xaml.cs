@@ -37,7 +37,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         private Client _selectClient;
         private Car _selectCar;
         private Typeofrepair _selectTypeofrepair;
-        private Status _selectStatus;
         private Employee _thisUser;
 
         private static Avtoservice3cursAaContext dbContext;
@@ -92,6 +91,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             }
         }
 
+        // Выранный клиент
         public Client? SelectedClient
         {
             get 
@@ -108,6 +108,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             }
         }
 
+        // Выбранное авто
         public Car? SelectedCar
         {
             get 
@@ -166,17 +167,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             }
 
             UpdateFinalCost();
-            CheckFields();
-        }
-        private void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var comboBox = sender as ComboBox;
-            if (comboBox != null && comboBox.SelectedIndex != 0)
-            {
-                string status = comboBox.SelectedValue.ToString();
-                _selectStatus = dbContext.Statuses.First(c => c.Name == status);
-            }
-            CheckFields();
+            VisibilityButtonAdd();
         }
         #endregion
 
@@ -195,9 +186,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
             var TypeOfRepairList = FillDataFilterSorter.FillTypeOfStatusRepair();
             TypeOfRepairComboBox.ItemsSource = TypeOfRepairList;    
-
-            var StatusList = FillDataFilterSorter.FillStatus();
-            StatusComboBox.ItemsSource = StatusList;
         }
 
          // Очистка листа с деталями
@@ -221,7 +209,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             TextForClients.Text = "Выберите клиента";
             clientsAndCarsManager = new ClientsAndCarsManager(ClientComboBox, TextForClients, CarComboBox, TextForCars, this);
             TypeOfRepairComboBox.SelectedIndex = 0;
-            StatusComboBox.SelectedIndex = 0;
         }
 
         // Очистка всех полей и комбобоксов
@@ -261,6 +248,30 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         {
 
         }
+
+        private void PdfSave()
+        {
+            bool allFieldsFilled = CheckFields();
+            if (!allFieldsFilled) return;
+
+
+        }
+
+        private void WordSave()
+        {
+            bool allFieldsFilled = CheckFields();
+            if (!allFieldsFilled) return;
+
+
+        }
+
+        private void ExcelSave()
+        {
+            bool allFieldsFilled = CheckFields();
+            if (!allFieldsFilled) return;
+
+
+        }
         #endregion
 
         // Оформление чеков
@@ -275,7 +286,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                 List <Price> prices = new List<Price>(priceManager.ReturnPrices());
 
                 ActionsData.AddOrder(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
-                    _selectStatus, prices, details, CostForClient, CostTotal);
+                    prices, details, CostForClient, CostTotal);
             }
 
             ClearFields();
@@ -294,20 +305,13 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             TextForClients.Text = "Выберите клиента";
             clientsAndCarsManager = new ClientsAndCarsManager(ClientComboBox, TextForClients, CarComboBox, TextForCars, this);
             TypeOfRepairComboBox.SelectedIndex = 0;
-            StatusComboBox.SelectedIndex = 0;
         }
 
         // Проверка на то, что все поля заполнены
-        internal void CheckFields()
+        internal void VisibilityButtonAdd()
         {
             // Проверяем, заполнены ли все необходимые поля
-            bool allFieldsFilled = SelectedClient != null &&
-                                   SelectedCar != null &&
-                                   StatusComboBox.SelectedIndex != 0 &&
-                                   TypeOfRepairComboBox.SelectedIndex != 0 &&
-                                   ListViewPriceItems.Items.Count != 0 &&
-                                   ListViewDetailItems.Items.Count != 0;
-
+            bool allFieldsFilled = CheckFields();
 
             // Включаем или отключаем кнопку в зависимости от состояния полей
             if (allFieldsFilled)
@@ -324,6 +328,18 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             // Устанавливаем подсказку для кнопки
             AddButton.Opacity = allFieldsFilled ? 1 : 0.5;
             AddButton.ToolTip = allFieldsFilled ? null : "Пожалуйста, заполните все поля перед созданием заказа.";
+        }
+
+        private bool CheckFields()
+        {
+            // Проверяем, заполнены ли все необходимые поля
+            bool allFieldsFilled = SelectedClient != null &&
+                                   SelectedCar != null &&
+                                   TypeOfRepairComboBox.SelectedIndex != 0 &&
+                                   ListViewPriceItems.Items.Count != 0 &&
+                                   ListViewDetailItems.Items.Count != 0;
+
+            return allFieldsFilled;
         }
     }
 }

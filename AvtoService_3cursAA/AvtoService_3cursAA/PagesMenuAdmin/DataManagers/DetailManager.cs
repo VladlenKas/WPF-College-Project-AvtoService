@@ -92,7 +92,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         private void DetailManagerLoad()
         {
             // инициализируем списки со всеми элементами и список
-            var listAllPrices = dbContext.Details.ToList();
+            var listAllPrices = dbContext.Details.Where(d => d.Count != 0).ToList();
             Details = new ObservableCollection<Detail>(listAllPrices);
             FilteredDetails = new ObservableCollection<Detail>(listAllPrices);
 
@@ -130,15 +130,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
 
             if (selectedDetail != null)
             {
-                if (selectedDetail.Count == 0)
-                {
-                    MessageBox.Show("Данные детали отсутствуют на складе!", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-
-                    _comboBoxDetails.ItemsSource = null;
-                    return;
-                }
-
                 DetailCollection.AddDetail(selectedDetail); // добавляем в itemSource ItemControl
                 Details.Remove(selectedDetail); // удаляем его из комбобокса
                 FillDetails();
@@ -262,7 +253,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
             costDetail = 0;
             costDetail += cost;
             _parentWindow.UpdateFinalCost();
-            _parentWindow.CheckFields();
+            _parentWindow.VisibilityButtonAdd();
         }
     }
 }

@@ -37,8 +37,6 @@ public partial class Avtoservice3cursAaContext : DbContext
 
     public virtual DbSet<Sale> Sales { get; set; }
 
-    public virtual DbSet<Status> Statuses { get; set; }
-
     public virtual DbSet<Typeofrepair> Typeofrepairs { get; set; } 
     #endregion
 
@@ -326,27 +324,10 @@ public partial class Avtoservice3cursAaContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("id_employee");
 
-            entity.HasOne(d => d.IdStatusNavigation).WithMany(p => p.Sales)
-                .HasForeignKey(d => d.IdStatus)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("id_status");
-
             entity.HasOne(d => d.IdTypeofrepairNavigation).WithMany(p => p.Sales)
                 .HasForeignKey(d => d.IdTypeofrepair)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("id_typeofrepair");
-        });
-
-        modelBuilder.Entity<Status>(entity =>
-        {
-            entity.HasKey(e => e.IdStatus).HasName("PRIMARY");
-
-            entity.ToTable("status");
-
-            entity.Property(e => e.IdStatus).HasColumnName("id_status");
-            entity.Property(e => e.Name)
-                .HasMaxLength(45)
-                .HasColumnName("name");
         });
 
         modelBuilder.Entity<Typeofrepair>(entity =>

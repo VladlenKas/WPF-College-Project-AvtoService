@@ -44,11 +44,6 @@ namespace AvtoService_3cursAA.ActionsForEmployee
             "Выберите тип ремонта",
             new Separator { Margin = new Thickness(0, 5, 0, 5), Width = 150 }
         };
-        private readonly static List<object> _statusList = new List<object>
-        {
-            "Выберите статус ремонта",
-            new Separator { Margin = new Thickness(0, 5, 0, 5), Width = 150 }
-        };
 
         public static List<object> FillListClients()
         {
@@ -75,15 +70,6 @@ namespace AvtoService_3cursAA.ActionsForEmployee
         {
             var list = new List<object>(_typeOfRepairList);
             foreach (var item in dbContext.Typeofrepairs)
-            {
-                list.Add(item.Name);
-            }
-            return list;
-        }
-        public static List<object> FillStatus()
-        {
-            var list = new List<object>(_statusList);
-            foreach (var item in dbContext.Statuses)
             {
                 list.Add(item.Name);
             }

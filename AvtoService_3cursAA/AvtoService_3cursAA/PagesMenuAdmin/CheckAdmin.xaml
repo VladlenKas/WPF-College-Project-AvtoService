@@ -277,20 +277,6 @@
                                             <materialDesign:PackIcon Kind="Wrench"/>
                                         </Grid>
                                     </StackPanel>
-
-                                    <StackPanel>
-                                        <TextBlock Text="Статус ремонта" Style="{StaticResource header}"/>
-                                        <Grid>
-                                            <ComboBox
-                                                IsHitTestVisible="True"
-                                                Name="StatusComboBox"
-                                                SelectionChanged="StatusComboBox_SelectionChanged"
-                                                SelectedIndex="0"
-                                                DockPanel.Dock="Top"
-                                                ItemsSource="{Binding StatusesList}"/>
-                                            <materialDesign:PackIcon Kind="Timelapse"/>
-                                        </Grid>
-                                    </StackPanel>
                                 </StackPanel>
 
                                 <StackPanel DockPanel.Dock="Bottom">
