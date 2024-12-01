@@ -70,6 +70,19 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style TargetType="{x:Type Button}" x:Key="WordButton" BasedOn="{StaticResource NextButton}">
+        <Setter Property="Background" Value="{StaticResource AuthGradientNone}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource AuthGradient}"/>
+            </Trigger>
+
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{StaticResource AuthGradientPressed}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
     <!--#endregion-->
 
     <Style x:Key="CardIconStyle" TargetType="materialDesign:PackIcon">

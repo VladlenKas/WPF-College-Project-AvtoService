@@ -299,8 +299,6 @@ public partial class Avtoservice3cursAaContext : DbContext
 
             entity.HasIndex(e => e.IdEmployee, "id_employee_idx");
 
-            entity.HasIndex(e => e.IdStatus, "id_status_idx");
-
             entity.HasIndex(e => e.IdTypeofrepair, "id_typeofrepair_idx");
 
             entity.Property(e => e.IdSale).HasColumnName("id_sale");
@@ -309,7 +307,6 @@ public partial class Avtoservice3cursAaContext : DbContext
                 .HasColumnName("date");
             entity.Property(e => e.IdCarclient).HasColumnName("id_carclient");
             entity.Property(e => e.IdEmployee).HasColumnName("id_employee");
-            entity.Property(e => e.IdStatus).HasColumnName("id_status");
             entity.Property(e => e.IdTypeofrepair).HasColumnName("id_typeofrepair");
             entity.Property(e => e.CostForClient).HasColumnName("cost_for_client");
             entity.Property(e => e.CostTotal).HasColumnName("cost_total");

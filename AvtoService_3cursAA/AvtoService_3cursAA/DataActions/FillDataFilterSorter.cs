@@ -66,7 +66,7 @@ namespace AvtoService_3cursAA.ActionsForEmployee
             }
             return list;
         }
-        public static List<object> FillTypeOfStatusRepair()
+        public static List<object> FillTypeOfRepairList()
         {
             var list = new List<object>(_typeOfRepairList);
             foreach (var item in dbContext.Typeofrepairs)

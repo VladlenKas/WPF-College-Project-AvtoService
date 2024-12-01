@@ -32,8 +32,14 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
     /// <summary>
     /// Логика взаимодействия для CheckAdmin.xaml
     /// </summary>
-    public partial class CheckAdmin 
+    public partial class CheckAdmin : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler? PropertyChanged; // реализуем интерфейс
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         private Client _selectClient;
         private Car _selectCar;
         private Typeofrepair _selectTypeofrepair;
@@ -52,8 +58,22 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             set {  _costTotal = value; }
         }
 
+        private string finalCostTextBlock;
+        public string FinalCostTextBlock {
+            get { return finalCostTextBlock; }
+            set
+            {
+                if (finalCostTextBlock != value)
+                {
+                    finalCostTextBlock = value;
+                    OnPropertyChanged(); // Уведомляем об изменении свойства
+                }
+            }
+        }         
+
         // Стоимость для клиента
         private int _costForClient;
+
         public int CostForClient
         {
             get
@@ -87,7 +107,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                 _costTotal = 0;
                 _costTotal = value;
 
-                finalCostTextBlock.Text = _costForClient.ToString();
+                FinalCostTextBlock = _costForClient.ToString();
             }
         }
 
@@ -132,7 +152,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             dbContext = new Avtoservice3cursAaContext();
 
             this._thisUser = employee;
-            finalCostTextBlock.Text = CostForClient.ToString();
+            FinalCostTextBlock = CostForClient.ToString();
         }
 
         #region РАБОТА С УСЛУГАМИ
@@ -184,8 +204,10 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
             clientsAndCarsManager = new ClientsAndCarsManager(ClientComboBox, TextForClients, CarComboBox, TextForCars, this);
 
-            var TypeOfRepairList = FillDataFilterSorter.FillTypeOfStatusRepair();
-            TypeOfRepairComboBox.ItemsSource = TypeOfRepairList;    
+            var TypeOfRepairList = FillDataFilterSorter.FillTypeOfRepairList();
+            TypeOfRepairComboBox.ItemsSource = TypeOfRepairList;
+
+            costTextBlock.DataContext = this;
         }
 
          // Очистка листа с деталями
@@ -224,11 +246,11 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                 _selectTypeofrepair.Name is "Гарантийный случай" &&
                 TypeOfRepairComboBox.SelectedIndex != 0)
             {
-                finalCostTextBlock.Text = $"{CostForClient} руб + 20% скидка";
+                FinalCostTextBlock = $"{CostForClient} руб + 20% скидка";
             }
             else
             {
-                finalCostTextBlock.Text = $"{CostForClient} руб.";
+                FinalCostTextBlock = $"{CostForClient} руб.";
             }
         }
         #endregion
@@ -287,24 +309,29 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
                 ActionsData.AddOrder(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
                     prices, details, CostForClient, CostTotal);
+                ClearFields();
             }
-
-            ClearFields();
         }
 
         // Очистка всех полей
         private void ClearFields()
         {
-            detailManager.ClearListView();
-            UpdateFinalCost();
+            var result = MessageBox.Show("Очистить все поля?", "Подтверждение",
+                        MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-            priceManager.ClearListView();
-            UpdateFinalCost();
+            if (result == MessageBoxResult.Yes)
+            {
+                detailManager.ClearListView();
+                UpdateFinalCost();
 
-            TextForCars.Text = "Сначала выберите клиента";
-            TextForClients.Text = "Выберите клиента";
-            clientsAndCarsManager = new ClientsAndCarsManager(ClientComboBox, TextForClients, CarComboBox, TextForCars, this);
-            TypeOfRepairComboBox.SelectedIndex = 0;
+                priceManager.ClearListView();
+                UpdateFinalCost();
+
+                TextForCars.Text = "Сначала выберите клиента";
+                TextForClients.Text = "Выберите клиента";
+                clientsAndCarsManager = new ClientsAndCarsManager(ClientComboBox, TextForClients, CarComboBox, TextForCars, this);
+                TypeOfRepairComboBox.SelectedIndex = 0;
+            }
         }
 
         // Проверка на то, что все поля заполнены
@@ -326,6 +353,16 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             }
 
             // Устанавливаем подсказку для кнопки
+            wordGrid.Opacity = allFieldsFilled ? 1 : 0.5;
+            excelGrid.Opacity = allFieldsFilled ? 1 : 0.5;
+            pdfGrid.Opacity = allFieldsFilled ? 1 : 0.6;
+
+            string text = "Пожалуйста, заполните все поля перед выбором опции.";
+            string text2 = "Сохранить в ";
+            wordButton.ToolTip = allFieldsFilled ? text2 + "Word." : text;
+            excelButton.ToolTip = allFieldsFilled ? text2 + "Excel." : text;
+            pdfButton.ToolTip = allFieldsFilled ? text2 + "PDF." : text;
+
             AddButton.Opacity = allFieldsFilled ? 1 : 0.5;
             AddButton.ToolTip = allFieldsFilled ? null : "Пожалуйста, заполните все поля перед созданием заказа.";
         }

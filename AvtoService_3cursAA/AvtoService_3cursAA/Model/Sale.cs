@@ -9,8 +9,6 @@ public partial class Sale
 
     public int IdEmployee { get; set; }
 
-    public int IdStatus { get; set; }
-
     public DateTime Date { get; set; }
 
     public int IdTypeofrepair { get; set; }

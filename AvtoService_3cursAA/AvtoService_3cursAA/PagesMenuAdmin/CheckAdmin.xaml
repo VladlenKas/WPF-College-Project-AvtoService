@@ -111,54 +111,70 @@
                 </Border>
 
                 <Border Margin="20 40 20 20">
-                    <DockPanel LastChildFill="False">
-                        <Button 
-                            Margin="20 0 0 0"
-                            DockPanel.Dock="Right"
-                            x:Name="AddButton"
-                            Click="AddButton_Click"
-                            Style="{StaticResource AuthButton}">
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon 
-                                    Kind="Tick" 
-                                    Height="25"
-                                    Margin="5 0"/>
-                                <TextBlock 
-                                    Text="Оформить" 
-                                    Style="{StaticResource MenuTextBlock}"/>
-                            </StackPanel>
-                        </Button>
+                    <StackPanel DockPanel.Dock="Top">
+                        <DockPanel 
+                            HorizontalAlignment="Right"
+                            DockPanel.Dock="Top">
 
-                        <Grid DockPanel.Dock="Right">
+                        <TextBlock
+                            DockPanel.Dock="Left"
+                            Style="{x:Null}"
+                            FontSize="26" 
+                            Margin="0 0 10 0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontFamily="Calibri"
+                            FontWeight="Bold"
+                            Text="Сохранить как: "/>
+
+                        <Grid 
+                            Margin="0 0 5 0"
+                            DockPanel.Dock="Left"
+                            Name="wordGrid">
                             <Button 
-                                Style="{StaticResource ResetButton}"
-                                Name="Delete"
-                                Click="Delete_Click"/>
+                                Name="wordButton"
+                                Width="Auto"
+                                Style="{StaticResource WordButton}"
+                                Click="wordButton_Click"/>
                             <materialDesign:PackIcon 
-                                Kind="Loop"
+                                Height="28"
+                                Width="28"
+                                Kind="FileWordBox"
                                 Style="{StaticResource CardIconStyle}"/>
                         </Grid>
 
-                        <TextBlock 
-                            Margin="0 0 50 0"
-                            Foreground="Green"
-                            Name="finalCostTextBlock"
-                            Padding="0"
-                            VerticalAlignment="Center"
-                            DockPanel.Dock="Right"
-                            Style="{StaticResource HeaderTextBlock}"
-                            FontSize="28"
-                            TextWrapping="Wrap"/>
-                        <TextBlock 
-                            Margin="0"
-                            Padding="0"
-                            VerticalAlignment="Center"
-                            DockPanel.Dock="Right"
-                            Style="{StaticResource HeaderTextBlock}"
-                            FontSize="28"
-                            TextWrapping="Wrap"
-                            Text="Итоговая стоимость: "/>
-                    </DockPanel>
+                        <Grid 
+                            Margin="0 0 5 0"
+                            DockPanel.Dock="Left"
+                            Name="excelGrid">
+                            <Button 
+                                Name="excelButton"
+                                Width="Auto"
+                                Style="{StaticResource EditButton}"
+                                Click="excelButton_Click"/>
+                            <materialDesign:PackIcon 
+                                Height="28"
+                                Width="28"
+                                Kind="FileExcelBox"
+                                Style="{StaticResource CardIconStyle}"/>
+                        </Grid>
+
+                        <Grid 
+                            DockPanel.Dock="Left" 
+                            Name="pdfGrid">
+                            <Button 
+                                Name="pdfButton"
+                                Width="Auto"
+                                Style="{StaticResource DeleteButton}"
+                                Click="pdfButton_Click"/>
+                            <materialDesign:PackIcon 
+                                Height="28"
+                                Width="28"
+                                Kind="FilePdfBox"
+                                Style="{StaticResource CardIconStyle}"/>
+                            </Grid>
+                        </DockPanel>
+                    </StackPanel>
                 </Border>
             </Grid>
 
@@ -206,7 +222,7 @@
                                         HorizontalAlignment="Center"
                                         FontFamily="Calibri"
                                         FontWeight="Bold"
-                                        Text="Данные для оформления чека"/>
+                                        Text="Данные"/>
 
                                     <StackPanel>
                                         <TextBlock Text="ФИО сотрудника" Style="{StaticResource header}"/>
@@ -277,47 +293,55 @@
                                             <materialDesign:PackIcon Kind="Wrench"/>
                                         </Grid>
                                     </StackPanel>
+
+
+                                    <TextBlock 
+                                        Name="costTextBlock"
+                                        Margin="0"
+                                        Padding="0"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Bottom"
+                                        Style="{StaticResource HeaderTextBlock}"
+                                        FontSize="28"
+                                        TextWrapping="Wrap">
+                                        <Run Text="Итоговая стоимость: "/>
+                                        <Run Text="{Binding FinalCostTextBlock, UpdateSourceTrigger=PropertyChanged}" Foreground="Green"/>
+                                    </TextBlock>
                                 </StackPanel>
 
-                                <StackPanel DockPanel.Dock="Bottom">
+                                <DockPanel 
+                                    DockPanel.Dock="Bottom"
+                                    LastChildFill="True">
                                     <Grid 
-                                        DockPanel.Dock="Bottom"
-                                        Margin="0 0 0 10">
+                                            Margin="0 0 15 0"
+                                            DockPanel.Dock="Left">
                                         <Button 
-                                            Name="wordButton"
-                                            Content="Сохранить чеки в формате WORD" 
-                                            Click="wordButton_Click"/>
+                                                Style="{StaticResource ResetButton}"
+                                                Name="Delete"
+                                                Click="Delete_Click"/>
                                         <materialDesign:PackIcon 
-                                            Kind="FileWordBox"
-                                            Foreground="Blue"/>
+                                                Kind="Loop"
+                                                Style="{StaticResource CardIconStyle}"/>
                                     </Grid>
 
-                                    <Grid 
-                                        DockPanel.Dock="Bottom"
-                                        Margin="0 0 0 10">
-                                        <Button 
-                                            Name="excelButton"
-                                            Content="Сохранить чеки в формате EXCEL" 
-                                            Click="excelButton_Click"/>
-                                        <materialDesign:PackIcon 
-                                            Kind="FileExcelBox"
-                                            Foreground="Green"/>
-                                    </Grid>
-
-                                    <Grid 
-                                        DockPanel.Dock="Bottom"
-                                        Margin="0 0 0 10">
-                                        <Button 
-                                            Name="pdfButton"
-                                            Content="Сохранить чеки в формате PDF" 
-                                            Click="pdfButton_Click"/>
-                                        <materialDesign:PackIcon 
-                                            Kind="FilePdfBox"
-                                            Foreground="Red"/>
-                                    </Grid>
-
-                                    <Grid Height="30"/>
-
+                                    <Button 
+                                            Width="Auto"
+                                            DockPanel.Dock="Left"
+                                            x:Name="AddButton"
+                                            Click="AddButton_Click"
+                                            Style="{StaticResource AuthButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon 
+                                                    Kind="Tick" 
+                                                    Height="25"
+                                                    Margin="5 0"/>
+                                            <TextBlock 
+                                                    Text="Оформить" 
+                                                    Style="{StaticResource MenuTextBlock}"/>
+                                        </StackPanel>
+                                    </Button>
+                                </DockPanel>
+                                <!--<StackPanel DockPanel.Dock="Bottom">
                                     <Grid 
                                         Margin="0 0 0 10"
                                         DockPanel.Dock="Bottom">
@@ -345,7 +369,7 @@
                                         <materialDesign:PackIcon 
                                          Kind="loop"/>
                                     </Grid>
-                                </StackPanel>
+                                </StackPanel>-->
                             </DockPanel>
 
                             <!-- Облсть с выбранными услугами -->
@@ -440,7 +464,7 @@
                                         FontWeight="Bold"
                                         VerticalAlignment="Center"
                                         TextWrapping="WrapWithOverflow"
-                                        Text="Товары для ремонта"/>
+                                        Text="Ремонтные детали"/>
 
                                     <Grid DockPanel.Dock="Top">
                                         <StackPanel>
