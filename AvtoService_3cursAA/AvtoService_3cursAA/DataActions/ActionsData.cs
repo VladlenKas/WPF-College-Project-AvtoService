@@ -3,8 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -370,7 +372,7 @@ namespace AvtoService_3cursAA.ActionsForEmployee
             }
         }
 
-        public static void AddOrder(Employee employee, Client client, Car car, 
+        public static void AddOrderAll(Employee employee, Client client, Car car, 
             Typeofrepair typeofrepair, List<Price> prices, List<(int IdDetail, int Count)> details,
             int costForClient, int costTotal)
         {
@@ -440,7 +442,118 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                 // Сохраняем все изменения
                 context.SaveChanges();
 
-                MessageBox.Show($"Чек, оформленный на клиента {client.FullName} успешно сохранен!", "Закрыть",
+                MessageBox.Show($"Чек, оформленный на клиента {client.FullName}, успешно сохранен!", "Закрыть",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        public static void AddOrderPrices(Employee employee, Client client, Car car,
+            Typeofrepair typeofrepair, List<Price> prices, int costForClient, int costTotal)
+        {
+            using (var context = new Avtoservice3cursAaContext())
+            {
+                // Находим перечисление связки машина-клиент
+                var carclientIQueryable = context.Carclients
+                    .Where(c => (c.IdCar == car.IdCar) && (c.IdClient == client.IdClient));
+                // Находим айди связки перечисления
+                var carclientId = carclientIQueryable
+                    .Select(cc => cc.IdCarclient)
+                    .Single();
+
+                // Создаем новый ордер
+                Sale sale = new Sale()
+                {
+                    IdEmployee = employee.IdEmployee,
+                    IdCarclient = carclientId,
+                    IdTypeofrepair = typeofrepair.IdTypeofrepair,
+                    Date = DateTime.Now,
+                    CostForClient = costForClient,
+                    CostTotal = costTotal
+                };
+
+                // Добавляем и сохраняем ордер в бд
+                context.Add(sale);
+                context.SaveChanges();
+
+                // Перебираем все услуги для создания чека услуг
+                // И сохраняем чек в бд
+                foreach (var price in prices)
+                {
+                    Checkprice checkprice = new Checkprice()
+                    {
+                        IdSale = sale.IdSale,
+                        IdPrice = price.IdPrice,
+                    };
+                    context.Add(checkprice);
+                }
+
+                // Сохраняем все изменения
+                context.SaveChanges();
+
+                MessageBox.Show($"Чек, оформленный на клиента {client.FullName}, успешно сохранен!", "Закрыть",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        public static void AddOrderDetails(Employee employee, Client client, Car car,
+            Typeofrepair typeofrepair, List<(int IdDetail, int Count)> details,
+            int costForClient, int costTotal)
+        {
+            using (var context = new Avtoservice3cursAaContext())
+            {
+                // Находим перечисление связки машина-клиент
+                var carclientIQueryable = context.Carclients
+                    .Where(c => (c.IdCar == car.IdCar) && (c.IdClient == client.IdClient));
+                // Находим айди связки перечисления
+                var carclientId = carclientIQueryable
+                    .Select(cc => cc.IdCarclient)
+                    .Single();
+
+                // Создаем новый ордер
+                Sale sale = new Sale()
+                {
+                    IdEmployee = employee.IdEmployee,
+                    IdCarclient = carclientId,
+                    IdTypeofrepair = typeofrepair.IdTypeofrepair,
+                    Date = DateTime.Now,
+                    CostForClient = costForClient,
+                    CostTotal = costTotal
+                };
+
+                // Добавляем и сохраняем ордер в бд
+                context.Add(sale);
+                context.SaveChanges();
+
+                // Перебираем все детали для создания чека деталей
+                // И сохраняем чек в бд
+                foreach (var detail in details)
+                {
+                    Checkdetail checkdetail = new Checkdetail()
+                    {
+                        IdSale = sale.IdSale,
+                        IdDetail = detail.IdDetail,
+                        DetailsCount = detail.Count
+                    };
+
+                    context.Add(checkdetail);
+                }
+
+                // Сохраняем все изменения
+                context.SaveChanges();
+
+                // Перебираем все детали для изменения их количества
+                foreach (var detail in details)
+                {
+                    var newDetail = context.Details.First(d => d.IdDetail == detail.IdDetail);
+                    newDetail.Count -= detail.Count;
+
+                    context.Update(newDetail);
+                }
+
+                // Сохраняем все изменения
+                context.SaveChanges();
+
+                MessageBox.Show($"Чек, оформленный на клиента {client.FullName}, успешно сохранен!", "Закрыть",
                         MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }

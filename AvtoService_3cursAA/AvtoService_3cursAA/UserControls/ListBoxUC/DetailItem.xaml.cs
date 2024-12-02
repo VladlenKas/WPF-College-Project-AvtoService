@@ -27,6 +27,7 @@ namespace AvtoService_3cursAA.UserControls.CheckUC
     {
         public int Cost => _count * _detail.Cost;
         public int Count => _count;
+        public string Name => _detail.Name;
         public int IdDetail => _detail.IdDetail;
 
         private Avtoservice3cursAaContext dbContext;

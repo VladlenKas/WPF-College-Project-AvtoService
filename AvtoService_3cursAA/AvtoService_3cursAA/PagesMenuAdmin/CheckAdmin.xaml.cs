@@ -1,13 +1,10 @@
 ﻿using AvtoService_3cursAA.ActionsForEmployee;
 using AvtoService_3cursAA.Model;
-using AvtoService_3cursAA.PagesMenuAdmin.Collections;
 using AvtoService_3cursAA.PagesMenuAdmin.DataManagers;
-using AvtoService_3cursAA.UserControls.CheckUC;
-using AvtoService_3cursAA.UserControls.PriceUC;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Windows.Forms;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
@@ -26,6 +23,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static AvtoService_3cursAA.PagesMenuAdmin.DataManagers.ClientsAndCarsManager;
+using OfficeOpenXml;
+using System.IO;
+
 
 namespace AvtoService_3cursAA.PagesMenuAdmin
 {
@@ -40,6 +40,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        private int bordersEnabled = 0;
         private Client _selectClient;
         private Car _selectCar;
         private Typeofrepair _selectTypeofrepair;
@@ -210,33 +211,16 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             costTextBlock.DataContext = this;
         }
 
-         // Очистка листа с деталями
-        private void ClearDetailList_Click(object sender, RoutedEventArgs e)
-        {
-            detailManager.ClearListView();
-            UpdateFinalCost();
-        }
-
-        // Очистка листа с услугами
-        private void ClearPriceList_Click(object sender, RoutedEventArgs e)
-        {
-            priceManager.ClearListView();
-            UpdateFinalCost();
-        }
-
-        // Очистка комобоксов с данными
-        private void ClearDataButton_Click(object sender, RoutedEventArgs e)
-        {
-            TextForCars.Text = "Сначала выберите клиента";
-            TextForClients.Text = "Выберите клиента";
-            clientsAndCarsManager = new ClientsAndCarsManager(ClientComboBox, TextForClients, CarComboBox, TextForCars, this);
-            TypeOfRepairComboBox.SelectedIndex = 0;
-        }
-
         // Очистка всех полей и комбобоксов
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            ClearFields();
+            var result = MessageBox.Show("Очистить все поля?", "Подтверждение",
+                        MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                ClearFields();
+            }
         }
 
         // Обновление итоговой цены
@@ -253,46 +237,220 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                 FinalCostTextBlock = $"{CostForClient} руб.";
             }
         }
+        private void CheckingRadioButtonsClick(object sender, RoutedEventArgs e)
+        {
+            if (sender != null)
+            {
+                RadioButton radioButton = sender as RadioButton;
+                if (radioButton.Name is "detailsRadioButton")
+                {
+                    priceBorder.Opacity = 0.5;
+                    priceBorder.IsEnabled = false;
+
+                    detailsBorder.Opacity = 1;
+                    detailsBorder.IsEnabled = true;
+
+                    priceManager.ClearListView();
+                    UpdateFinalCost();
+
+                    bordersEnabled = 2;
+                    VisibilityButtonAdd();
+                }
+                else if (radioButton.Name is "pricesRadioButton")
+                {
+                    detailsBorder.Opacity = 0.5;
+                    detailsBorder.IsEnabled = false;
+
+                    priceBorder.Opacity = 1;
+                    priceBorder.IsEnabled = true;
+
+                    detailManager.ClearListView();
+                    UpdateFinalCost();
+
+                    bordersEnabled = 1;
+                    VisibilityButtonAdd();
+                }
+                else
+                {
+                    detailsBorder.Opacity = 1;
+                    detailsBorder.IsEnabled = true;
+
+                    priceBorder.Opacity = 1;
+                    priceBorder.IsEnabled = true;
+
+                    bordersEnabled = 0;
+                    VisibilityButtonAdd();
+                }
+            }
+        }
         #endregion
 
         #region МЕТОДЫ С ФАЙЛАМИ
         private void pdfButton_Click(object sender, RoutedEventArgs e)
         {
-
+            PdfSave();
         }
 
         private void wordButton_Click(object sender, RoutedEventArgs e)
         {
-
+            WordSave();
         }
 
         private void excelButton_Click(object sender, RoutedEventArgs e)
         {
-
+            ExcelSave();
         }
 
         private void PdfSave()
         {
-            bool allFieldsFilled = CheckFields();
-            if (!allFieldsFilled) return;
-
 
         }
 
         private void WordSave()
         {
-            bool allFieldsFilled = CheckFields();
-            if (!allFieldsFilled) return;
-
-
+            
         }
 
+        [STAThread]
         private void ExcelSave()
         {
-            bool allFieldsFilled = CheckFields();
-            if (!allFieldsFilled) return;
+            using (var context = new Avtoservice3cursAaContext())
+            {
+                // находим максимальный айдишник для нового чека
+                var lastSale = context.Sales.OrderByDescending(s => s.IdSale).FirstOrDefault();
+                var idOrder = (lastSale?.IdSale ?? 0) + 1; // Если продаж еще не было, она становится первой
 
+                // Вызываем диалоговое окно для сохранения таблицы
+                SaveFileDialog saveFileDialog = new SaveFileDialog()
+                {
+                    Filter = "Excel Files|*.xlsx*",
+                    Title = "Сохранить Excel файл",
+                    FileName = $"Чек {idOrder}"
+                };
 
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    // Устанавливаем контекст лицензии
+                    ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+
+                    // Создаем новый Excel документ
+                    using (var excelDocument = new ExcelPackage())
+                    {
+                        // Создаем страницу и называем ее
+                        var worksheet = excelDocument.Workbook.Worksheets.Add("Чек для услуг и деталей");
+
+                        #region Чек для деталей
+                        // Заголовок чека
+                        worksheet.SetValue(1, 1, $"Чек {idOrder}");
+                        worksheet.Cells[1, 1, 1, 3].Merge = true; // Объединяем ячейки для заголовка
+                        worksheet.Cells[1, 1, 1, 3].Style.Font.Bold = true; // Делаем заголовок жирным
+
+                        // Заголовки столбцов 
+                        worksheet.SetValue(2, 1, "Наименование детали:");
+                        worksheet.SetValue(2, 2, "Количество:");
+                        worksheet.SetValue(2, 3, "Цена:");
+
+                        // Данные для заполнения ячеек
+                        int costDetails = 0;
+                        List<(int count, string Name, int Cost)> details = new(detailManager.GetDetailsForFile());
+
+                        int row = 3; // Начинаем заполнение с третьей линии
+                        foreach (var (count, name, cost) in details)
+                        {
+                            worksheet.SetValue(row, 1, name);
+                            worksheet.SetValue(row, 2, count);
+                            worksheet.SetValue(row, 3, cost);
+
+                            worksheet.Cells[row, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                            worksheet.Cells[row, 2].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                            worksheet.Cells[row, 3].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+
+                            costDetails += cost;
+                            row++;
+                        }
+
+                        // Итоговая сумма
+                        worksheet.SetValue(row, 2, "Итого к оплате:");
+                        if (_selectTypeofrepair.Name == "Гарантийный случай")
+                        {
+                            worksheet.SetValue(row, 3, costDetails * 0.8); // Итоговая сумма с учетом скидки
+                        }
+                        else
+                        {
+                            worksheet.SetValue(row, 3, costDetails); // Итоговая сумма без скидки
+                        }
+
+                        worksheet.Cells[row, 2].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                        worksheet.Cells[row, 3].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+
+                        row += 2; // Добавляем отступ после итоговой суммы
+
+                        // Кто оформлял, тип ремонта и дата
+                        worksheet.SetValue(row++, 1, $"Администратор: {_thisUser.FullName}");
+                        worksheet.SetValue(row++, 1, $"Тип ремонта: {_selectTypeofrepair.Name}");
+                        worksheet.SetValue(row++, 1, $"Дата оформления: {DateTime.Now}");
+
+                        row += 2; // Добавляем отступ перед следующим чеком
+                        #endregion
+
+                        #region Чек для услуг
+                        // Заголовок второго чека
+                        worksheet.SetValue(row++, 1, $"Чек {idOrder}");
+                        worksheet.Cells[row - 1, 1, row - 1, 2].Merge = true; // Объединяем ячейки для заголовка
+                        worksheet.Cells[row - 1, 1].Style.Font.Bold = true; // Делаем заголовок жирным
+
+                        // Заголовки столбцов 
+                        worksheet.SetValue(row, 1, "Наименование услуги:");
+                        worksheet.SetValue(row++, 2, "Цена:");
+
+                        // Данные для заполнения ячеек
+                        int costPrices = 0;
+                        List<Price> prices = new List<Price>(priceManager.ReturnPrices());
+
+                        foreach (var price in prices)
+                        {
+                            worksheet.SetValue(row, 1, price.Name);
+                            worksheet.SetValue(row, 2, price.Cost);
+
+                            worksheet.Cells[row, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                            worksheet.Cells[row, 2].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+
+                            costPrices += price.Cost;
+                            row++;
+                        }
+
+                        // Итоговая сумма 
+                        worksheet.SetValue(row, 1, "Итого к оплате:");
+                        worksheet.SetValue(row, 2, costPrices);
+
+                        worksheet.Cells[row, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                        worksheet.Cells[row, 2].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+                        row += 2;
+
+                        // Кто оформлял, тип ремонта и дата
+                        worksheet.SetValue(row++, 1, $"Администратор: {_thisUser.FullName}");
+                        worksheet.SetValue(row++, 1, $"Дата оформления: {DateTime.Now}");
+
+                        #endregion
+
+                        // Указываем путь до файла
+                        string filePath = @$"{saveFileDialog.FileName}.xlsx";
+                        excelDocument.SaveAs(filePath);
+
+                        // Открываем файл при желании
+                        var result = MessageBox.Show("Чек успешно сохранен! Открыть его?", "Открыть?",
+                            MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            Process.Start(new ProcessStartInfo
+                            {
+                                FileName = filePath,
+                                UseShellExecute = true // Используем оболочку Windows для открытия файла
+                            });
+                        }
+                    }
+                }
+            }
         }
         #endregion
 
@@ -307,31 +465,41 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                 List<(int IdDetail, int count)> details = new(detailManager.GetDetails());
                 List <Price> prices = new List<Price>(priceManager.ReturnPrices());
 
-                ActionsData.AddOrder(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
-                    prices, details, CostForClient, CostTotal);
-                ClearFields();
+
+                if (bordersEnabled == 1)
+                {
+                    ActionsData.AddOrderPrices(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
+                                prices, CostForClient, CostTotal);
+                    ClearFields();
+                }
+                else if (bordersEnabled == 2)
+                {
+                    ActionsData.AddOrderDetails(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
+                                details, CostForClient, CostTotal);
+                    ClearFields();
+                }
+                else
+                {
+                    ActionsData.AddOrderAll(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
+                                prices, details, CostForClient, CostTotal);
+                    ClearFields();
+                }
             }
         }
 
         // Очистка всех полей
         private void ClearFields()
         {
-            var result = MessageBox.Show("Очистить все поля?", "Подтверждение",
-                        MessageBoxButton.YesNo, MessageBoxImage.Question);
+            detailManager.ClearListView();
+            UpdateFinalCost();
 
-            if (result == MessageBoxResult.Yes)
-            {
-                detailManager.ClearListView();
-                UpdateFinalCost();
+            priceManager.ClearListView();
+            UpdateFinalCost();
 
-                priceManager.ClearListView();
-                UpdateFinalCost();
-
-                TextForCars.Text = "Сначала выберите клиента";
-                TextForClients.Text = "Выберите клиента";
-                clientsAndCarsManager = new ClientsAndCarsManager(ClientComboBox, TextForClients, CarComboBox, TextForCars, this);
-                TypeOfRepairComboBox.SelectedIndex = 0;
-            }
+            TextForCars.Text = "Сначала выберите клиента";
+            TextForClients.Text = "Выберите клиента";
+            clientsAndCarsManager = new ClientsAndCarsManager(ClientComboBox, TextForClients, CarComboBox, TextForCars, this);
+            TypeOfRepairComboBox.SelectedIndex = 0;
         }
 
         // Проверка на то, что все поля заполнены
@@ -345,11 +513,17 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             {
                 // Добавляем обработчик события
                 AddButton.Click += AddButton_Click;
+                excelButton.Click += excelButton_Click;
+                wordButton.Click += wordButton_Click;
+                pdfButton.Click += pdfButton_Click;
             }
             else
             {
                 // Удаляем обработчик события
                 AddButton.Click -= AddButton_Click;
+                excelButton.Click -= excelButton_Click;
+                wordButton.Click -= wordButton_Click;
+                pdfButton.Click -= pdfButton_Click;
             }
 
             // Устанавливаем подсказку для кнопки
@@ -369,14 +543,37 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
         private bool CheckFields()
         {
-            // Проверяем, заполнены ли все необходимые поля
-            bool allFieldsFilled = SelectedClient != null &&
-                                   SelectedCar != null &&
-                                   TypeOfRepairComboBox.SelectedIndex != 0 &&
-                                   ListViewPriceItems.Items.Count != 0 &&
-                                   ListViewDetailItems.Items.Count != 0;
+            if (bordersEnabled == 1)
+            {
+                // Если доступны только услуги
+                bool allFieldsFilled = SelectedClient != null &&
+                                       SelectedCar != null &&
+                                       TypeOfRepairComboBox.SelectedIndex != 0 &&
+                                       ListViewPriceItems.Items.Count != 0;
 
-            return allFieldsFilled;
+                return allFieldsFilled;
+            }
+            else if (bordersEnabled == 2)
+            {
+                // Если доступны только детали
+                bool allFieldsFilled = SelectedClient != null &&
+                                       SelectedCar != null &&
+                                       TypeOfRepairComboBox.SelectedIndex != 0 &&
+                                       ListViewDetailItems.Items.Count != 0;
+
+                return allFieldsFilled;
+            }
+            else
+            {
+                // Если все поля доступны
+                bool allFieldsFilled = SelectedClient != null &&
+                                       SelectedCar != null &&
+                                       TypeOfRepairComboBox.SelectedIndex != 0 &&
+                                       ListViewPriceItems.Items.Count != 0 &&
+                                       ListViewDetailItems.Items.Count != 0;
+
+                return allFieldsFilled;
+            }
         }
     }
 }

@@ -179,6 +179,17 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
             return list;
         }
 
+        internal List<(int Count, string Name, int Cost)> GetDetailsForFile()
+        {
+            List<(int Count, string Name, int Cost)> list = new();
+            foreach (var item in DetailCollection.Details)
+            {
+                list.Add((item.Count, item.Name, item.Cost));
+            }
+
+            return list;
+        }
+
         private ObservableCollection<DetailItem> ReturnDetails()
         {
             return DetailCollection.Details;

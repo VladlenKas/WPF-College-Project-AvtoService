@@ -37,6 +37,8 @@
         <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ActionTextBlock}" x:Key="header">
             <Setter Property="Foreground" Value="Black"/>
         </Style>
+
+        <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource RadioButtonDesign}"/>
         <!--#endregion-->
     </Page.Resources>
 
@@ -111,10 +113,48 @@
                 </Border>
 
                 <Border Margin="20 40 20 20">
-                    <StackPanel DockPanel.Dock="Top">
+                    <Grid>
+                        <DockPanel
+                            HorizontalAlignment="Left">
+                            <TextBlock
+                                DockPanel.Dock="Left"
+                                Style="{x:Null}"
+                                FontSize="26" 
+                                Margin="0 0 10 0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontFamily="Calibri"
+                                FontWeight="Bold"
+                                Text="Оформить чек для: "/>
+
+                            <RadioButton
+                                Margin="0 0 5 0"
+                                DockPanel.Dock="Left"
+                                VerticalAlignment="Center"
+                                Content="Деталей"
+                                Name="detailsRadioButton"
+                                Click="CheckingRadioButtonsClick"/>
+
+                            <RadioButton
+                                Margin="0 0 5 0"
+                                DockPanel.Dock="Left"
+                                VerticalAlignment="Center"
+                                Content="Услуг"
+                                Name="pricesRadioButton"
+                                Click="CheckingRadioButtonsClick"/>
+
+                            <RadioButton
+                                IsChecked="True"
+                                Margin="0 0 5 0"
+                                DockPanel.Dock="Left"
+                                VerticalAlignment="Center"
+                                Content="Оба сразу"
+                                Name="allRadioButton"
+                                Click="CheckingRadioButtonsClick"/>
+                        </DockPanel>
+                        
                         <DockPanel 
-                            HorizontalAlignment="Right"
-                            DockPanel.Dock="Top">
+                            HorizontalAlignment="Right">
 
                         <TextBlock
                             DockPanel.Dock="Left"
@@ -174,7 +214,7 @@
                                 Style="{StaticResource CardIconStyle}"/>
                             </Grid>
                         </DockPanel>
-                    </StackPanel>
+                    </Grid>
                 </Border>
             </Grid>
 
@@ -208,6 +248,7 @@
 
                             <!-- Облсть с данными для оформления чека -->
                             <DockPanel 
+                                Name="dataBorder"
                                 Effect="{x:Null}"
                                 Margin="10 0"
                                 Grid.Column="2"
@@ -341,41 +382,13 @@
                                         </StackPanel>
                                     </Button>
                                 </DockPanel>
-                                <!--<StackPanel DockPanel.Dock="Bottom">
-                                    <Grid 
-                                        Margin="0 0 0 10"
-                                        DockPanel.Dock="Bottom">
-                                        <Button 
-                                            Content="Сбросить услуги" 
-                                            Click="ClearPriceList_Click"/>
-                                        <materialDesign:PackIcon 
-                                            Kind="loop"/>
-                                    </Grid>
-                                    
-                                    <Grid 
-                                        Margin="0 0 0 10"
-                                        DockPanel.Dock="Bottom">
-                                        <Button 
-                                            Content="Сбросить товары" 
-                                            Click="ClearDetailList_Click"/>
-                                        <materialDesign:PackIcon 
-                                            Kind="loop"/>
-                                    </Grid>
-
-                                    <Grid DockPanel.Dock="Bottom">
-                                        <Button 
-                                         Content="Сбросить данные" 
-                                         Click="ClearDataButton_Click"/>
-                                        <materialDesign:PackIcon 
-                                         Kind="loop"/>
-                                    </Grid>
-                                </StackPanel>-->
                             </DockPanel>
 
                             <!-- Облсть с выбранными услугами -->
                             <DockPanel 
-                            Margin="10 0"
-                            Grid.Column="0">
+                                x:Name="priceBorder"
+                                Margin="10 0"
+                                Grid.Column="0">
 
                                 <DockPanel 
                                 LastChildFill="True"
@@ -412,7 +425,6 @@
                                         </StackPanel>
                                     </Grid>
 
-                                    <!-- Область с услугами -->
                                     <Grid>
                                         <Border 
                                             Panel.ZIndex="-1"
@@ -447,6 +459,7 @@
 
                             <!-- Облсть с выбранными деталями -->
                             <DockPanel 
+                                Name="detailsBorder"
                                 Margin="10 0"
                                 Grid.Column="1">
 
@@ -487,7 +500,6 @@
                                         </StackPanel>
                                     </Grid>
 
-                                    <!-- Область с услугами -->
                                     <Border
                                         Effect="{StaticResource dropShadowBorder}"
                                         BorderBrush="Gray"

@@ -85,6 +85,7 @@
     </Style>
     <!--#endregion-->
 
+    <!--#region Icons style -->
     <Style x:Key="CardIconStyle" TargetType="materialDesign:PackIcon">
         <Setter Property="Margin" Value="0"/>
         <Setter Property="Padding" Value="0"/>
@@ -94,4 +95,66 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="IsHitTestVisible" Value="False"/>
     </Style>
+    <!--#endregion-->
+    
+    <!--#region Radio button -->
+    <Style x:Key="RadioButtonDesign" TargetType="{x:Type RadioButton}">
+        <Setter Property="Height" Value="50"/>
+        <Setter Property="Padding" Value="20 0"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Background" Value="{StaticResource AuthGradientNone}"/>
+        <Setter Property="Effect" Value="{StaticResource dropShadowFront}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RadioButton}">
+                    <Border 
+                        Name="radioButtonBorder"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}"
+                        SnapsToDevicePixels="True"
+                        CornerRadius="25">
+
+                        <Grid>
+                            <Border x:Name="optionMark" MinWidth="6" MinHeight="6" Opacity="0"/>
+                            <ContentPresenter 
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                TextBlock.FontSize="18"
+                                TextBlock.FontFamily="Arial Rounded MT Bold"/>
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <!-- Триггер для выбора -->
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter Property="Opacity" TargetName="optionMark" Value="1"/>
+                            <Setter Property="Background" TargetName="radioButtonBorder" Value="{StaticResource AuthGradient}"/>
+                            <!-- Цвет при выборе -->
+                        </Trigger>
+
+                        <!-- Триггер для невыбранного состояния -->
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter Property="Opacity" TargetName="optionMark" Value="0.56"/>
+                            <Setter Property="Background" TargetName="radioButtonBorder" Value="Gray"/>
+                            <!-- Серый цвет при невыборе -->
+                        </Trigger>
+
+                        <!-- MultiTrigger для MouseOver только при нажатии -->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="IsPressed" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="radioButtonBorder" Value="{StaticResource AuthGradientPressed}"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion-->
+    
 </ResourceDictionary>
