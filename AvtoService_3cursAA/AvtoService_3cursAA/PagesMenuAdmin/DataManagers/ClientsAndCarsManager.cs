@@ -50,13 +50,10 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
 
         public static void UpdateSelectedItems()
         {
-            _carsManager.SelectedClient = ClientCars;
+            _carsManager.SelectedCar = null;
+            _carsManager.SelectedClient = _client;
             _carsManager.UpdateClient();
 
-            _parentWindow.VisibilityButtonAdd();
-        }
-        public static void UpdateSelectedItemsForCar()
-        {
             _parentWindow.VisibilityButtonAdd();
         }
 
@@ -284,7 +281,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                 set 
                 {
                     _selectedCar = value; 
-                    UpdateSelectedItemsForCar();
+                    _parentWindow.SelectedCar = value;
                 }
             }
 
@@ -344,6 +341,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
 
                     _comboBoxCars.ItemsSource = FilteredCars; // Передаем источник данных комбобокса
 
+                    SelectedCar = null;
                     _placeHolder.Text = "Сначала выберите клиента";
                 }
             }

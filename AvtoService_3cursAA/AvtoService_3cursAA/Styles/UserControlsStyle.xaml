@@ -128,17 +128,35 @@
                     </Border>
 
                     <ControlTemplate.Triggers>
-                        <!-- Триггер для выбора -->
+                        <!-- Триггер checked -->
                         <Trigger Property="IsChecked" Value="true">
                             <Setter Property="Opacity" TargetName="optionMark" Value="1"/>
-                            <Setter Property="Background" TargetName="radioButtonBorder" Value="{StaticResource AuthGradient}"/>
+                            <Setter Property="Background" TargetName="radioButtonBorder" Value="{StaticResource AuthGradientNone}"/>
                             <!-- Цвет при выборе -->
                         </Trigger>
+                        
+                        <!-- MultiTrigger для MouseOver когда Checed -->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="IsChecked" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="radioButtonBorder" Value="{StaticResource AuthGradient}"/>
+                        </MultiTrigger>
 
-                        <!-- Триггер для невыбранного состояния -->
+                        <!-- MultiTrigger при нажатии когда Checed -->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="True"/>
+                                <Condition Property="IsPressed" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="radioButtonBorder" Value="{StaticResource AuthGradientPressed}"/>
+                        </MultiTrigger>
+
+                        <!-- Триггер Unchecked -->
                         <Trigger Property="IsChecked" Value="False">
                             <Setter Property="Opacity" TargetName="optionMark" Value="0.56"/>
-                            <Setter Property="Background" TargetName="radioButtonBorder" Value="Gray"/>
+                            <Setter Property="Background" TargetName="radioButtonBorder" Value="{StaticResource AuthGradientNoneRed}"/>
                             <!-- Серый цвет при невыборе -->
                         </Trigger>
 
@@ -146,9 +164,18 @@
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="IsChecked" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="radioButtonBorder" Value="{StaticResource AuthGradientRed}"/>
+                        </MultiTrigger>
+
+                        <!-- MultiTrigger при нажатии когда Uncheced -->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="False"/>
                                 <Condition Property="IsPressed" Value="True"/>
                             </MultiTrigger.Conditions>
-                            <Setter Property="Background" TargetName="radioButtonBorder" Value="{StaticResource AuthGradientPressed}"/>
+                            <Setter Property="Background" TargetName="radioButtonBorder" Value="{StaticResource AuthGradientPressedRed}"/>
                         </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

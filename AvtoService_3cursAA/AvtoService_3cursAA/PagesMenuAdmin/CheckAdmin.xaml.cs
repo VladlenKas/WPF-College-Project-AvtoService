@@ -40,12 +40,11 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private int bordersEnabled = 0;
-        private Client _selectClient;
-        private Car _selectCar;
+        // Поля данных
         private Typeofrepair _selectTypeofrepair;
         private Employee _thisUser;
 
+        // Инициализация классов и контекста для работы с данными
         private static Avtoservice3cursAaContext dbContext;
         private DetailManager detailManager;
         private PriceManager priceManager;
@@ -59,22 +58,8 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             set {  _costTotal = value; }
         }
 
-        private string finalCostTextBlock;
-        public string FinalCostTextBlock {
-            get { return finalCostTextBlock; }
-            set
-            {
-                if (finalCostTextBlock != value)
-                {
-                    finalCostTextBlock = value;
-                    OnPropertyChanged(); // Уведомляем об изменении свойства
-                }
-            }
-        }         
-
-        // Стоимость для клиента
+        // Общая стоимость для клиента
         private int _costForClient;
-
         public int CostForClient
         {
             get
@@ -112,6 +97,21 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             }
         }
 
+        // Текст цены для окна
+        private string finalCostTextBlock;
+        public string FinalCostTextBlock {
+            get { return finalCostTextBlock; }
+            set
+            {
+                if (finalCostTextBlock != value)
+                {
+                    finalCostTextBlock = value;
+                    OnPropertyChanged(); // Уведомляем об изменении свойства
+                }
+            }
+        }
+
+
         // Выранный клиент
         public Client? SelectedClient
         {
@@ -130,22 +130,18 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         }
 
         // Выбранное авто
+        private Car? _selectedCar;
         public Car? SelectedCar
         {
-            get 
-            {
-                if (clientsAndCarsManager != null)
-                {
-                    return clientsAndCarsManager.SelectedCar; 
-                }
-                return null;
-            }
+            get { return _selectedCar; } 
             set 
-            {
-                clientsAndCarsManager.SelectedCar = value;
+            { 
+                _selectedCar = value;
+                VisibilityButtonAdd();
             }
         }
 
+        private int bordersEnabled = 0; // Поле для хранения выбора оформления чека
         public CheckAdmin(Employee employee)
         {
             InitializeComponent();
@@ -156,15 +152,14 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             FinalCostTextBlock = CostForClient.ToString();
         }
 
-        #region РАБОТА С УСЛУГАМИ
+        #region Методы для работы с данными для чека
+
         public void DeletePriceInPriceView(Price price)
         {
             priceManager.DeletePriceInPriceView(price);
             UpdateFinalCost();
         }
-        #endregion
 
-        #region РАБОТА С ДЕТАЛЯМИ
         public void DeleteDetailInDetailView(Detail detail)
         {
             detailManager.DeleteDetailInDetailView(detail);
@@ -174,25 +169,11 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         public void LoadInDetailView(Detail detail)
         {
             detailManager.LoadDetailInDetailView(detail);
-        }
+        } 
+
         #endregion
 
-        #region РАБОТА С ДАННЫМИ
-        private void TypeOfRepairComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var comboBox = sender as ComboBox;
-            if (comboBox != null && comboBox.SelectedIndex != 0)
-            {
-                string type = comboBox.SelectedValue.ToString();
-                _selectTypeofrepair = dbContext.Typeofrepairs.First(c => c.Name == type);
-            }
-
-            UpdateFinalCost();
-            VisibilityButtonAdd();
-        }
-        #endregion
-
-        #region МЕТОДЫ ДЛЯ СТРАНИЦЫ
+        #region Обработчики событий
 
         // Первоначальная подгрузка данных
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -211,32 +192,21 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             costTextBlock.DataContext = this;
         }
 
-        // Очистка всех полей и комбобоксов
-        private void Delete_Click(object sender, RoutedEventArgs e)
+        // Обработчик события для выбора типа ремонта
+        private void TypeOfRepairComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var result = MessageBox.Show("Очистить все поля?", "Подтверждение",
-                        MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
+            var comboBox = sender as ComboBox;
+            if (comboBox != null && comboBox.SelectedIndex != 0)
             {
-                ClearFields();
+                string type = comboBox.SelectedValue.ToString();
+                _selectTypeofrepair = dbContext.Typeofrepairs.First(c => c.Name == type);
             }
+
+            UpdateFinalCost();
+            VisibilityButtonAdd();
         }
 
-        // Обновление итоговой цены
-        internal void UpdateFinalCost()
-        {
-            if (_selectTypeofrepair != null && 
-                _selectTypeofrepair.Name is "Гарантийный случай" &&
-                TypeOfRepairComboBox.SelectedIndex != 0)
-            {
-                FinalCostTextBlock = $"{CostForClient} руб + 20% скидка";
-            }
-            else
-            {
-                FinalCostTextBlock = $"{CostForClient} руб.";
-            }
-        }
+        // Обработчик события для выбора типа чека
         private void CheckingRadioButtonsClick(object sender, RoutedEventArgs e)
         {
             if (sender != null)
@@ -283,36 +253,174 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                 }
             }
         }
+
+        // Очистка всех полей и комбобоксов
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show("Очистить все поля?", "Подтверждение",
+                        MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                ClearFields();
+            }
+        }
+
+        // Оформление чеков
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show("Вы действительно заполнили все поля верно?", "Подтверждение оформления чека",
+                        MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                List<(int IdDetail, int count)> details = new(detailManager.GetDetails());
+                List<Price> prices = new List<Price>(priceManager.ReturnPrices());
+
+
+                if (bordersEnabled == 1)
+                {
+                    ActionsData.AddOrderPrices(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
+                                prices, CostForClient, CostTotal);
+                    ClearFields();
+                }
+                else if (bordersEnabled == 2)
+                {
+                    ActionsData.AddOrderDetails(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
+                                details, CostForClient, CostTotal);
+                    ClearFields();
+                }
+                else
+                {
+                    ActionsData.AddOrderAll(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
+                                prices, details, CostForClient, CostTotal);
+                    ClearFields();
+                }
+            }
+        }
+
         #endregion
 
-        #region МЕТОДЫ С ФАЙЛАМИ
-        private void pdfButton_Click(object sender, RoutedEventArgs e)
+        #region Методы для страницы
+
+        // Обновление итоговой цены
+        internal void UpdateFinalCost()
         {
-            PdfSave();
+            if (_selectTypeofrepair != null && 
+                _selectTypeofrepair.Name is "Гарантийный случай" &&
+                TypeOfRepairComboBox.SelectedIndex != 0)
+            {
+                FinalCostTextBlock = $"{CostForClient} руб + 20% скидка";
+            }
+            else
+            {
+                FinalCostTextBlock = $"{CostForClient} руб.";
+            }
         }
 
-        private void wordButton_Click(object sender, RoutedEventArgs e)
+        // Очистка всех полей
+        private void ClearFields()
         {
-            WordSave();
+            detailManager.ClearListView();
+            UpdateFinalCost();
+
+            priceManager.ClearListView();
+            UpdateFinalCost();
+
+            SelectedClient = null;
+            SelectedCar = null;
+            TextForCars.Text = "Сначала выберите клиента";
+            TextForClients.Text = "Выберите клиента";
+            TypeOfRepairComboBox.SelectedIndex = 0;
         }
 
+        // Управляет видимостью кнопок
+        internal void VisibilityButtonAdd()
+        {
+            // Проверяем, заполнены ли все необходимые поля
+            bool allFieldsFilled = CheckFields();
+
+            // Включаем или отключаем кнопку в зависимости от состояния полей
+            if (allFieldsFilled)
+            {
+                // Добавляем обработчик события
+                AddButton.Click += AddButton_Click;
+                excelButton.Click += excelButton_Click;
+                wordButton.Click += wordButton_Click;
+                pdfButton.Click += pdfButton_Click;
+            }
+            else
+            {
+                // Удаляем обработчик события
+                AddButton.Click -= AddButton_Click;
+                excelButton.Click -= excelButton_Click;
+                wordButton.Click -= wordButton_Click;
+                pdfButton.Click -= pdfButton_Click;
+            }
+
+            // Устанавливаем подсказку для кнопки
+            wordGrid.Opacity = allFieldsFilled ? 1 : 0.5;
+            excelGrid.Opacity = allFieldsFilled ? 1 : 0.5;
+            pdfGrid.Opacity = allFieldsFilled ? 1 : 0.6;
+
+            string text = "Пожалуйста, заполните все поля перед выбором опции.";
+            string text2 = "Сохранить в ";
+            wordButton.ToolTip = allFieldsFilled ? text2 + "Word." : text;
+            excelButton.ToolTip = allFieldsFilled ? text2 + "Excel." : text;
+            pdfButton.ToolTip = allFieldsFilled ? text2 + "PDF." : text;
+
+            AddButton.Opacity = allFieldsFilled ? 1 : 0.5;
+            AddButton.ToolTip = allFieldsFilled ? null : "Пожалуйста, заполните все поля перед созданием заказа.";
+        }
+
+        // Проверка на то, что поля заполнены
+        private bool CheckFields()
+        {
+            if (bordersEnabled == 1)
+            {
+                // Если доступны только услуги
+                bool allFieldsFilled = SelectedClient != null &&
+                                       SelectedCar != null &&
+                                       TypeOfRepairComboBox.SelectedIndex != 0 &&
+                                       ListViewPriceItems.Items.Count != 0;
+
+                return allFieldsFilled;
+            }
+            else if (bordersEnabled == 2)
+            {
+                // Если доступны только детали
+                bool allFieldsFilled = SelectedClient != null &&
+                                       SelectedCar != null &&
+                                       TypeOfRepairComboBox.SelectedIndex != 0 &&
+                                       ListViewDetailItems.Items.Count != 0;
+
+                return allFieldsFilled;
+            }
+            else
+            {
+                // Если все поля доступны
+                bool allFieldsFilled = SelectedClient != null &&
+                                       SelectedCar != null &&
+                                       TypeOfRepairComboBox.SelectedIndex != 0 &&
+                                       ListViewPriceItems.Items.Count != 0 &&
+                                       ListViewDetailItems.Items.Count != 0;
+
+                return allFieldsFilled;
+            }
+        }
+
+        #endregion
+
+        #region Вывод в Excel
+
+        // Обработчик события для экспорта данных в Excel
         private void excelButton_Click(object sender, RoutedEventArgs e)
         {
-            ExcelSave();
+            ExcelSaveAll();
         }
 
-        private void PdfSave()
-        {
-
-        }
-
-        private void WordSave()
-        {
-            
-        }
-
-        [STAThread]
-        private void ExcelSave()
+        // Вывод для двух чеков
+        private void ExcelSaveAll()
         {
             using (var context = new Avtoservice3cursAaContext())
             {
@@ -452,128 +560,38 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                 }
             }
         }
+
+        // Вывод для чека услуг
+        private void ExcelSavePrice()
+        {
+
+        }
+
+        // Вывод для чека деталей
+        private void ExcelSaveDetail()
+        {
+
+        }
         #endregion
 
-        // Оформление чеков
-        private void AddButton_Click(object sender, RoutedEventArgs e)
+        private void pdfButton_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show("Вы действительно заполнили все поля верно?", "Подтверждение оформления чека",
-                        MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                List<(int IdDetail, int count)> details = new(detailManager.GetDetails());
-                List <Price> prices = new List<Price>(priceManager.ReturnPrices());
-
-
-                if (bordersEnabled == 1)
-                {
-                    ActionsData.AddOrderPrices(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
-                                prices, CostForClient, CostTotal);
-                    ClearFields();
-                }
-                else if (bordersEnabled == 2)
-                {
-                    ActionsData.AddOrderDetails(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
-                                details, CostForClient, CostTotal);
-                    ClearFields();
-                }
-                else
-                {
-                    ActionsData.AddOrderAll(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
-                                prices, details, CostForClient, CostTotal);
-                    ClearFields();
-                }
-            }
+            PdfSave();
         }
 
-        // Очистка всех полей
-        private void ClearFields()
+        private void wordButton_Click(object sender, RoutedEventArgs e)
         {
-            detailManager.ClearListView();
-            UpdateFinalCost();
-
-            priceManager.ClearListView();
-            UpdateFinalCost();
-
-            TextForCars.Text = "Сначала выберите клиента";
-            TextForClients.Text = "Выберите клиента";
-            clientsAndCarsManager = new ClientsAndCarsManager(ClientComboBox, TextForClients, CarComboBox, TextForCars, this);
-            TypeOfRepairComboBox.SelectedIndex = 0;
+            WordSave();
         }
 
-        // Проверка на то, что все поля заполнены
-        internal void VisibilityButtonAdd()
+        private void PdfSave()
         {
-            // Проверяем, заполнены ли все необходимые поля
-            bool allFieldsFilled = CheckFields();
 
-            // Включаем или отключаем кнопку в зависимости от состояния полей
-            if (allFieldsFilled)
-            {
-                // Добавляем обработчик события
-                AddButton.Click += AddButton_Click;
-                excelButton.Click += excelButton_Click;
-                wordButton.Click += wordButton_Click;
-                pdfButton.Click += pdfButton_Click;
-            }
-            else
-            {
-                // Удаляем обработчик события
-                AddButton.Click -= AddButton_Click;
-                excelButton.Click -= excelButton_Click;
-                wordButton.Click -= wordButton_Click;
-                pdfButton.Click -= pdfButton_Click;
-            }
-
-            // Устанавливаем подсказку для кнопки
-            wordGrid.Opacity = allFieldsFilled ? 1 : 0.5;
-            excelGrid.Opacity = allFieldsFilled ? 1 : 0.5;
-            pdfGrid.Opacity = allFieldsFilled ? 1 : 0.6;
-
-            string text = "Пожалуйста, заполните все поля перед выбором опции.";
-            string text2 = "Сохранить в ";
-            wordButton.ToolTip = allFieldsFilled ? text2 + "Word." : text;
-            excelButton.ToolTip = allFieldsFilled ? text2 + "Excel." : text;
-            pdfButton.ToolTip = allFieldsFilled ? text2 + "PDF." : text;
-
-            AddButton.Opacity = allFieldsFilled ? 1 : 0.5;
-            AddButton.ToolTip = allFieldsFilled ? null : "Пожалуйста, заполните все поля перед созданием заказа.";
         }
 
-        private bool CheckFields()
+        private void WordSave()
         {
-            if (bordersEnabled == 1)
-            {
-                // Если доступны только услуги
-                bool allFieldsFilled = SelectedClient != null &&
-                                       SelectedCar != null &&
-                                       TypeOfRepairComboBox.SelectedIndex != 0 &&
-                                       ListViewPriceItems.Items.Count != 0;
 
-                return allFieldsFilled;
-            }
-            else if (bordersEnabled == 2)
-            {
-                // Если доступны только детали
-                bool allFieldsFilled = SelectedClient != null &&
-                                       SelectedCar != null &&
-                                       TypeOfRepairComboBox.SelectedIndex != 0 &&
-                                       ListViewDetailItems.Items.Count != 0;
-
-                return allFieldsFilled;
-            }
-            else
-            {
-                // Если все поля доступны
-                bool allFieldsFilled = SelectedClient != null &&
-                                       SelectedCar != null &&
-                                       TypeOfRepairComboBox.SelectedIndex != 0 &&
-                                       ListViewPriceItems.Items.Count != 0 &&
-                                       ListViewDetailItems.Items.Count != 0;
-
-                return allFieldsFilled;
-            }
         }
     }
 }
