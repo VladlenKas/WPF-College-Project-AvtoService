@@ -37,7 +37,7 @@ namespace AvtoService_3cursAA.UserControls.CarUC
         public CarCardEdit(Car car, CarOperator carOperator)
         {
             dbContext = new();
-            dbContext.Cars.Include(c => c.Carclients).Load(); // Изменено на Cars
+            dbContext.Cars.Include(c => c.Carclients).Load(); 
 
             _car = car;
             _parentWindow = carOperator;
@@ -48,7 +48,7 @@ namespace AvtoService_3cursAA.UserControls.CarUC
 
         private void Edit_Click(object sender, RoutedEventArgs e)
         {
-            dbContext.Cars.Include(c => c.Carclients).Load(); // Изменено на Cars
+            dbContext.Cars.Include(c => c.Carclients).Load(); 
             EditCar editCar = new EditCar(_car);
             editCar.ShowDialog();
 
@@ -108,6 +108,12 @@ namespace AvtoService_3cursAA.UserControls.CarUC
                 carToRemove.IsDeleted = true;
                 dbContext.SaveChanges();
             }
+        }
+
+        private void Info_Click(object sender, RoutedEventArgs e)
+        {
+            ClientsMessege clientsMessege = new ClientsMessege(_car);
+            clientsMessege.ShowDialog();
         }
     }
 

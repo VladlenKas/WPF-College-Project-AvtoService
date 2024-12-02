@@ -11,11 +11,11 @@
 
     <UserControl.Resources>
         <DropShadowEffect x:Key="dropShadowBorder" 
-                      ShadowDepth="5" 
-                      BlurRadius="20" 
-                      Color="#000000" 
-                      Opacity="0.1"
-                      Direction="90"/>
+                          ShadowDepth="5" 
+                          BlurRadius="20" 
+                          Color="#000000" 
+                          Opacity="0.1"
+                          Direction="90"/>
 
         <Style TargetType="TextBlock">
             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -65,6 +65,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
                     <Grid Grid.Column="0">
@@ -142,6 +143,21 @@
                                 FontWeight="Bold"
                                 FontSize="20"/>
                     </TextBlock>
+
+
+                    <Grid 
+                        VerticalAlignment="Bottom"
+                        Grid.Column="2">
+                        <Button 
+                            Style="{StaticResource NextButton}"
+                            Name="Info"
+                            Click="Info_Click"/>
+                        <materialDesign:PackIcon 
+                            Width="45"
+                            Height="45"
+                            Kind="InformationSymbol"
+                            Style="{StaticResource CardIconStyle}"/>
+                    </Grid>
                 </Grid>
             </Border>
         </Grid>

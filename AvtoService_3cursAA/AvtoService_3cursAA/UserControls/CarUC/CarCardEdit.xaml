@@ -7,7 +7,7 @@
              xmlns:vm="clr-namespace:AvtoService_3cursAA.UserControls.CarUC"
              mc:Ignorable="d" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             Height="500" Width="700">
+             Height="515" Width="700">
 
     <UserControl.Resources>
         <DropShadowEffect x:Key="dropShadowBorder" 
@@ -35,7 +35,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition/>
-                <RowDefinition Height="185"/>
+                <RowDefinition Height="200"/>
             </Grid.RowDefinitions>
 
             <!-- Image of item -->
@@ -62,16 +62,20 @@
                 Effect="{StaticResource dropShadowBorder}">
 
                 <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5*"/>
+                        <RowDefinition Height="24*"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="15"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <DockPanel 
                         Grid.Column="0"
-                        LastChildFill="False">
+                        LastChildFill="False" Grid.RowSpan="2">
 
                         <TextBlock DockPanel.Dock="Top">
                             <Run 
@@ -131,9 +135,7 @@
 
                     <TextBlock 
                         Height="Auto"
-                        Grid.Column="1"
-                        VerticalAlignment="Top"
-                        DockPanel.Dock="Top">
+                        VerticalAlignment="Top" Grid.ColumnSpan="2" Margin="80,0,0,0" Grid.RowSpan="2">
                             <Run 
                                 Text="Описание: "
                                 FontSize="14"
@@ -145,10 +147,11 @@
                     </TextBlock>
 
 
-                    <Grid Grid.Column="3">
+                    <Grid Grid.Column="3" Grid.RowSpan="2">
                         <DockPanel 
                             LastChildFill="False"
                             HorizontalAlignment="Right">
+
 
                             <Grid DockPanel.Dock="Bottom">
                                 <Button 
@@ -161,7 +164,7 @@
                             </Grid>
 
                             <Grid 
-                                Margin="0 0 0 10"
+                                Margin="0 0 0 5"
                                 DockPanel.Dock="Bottom">
                                 <Button 
                                     Style="{StaticResource EditButton}"
@@ -169,6 +172,21 @@
                                     Click="Edit_Click"/>
                                 <materialDesign:PackIcon 
                                     Kind="Edit"
+                                    Style="{StaticResource CardIconStyle}"/>
+                            </Grid>
+
+
+                            <Grid 
+                                Margin="0 0 0 5"
+                                DockPanel.Dock="Bottom">
+                                <Button 
+                                    Style="{StaticResource NextButton}"
+                                    Name="Info"
+                                    Click="Info_Click"/>
+                                <materialDesign:PackIcon 
+                                    Width="45"
+                                    Height="45"
+                                    Kind="InformationSymbol"
                                     Style="{StaticResource CardIconStyle}"/>
                             </Grid>
                         </DockPanel>
