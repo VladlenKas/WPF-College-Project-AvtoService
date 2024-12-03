@@ -1,6 +1,7 @@
 ﻿using AvtoService_3cursAA.ActionsEmployee;
 using AvtoService_3cursAA.ActionsForEmployee;
 using AvtoService_3cursAA.Classes;
+using AvtoService_3cursAA.DataActions;
 using AvtoService_3cursAA.Model;
 using AvtoService_3cursAA.UserControls.PriceUC;
 using Microsoft.EntityFrameworkCore;
@@ -89,37 +90,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                 UpdateItemsListView();
             }
         }
-
-        private void StartCostTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (ListViewItems.Items != null)
-            {
-                var cost = StartCostTextBox.Text;
-                if (int.TryParse(cost, out int parsedCost))
-                {
-                    if (parsedCost > 999)
-                        UpdateItemsListView();
-                }
-                else if (string.IsNullOrEmpty(cost))
-                        UpdateItemsListView();
-            }
-        }
-
-        private void FinishCostTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (ListViewItems.Items != null)
-            {
-                UpdateItemsListView();
-                var cost = FinishCostTextBox.Text;
-                if (int.TryParse(cost, out int parsedCost))
-                {
-                    if (parsedCost > 999)
-                        UpdateItemsListView();
-                }
-                else if (string.IsNullOrEmpty(cost))
-                    UpdateItemsListView();
-            }
-        }
         private void SortCheckBox_Click(object sender, RoutedEventArgs e)
         {
             if (ListViewItems.Items != null)
@@ -130,6 +100,22 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         {
             if (ListViewItems.Items != null)
                 UpdateItemsListView();
+        }
+
+        private void SearchByCost_Click(object sender, RoutedEventArgs e)
+        {
+            if (ListViewItems.Items != null)
+                UpdateItemsListView();
+        }
+
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            ActionsTextBox.ValidateInputNumbers(e);
+        }
+
+        private void TextBox_Pasting(object sender, DataObjectPastingEventArgs e)
+        {
+            ActionsTextBox.ValidatePasteNumbers(e);
         }
     }
 }

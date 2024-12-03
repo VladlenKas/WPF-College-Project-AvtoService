@@ -9,8 +9,8 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
  
         Title="Добавление авто" 
-        Height="1000" Width="1000" 
-        MinHeight="950" MinWidth="600" 
+        Height="900" Width="1000" 
+        MinHeight="900" MinWidth="1000" 
         Closed="Window_Closed"
         WindowStartupLocation="CenterScreen">
 
@@ -33,12 +33,8 @@
     </Window.Resources>
 
     <Grid Background="#ffffff">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="123*"/>
-            <ColumnDefinition Width="877*"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="280"/>
+            <RowDefinition Height="300"/>
             <RowDefinition Height="50"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
@@ -218,7 +214,7 @@
                                         MinHeight="60"
                                         Height="Auto"
                                         Effect="{StaticResource dropShadow}"
-                                        BorderBrush="LightGray"
+                                        BorderBrush="{StaticResource AuthGradient}"
                                         BorderThickness="1.5"
                                         CornerRadius="20"
                                         Background="#ffffff"/>
@@ -231,23 +227,37 @@
                         </StackPanel>
                     </Grid>
 
+                    <Grid
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        DockPanel.Dock="Bottom">
 
-                    <Button 
-                        Width="300"
-                        Content="Выйти"
-                        x:Name="ButtonExit"
-                        Click="ButtonExit_Click"
-                        DockPanel.Dock="Bottom"
-                        Margin="40 20"
-                        Style="{StaticResource AuythButtonExitAct}"/>
-                    <Button 
-                        Width="300"
-                        Content="Добавить автомобиль"
-                        x:Name="ButtonAdd"
-                        Click="ButtonAdd_Click"
-                        DockPanel.Dock="Bottom"
-                        Margin="40 0"
-                        Style="{StaticResource AuthButtonAct}"/>
+                        <StackPanel 
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal">
+                            <Button 
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Center"
+                                Width="100"
+                                Content="Выйти"
+                                x:Name="ButtonExit"
+                                Click="ButtonExit_Click"
+                                DockPanel.Dock="Right"
+                                Margin="0"
+                                Style="{StaticResource AuythButtonExitAct}"/>
+                            <Button 
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Width="300"
+                                Content="Добавить автомобиль"
+                                x:Name="ButtonAdd"
+                                Click="ButtonAdd_Click"
+                                DockPanel.Dock="Left"
+                                Margin="20 0 0 0"
+                                Style="{StaticResource AuthButtonAct}"/>
+                        </StackPanel>
+                    </Grid>
                 </DockPanel>
             </Border>
         </Grid>

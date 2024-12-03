@@ -59,6 +59,7 @@
                 <DockPanel LastChildFill="False">
                     <!-- TextBox search -->
                     <Grid DockPanel.Dock="Left"
+                          Margin="0 0 15 0"
                               VerticalAlignment="Top">
                         <TextBox Width="500" 
                                  Tag="Поиск по ФИО"
@@ -66,18 +67,21 @@
                                  TextChanged="SearchTextBox_TextChanged"/>
                         <materialDesign:PackIcon Kind="Search"
                                                  IsHitTestVisible="False"
-                                                 Foreground="#70000000"/>
+                                                 Foreground="#000000"/>
                     </Grid>
 
                     <!-- Button clear data -->
-                    <Grid VerticalAlignment="Top"
-                          Margin="20 0 0 0">
-                        <Button x:Name="ClearDataButton"
-                                Click="ClearDataButton_Click"
-                                Style="{StaticResource MenuButton}"
-                                Content="Cбросить все"/>
-                        <materialDesign:PackIcon Kind="Loop"/>
+                    <Grid 
+                        VerticalAlignment="Top"
+                        DockPanel.Dock="Left">
+                        <Button
+                            Style="{StaticResource DeleteButtonSmall}"
+                            Click="ClearDataButton_Click"/>
+                        <materialDesign:PackIcon 
+                            Kind="Loop"
+                            Style="{StaticResource CardIconStyle}"/>
                     </Grid>
+
                     <!-- User's name and role-->
                     <Grid DockPanel.Dock="Right">
                         <DockPanel LastChildFill="False">

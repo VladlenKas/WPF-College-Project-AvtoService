@@ -11,20 +11,23 @@
                       Opacity="0.1"
                       Direction="90"/>
     <!--#endregion-->
-    
+
+    <!--#region Icons -->
     <!-- Icon for textboxes -->
     <Style TargetType="materialDesign:PackIcon" x:Key="IconsActions">
         <Setter Property="Margin" Value="10"/>
         <Setter Property="Width" Value="20"/>
-        <Setter Property="Foreground" Value="#80000000"/>
+        <Setter Property="Foreground" Value="#000000"/>
     </Style>
-    
+    <!--#endregion-->
+
     <!--#region TextBoxes -->
     <!-- TextBox for input -->
     <Style TargetType="{x:Type TextBox}" 
            BasedOn="{StaticResource SearchTextBox}"
            x:Key="ActionTextBox">
         <Setter Property="Height" Value="35"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AuthGradient}"/>
         <Setter Property="Margin" Value="0 0 0 20"/>
         <Setter Property="Padding" Value="35 0 0 0"/>
         <Setter Property="Template">
@@ -61,7 +64,7 @@
                             <Setter TargetName="textBlock" Property="Visibility" Value="Visible" />
                         </Trigger>
                         <Trigger Property="Text" Value="">
-                            <Setter TargetName="textBlock" Property="Foreground" Value="#80000000" />
+                            <Setter TargetName="textBlock" Property="Foreground" Value="#000000" />
                         </Trigger>
                         <Trigger Property="IsFocused" Value="True">
                             <Setter Property="BorderBrush" Value="#000000"/>
@@ -72,13 +75,13 @@
         </Setter>
     </Style>
     <!--#endregion-->
-    
-    <!-- PassBox -->
+
+    <!--#region PassBox -->
     <Style TargetType="{x:Type PasswordBox}" 
            BasedOn="{StaticResource AuthPassBox}"
            x:Key="ActionPassBox">
         <Setter Property="Height" Value="35"/>
-        <Setter Property="BorderBrush" Value="#20000000"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AuthGradient}"/>
         <Setter Property="Margin" Value="0 0 0 20"/>
         <Setter Property="Padding" Value="35 0 0 0"/>
         <Setter Property="Template">
@@ -119,14 +122,16 @@
     </Style>
     <!--#endregion-->
 
-    <!-- TextBlock base style for name of input -->
+    <!--#region TextBlock base style for name of input -->
     <Style TargetType="{x:Type TextBlock}"
            BasedOn="{StaticResource AuthTextBlock}"
            x:Key="ActionTextBlock">
-        <Setter Property="Foreground" Value="#80000000"/>
+        <Setter Property="Foreground" Value="#000000"/>
         <Setter Property="Margin" Value="10 0 0 5"/>
     </Style>
+    <!--#endregion-->
 
+    <!--#region Buttons -->
     <Style TargetType="{x:Type Button}" 
            BasedOn="{StaticResource AuthButton}"
            x:Key="AuthButtonAct">
@@ -180,14 +185,15 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    <!--#endregion-->
 
-    <!-- Combobox -->
+    <!--#region ComboBoxes -->
     <Style TargetType="{x:Type ComboBox}"
            BasedOn="{StaticResource ComboBoxSupportive}"
            x:Key="ComboBoxAction">
         <Setter Property="Height" Value="35"/>
         <Setter Property="IsEditable" Value="False"/>
-        <Setter Property="BorderBrush" Value="#20000000"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AuthGradient}"/>
         <Setter Property="Background" Value="#ffffff"/>
         <Setter Property="Margin" Value="0 0 0 20"/>
         <Setter Property="Effect" Value="{StaticResource dropShadow}"/>
@@ -231,8 +237,8 @@
                                 Background="Transparent"
                                 BorderBrush="Transparent"
                                 IsReadOnly="{TemplateBinding IsReadOnly}"/>
-                            
-                            
+
+
 
                             <ContentPresenter Name="ContentSite"
                                               Content="{TemplateBinding SelectionBoxItem}"
@@ -276,7 +282,7 @@
                                         <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" 
                                                     TextBlock.FontFamily="Arial Rounded MT Bold"
                                                     TextBlock.FontSize="16"/>
-    
+
                                     </ScrollViewer>
                                 </Grid>
                             </Popup>
@@ -386,4 +392,6 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <!--#endregion-->
+    
 </ResourceDictionary>

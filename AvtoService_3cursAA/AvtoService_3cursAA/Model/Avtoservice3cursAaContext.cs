@@ -46,7 +46,7 @@ public partial class Avtoservice3cursAaContext : DbContext
     public IQueryable<Detail> Details => AllDetails.Where(detail => !detail.IsDeleted); // Только существующие детали
     public IQueryable<Employee> Employees => AllEmployees.Where(employee => !employee.IsDeleted); // Только активные сотрудники
     public IQueryable<Price> Prices => AllPrices.Where(price => !price.IsDeleted); // Только существующие услуги
-    public IQueryable<Carclient> Carclients => AllCarclients.Where(carclient => !carclient.IsDeleted); // Только существующие услуги
+    public IQueryable<Carclient> Carclients => AllCarclients.Where(carclient => !carclient.IsDeleted); // Только существующие связи
 
     #endregion
 

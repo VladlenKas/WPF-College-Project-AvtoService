@@ -2,6 +2,7 @@
 using AvtoService_3cursAA.Actions.Details;
 using AvtoService_3cursAA.ActionsForEmployee;
 using AvtoService_3cursAA.Classes;
+using AvtoService_3cursAA.DataActions;
 using AvtoService_3cursAA.Model;
 using AvtoService_3cursAA.UserControls.DetailUC;
 using Microsoft.EntityFrameworkCore;
@@ -102,16 +103,20 @@ namespace AvtoService_3cursAA.PagesMenuOperator
             }
         }
 
-        private void StartCostTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void SearchByCost_Click(object sender, RoutedEventArgs e)
         {
             if (ListViewItems.Items != null)
                 UpdateItemsListView();
         }
 
-        private void FinishCostTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            if (ListViewItems.Items != null)
-                UpdateItemsListView();
+            ActionsTextBox.ValidateInputNumbers(e);
+        }
+
+        private void TextBox_Pasting(object sender, DataObjectPastingEventArgs e)
+        {
+            ActionsTextBox.ValidatePasteNumbers(e);
         }
 
         private void SortCheckBox_Click(object sender, RoutedEventArgs e)

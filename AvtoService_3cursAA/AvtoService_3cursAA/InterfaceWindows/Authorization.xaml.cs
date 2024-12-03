@@ -103,37 +103,6 @@ namespace AvtoService_3cursAA
         {
             ActionsTextBox.HiddenPassword(ChechBoxPassView, TextBoxPassHidden, TextBoxPassVisibility);
         }
-
-        private void TextBoxEmail_GotFocus(object sender, RoutedEventArgs e)
-        {
-            EmailTextBlock.Foreground = new SolidColorBrush(Colors.Black);
-        }
-
-        private void TextBoxEmail_LostFocus(object sender, RoutedEventArgs e)
-        {
-            EmailTextBlock.Foreground = new SolidColorBrush(Color.FromArgb(128, 0, 0, 0)); // Цвет по умолчанию
-        }
-
-        private void TextBoxPassVisibility_GotFocus(object sender, RoutedEventArgs e)
-        {
-            PassTextBlock.Foreground = new SolidColorBrush(Colors.Black);
-        }
-
-        private void TextBoxPassVisibility_LostFocus(object sender, RoutedEventArgs e)
-        {
-            PassTextBlock.Foreground = new SolidColorBrush(Color.FromArgb(128, 0, 0, 0)); // Цвет по умолчанию
-        }
-
-        private void TextBoxPassHidden_GotFocus(object sender, RoutedEventArgs e)
-        {
-            PassTextBlock.Foreground = new SolidColorBrush(Colors.Black);
-        }
-
-        private void TextBoxPassHidden_LostFocus(object sender, RoutedEventArgs e)
-        {
-            PassTextBlock.Foreground = new SolidColorBrush(Color.FromArgb(128, 0, 0, 0)); // Цвет по умолчанию
-        }
-
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
         {
             this.Close();

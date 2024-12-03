@@ -156,7 +156,7 @@
         <Setter Property="BorderBrush" Value="#80000000"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Effect" Value="{StaticResource dropShadow}"/>
-        <Setter Property="Foreground" Value="#80000000"/>
+        <Setter Property="Foreground" Value="#000000"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
@@ -213,8 +213,7 @@
                         </Trigger>
 
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Foreground" Value="#000000"/>
-                            <Setter Property="BorderBrush" Value="#000000"/>
+                            <Setter Property="BorderBrush" Value="#80000000"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

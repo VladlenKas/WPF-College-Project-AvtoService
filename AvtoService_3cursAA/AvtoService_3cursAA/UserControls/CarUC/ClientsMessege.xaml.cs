@@ -37,7 +37,14 @@ namespace AvtoService_3cursAA.UserControls.CarUC
             _car = dbContext.Cars.Single(r => r.IdCar == car.IdCar);
 
             CarName = _car.Title;
-            foreach (var item in _car.Carclients)
+
+            List<Carclient> carclients = new List<Carclient>();
+            carclients = _car.Carclients
+                .Where(cc => cc.IsDeleted != true)
+                .Where(cc => cc.IdClientNavigation.IsDeleted != true)
+                .ToList();
+
+            foreach (var item in carclients)
             {
                 Clients += $"{item.IdClientNavigation.FullName}\n";
             }

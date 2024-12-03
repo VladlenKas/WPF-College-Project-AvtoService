@@ -68,17 +68,20 @@
                                  TextChanged="SearchTextBox_TextChanged"/>
                         <materialDesign:PackIcon Kind="Search"
                                                  IsHitTestVisible="False"
-                                                 Foreground="#70000000"/>
+                                                 Foreground="#000000"/>
                     </Grid>
 
                     <!-- Button clear data -->
-                    <Grid VerticalAlignment="Top"
-                          Margin="20 0 0 0">
-                        <Button x:Name="ClearDataButton"
-                                Click="ClearDataButton_Click"
-                                Style="{StaticResource MenuButton}"
-                                Content="Cбросить все"/>
-                        <materialDesign:PackIcon Kind="Loop"/>
+                    <Grid 
+                        Margin="15 0 0 0"
+                        VerticalAlignment="Top"
+                        DockPanel.Dock="Left">
+                        <Button
+                            Style="{StaticResource DeleteButtonSmall}"
+                            Click="SearchByCost_Click"/>
+                        <materialDesign:PackIcon 
+                            Kind="Loop"
+                            Style="{StaticResource CardIconStyle}"/>
                     </Grid>
                     <!-- User's name and role-->
                     <Grid DockPanel.Dock="Right">
@@ -123,7 +126,7 @@
                     <!-- Name page -->
                     <TextBlock Style="{StaticResource HeaderTextBlock}" Text="Услуги"/>
                     <Grid
-                        Margin="0 0 30 0"
+                        Margin="0 0 50 0"
                         DockPanel.Dock="Left" 
                         VerticalAlignment="Bottom">
 
@@ -149,28 +152,41 @@
                             MaxLength="4"
                             Tag="Цена от:"
                             x:Name="StartCostTextBox"
-                            TextChanged="StartCostTextBox_TextChanged"/>
+                            DataObject.Pasting="TextBox_Pasting"
+                            PreviewTextInput="TextBox_PreviewTextInput"/>
                         <materialDesign:PackIcon 
                             Kind="ArrowUpward"
                             IsHitTestVisible="False"
-                            Foreground="#70000000"/>
+                            Foreground="#000000"/>
                     </Grid>
                     
                      <Grid 
                         DockPanel.Dock="Left"
-                        VerticalAlignment="Bottom">
+                        VerticalAlignment="Bottom"
+                        Margin="0 0 10 0">
                         <TextBox
                             Width="200" 
                             MaxLength="4"
                             Tag="Цена до:"
                             x:Name="FinishCostTextBox"
-                            TextChanged="FinishCostTextBox_TextChanged"/>
+                            DataObject.Pasting="TextBox_Pasting"
+                            PreviewTextInput="TextBox_PreviewTextInput"/>
                         <materialDesign:PackIcon 
                             Kind="ArrowBottom"
                             IsHitTestVisible="False"
-                            Foreground="#70000000"/>
+                            Foreground="#000000"/>
                     </Grid>
 
+                    <Grid VerticalAlignment="Bottom">
+                        <Button
+                            Style="{StaticResource NextButtonSmall}"
+                            Click="SearchByCost_Click"/>
+                        <materialDesign:PackIcon 
+                            Width="20"
+                            Height="20"
+                            Kind="Search"
+                            Style="{StaticResource CardIconStyle}"/>
+                    </Grid>
                 </DockPanel>
             </Grid>
 

@@ -62,19 +62,17 @@
                            FontSize="18"
                            HorizontalAlignment="Left"
                            Margin="15 70 0 15"
-                           Foreground="#80000000"
+                           Foreground="#000000"
                            DockPanel.Dock="Top"
                            Name="EmailTextBlock"/>
                 <TextBox x:Name="TextBoxEmail"
                          MaxLength="45"
-                         DockPanel.Dock="Top"
-                         GotFocus="TextBoxEmail_GotFocus"
-                         LostFocus="TextBoxEmail_LostFocus"/>
+                         DockPanel.Dock="Top"/>
 
                 <TextBlock Text="Пароль"
                            FontSize="18"
                            HorizontalAlignment="Left"
-                           Foreground="#80000000"
+                           Foreground="#000000"
                            Margin="15 20 0 15"
                            DockPanel.Dock="Top"
                            Name="PassTextBlock"/>
@@ -82,14 +80,10 @@
                 <Grid DockPanel.Dock="Top">
                     <TextBox x:Name="TextBoxPassVisibility"
                                 Visibility="Hidden"
-                                MaxLength="45"
-                                GotFocus="TextBoxPassVisibility_GotFocus"
-                                LostFocus="TextBoxPassVisibility_LostFocus"/>
+                                MaxLength="45"/>
                     <PasswordBox x:Name="TextBoxPassHidden"
                                     MaxLength="45"
-                                    Visibility="Visible"
-                                    GotFocus="TextBoxPassHidden_GotFocus"
-                                    LostFocus="TextBoxPassHidden_LostFocus"/>
+                                    Visibility="Visible"/>
                 </Grid>
                 
                 <CheckBox Content="Показать пароль"

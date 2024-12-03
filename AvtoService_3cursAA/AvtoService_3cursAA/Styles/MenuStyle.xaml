@@ -70,8 +70,10 @@
     <!--#endregion-->
 
     <!--#region TextBoxes-->
-    <Style TargetType="{x:Type TextBox}" x:Key="SearchTextBox" BasedOn="{StaticResource AuthTextBox}">
-        <Setter Property="BorderBrush" Value="#20000000"/>
+    <Style TargetType="{x:Type TextBox}" 
+           x:Key="SearchTextBox"
+           BasedOn="{StaticResource AuthTextBox}">
+        <Setter Property="BorderBrush" Value="{StaticResource AuthGradient}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
@@ -88,7 +90,7 @@
                             <ScrollViewer x:Name="PART_ContentHost" Focusable="False"/>
                             <TextBlock x:Name="textBlock"
                                        Style="{StaticResource AuthTextBlock}"
-                                       Foreground="{TemplateBinding BorderBrush}"
+                                       Foreground="Black"
                                        IsHitTestVisible="False"
                                        Text="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
                                        Visibility="Collapsed"
@@ -103,7 +105,6 @@
                             <Setter TargetName="textBlock" Property="Visibility" Value="Visible" />
                         </Trigger>
                         <Trigger Property="IsFocused" Value="True">
-                            <Setter Property="BorderBrush" Value="#000000"/>
                             <Setter Property="Foreground" TargetName="textBlock" Value="#80000000"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -317,7 +318,7 @@
                             Effect="{x:Null}"
                             x:Name="SortText" 
                             Style="{StaticResource MenuTextBlock}"
-                            Foreground="#60000000"
+                            Foreground="#000000"
                             Margin="180 0 40 0"/>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -334,7 +335,7 @@
                         </Trigger>
 
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Foreground" TargetName="SortText" Value="#000000"/>
+                            <Setter Property="Foreground" TargetName="SortText" Value="#70000000"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

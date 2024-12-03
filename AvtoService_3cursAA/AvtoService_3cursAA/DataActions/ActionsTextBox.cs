@@ -53,16 +53,12 @@ namespace AvtoService_3cursAA.DataActions
         }
         public static void ValidatePasteCyrillic(DataObjectPastingEventArgs e)
         {
-            // Проверяем, строка ли вставляемый текст из буфера обмена
-            if (e.DataObject.GetDataPresent(DataFormats.Text))
-            {
-                // Если да, то передаем его в отедльную строку
-                string pastedText = e.DataObject.GetData(DataFormats.Text) as string;
+            // Если да, то передаем его в отедльную строку
+            string pastedText = e.DataObject.GetData(DataFormats.Text) as string;
 
-                if (!Regex.IsMatch(pastedText, @"^[а-яА-Я]+$"))
-                {
-                    e.CancelCommand(); // Блокируем ввод
-                }
+            if (!Regex.IsMatch(pastedText, @"^[а-яА-Я]+$"))
+            {
+                e.CancelCommand(); // Блокируем ввод
             }
         }
 
@@ -77,16 +73,12 @@ namespace AvtoService_3cursAA.DataActions
 
         public static void ValidatePasteNumbers(DataObjectPastingEventArgs e)
         {
-            // Проверяем, строка ли вставляемый текст из буфера обмена
-            if (e.DataObject.GetDataPresent(DataFormats.Text))
-            {
-                // Если да, то передаем его в отедльную строку
-                string pastedText = e.DataObject.GetData(DataFormats.Text) as string;
+            // Если да, то передаем его в отедльную строку
+            string pastedText = e.DataObject.GetData(DataFormats.Text) as string;
 
-                if (!Regex.IsMatch(pastedText, @"^\d+$"))
-                {
-                    e.CancelCommand(); // Блокируем ввод
-                }
+            if (!Regex.IsMatch(pastedText, @"^\d+$"))
+            {
+                e.CancelCommand(); // Блокируем ввод
             }
         }
 
@@ -101,16 +93,12 @@ namespace AvtoService_3cursAA.DataActions
 
         public static void ValidatePasteDescription(DataObjectPastingEventArgs e)
         {
-            // Проверяем, строка ли вставляемый текст из буфера обмена
-            if (e.DataObject.GetDataPresent(DataFormats.Text))
-            {
-                // Если да, то передаем его в отдельную строку
-                string pastedText = e.DataObject.GetData(DataFormats.Text) as string;
+            // Если да, то передаем его в отдельную строку
+            string pastedText = e.DataObject.GetData(DataFormats.Text) as string;
 
-                if (!Regex.IsMatch(pastedText, @"^[а-яА-ЯёЁ0-9\s!@#$%^&*(),.?""':;{}[\]<>-]+$"))
-                {
-                    e.CancelCommand(); // Блокируем вставку
-                }
+            if (!Regex.IsMatch(pastedText, @"^[а-яА-ЯёЁ0-9\s!@#$%^&*(),.?""':;{}[\]<>-]+$"))
+            {
+                e.CancelCommand(); // Блокируем вставку
             }
         }
     }
