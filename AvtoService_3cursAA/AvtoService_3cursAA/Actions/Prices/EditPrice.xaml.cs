@@ -38,7 +38,19 @@ namespace AvtoService_3cursAA.Actions
                 return 0;
             }
         }
-        private ImageSource Image => ImagePrice.Source;
+        private ImageSource _imageNull { get; set; }
+        private ImageSource? _imagePriceThis;
+        private ImageSource Image
+        {
+            get
+            {
+                return ImagePrice.Source;
+            }
+            set
+            {
+                ImagePrice.Source = value;
+            }
+        }
 
         string _file = "pack://application:,,,/AvtoService_3cursAA;component/Images/NoImagePrice.jpg";
         public Price _selectedPriceEdit;
@@ -66,8 +78,44 @@ namespace AvtoService_3cursAA.Actions
 
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
+            // Находим товар для сверки сведений
+            var _oldProduct = dbContext.Prices.Single(p => p.IdPrice == _selectedPriceEdit.IdPrice);
+
+            // Сравниваем, менялись ли изображения
+            bool productImageWasChanged = !ActionsData.AreImagesEqual(_imagePriceThis, Image); // Предполагается, что у вас есть поле Image в модели Product
+
+            // Проверка на изменение данных товара
+            bool isProductDataChanged =
+                _oldProduct.Name != Name ||
+                _oldProduct.Cost != Cost ||
+                productImageWasChanged;
+
+            // Проверка на валидность данных
             if (!DataValidate()) return;
-            ActionsData.EditPrice(Name, Cost, Image, _selectedPriceEdit);
+
+            if (isProductDataChanged)
+            {
+                // Данные изменились, вызываем метод редактирования
+                if (!ActionsData.AreImagesEqual(Image, _imageNull)) // Предполагается, что _imageNull определен как изображение по умолчанию
+                {
+                    ActionsData.EditPrice(Name, Cost, Image, _selectedPriceEdit);
+                }
+                else
+                {
+                    ActionsData.EditPrice(Name, Cost, null, _selectedPriceEdit);
+                }
+            }
+            else
+            {
+                // Данные не изменились, продолжаем редактирование 
+                var button = MessageBox.Show("Данные не изменились. Продолжить редактирование?", "Редактирование",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (button == MessageBoxResult.Yes)
+                {
+                    return;
+                }
+            }
+
             this.Close();
         }
 
@@ -130,6 +178,21 @@ namespace AvtoService_3cursAA.Actions
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
             ImagePrice.Source = new BitmapImage(new Uri(_file, UriKind.Absolute));
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            _imageNull = new BitmapImage(new Uri(_file, UriKind.Absolute));
+
+            if (_selectedPriceEdit.Photo == null)
+            {
+                _imagePriceThis = new BitmapImage(new Uri(_file, UriKind.Absolute));
+                ImagePrice.Source = new BitmapImage(new Uri(_file, UriKind.Absolute));
+            }
+            else
+            {
+                _imagePriceThis = ImagePrice.Source;
+            }
         }
     }
 }

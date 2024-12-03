@@ -82,31 +82,34 @@ namespace AvtoService_3cursAA.UserControls.CarUC
 
         private void DeleteCar()
         {
-            dbContext = new();
-            dbContext.Cars.Include(c => c.Carclients).Load(); // Изменено на Cars
-
-            // Найти все записи Carclient, связанные с удаляемой машиной
-            var carClientsToRemove = dbContext.Carclients
-                .Where(cc => cc.IdCar == _car.IdCar)
-                .ToList();
-
-            // Удалить все связанные записи Carclient
-            if (carClientsToRemove.Count != 0)
+            using (var context = new Avtoservice3cursAaContext())
             {
-                foreach (var item in carClientsToRemove)
+                context.Cars.Include(c => c.Carclients).Load();
+
+                // Найти все записи Carclient, связанные с удаляемой машиной
+                var carClientsToRemove = context.Cars
+                    .Where(cc => cc.IdCar == _car.IdCar)
+                    .SelectMany(c => c.Carclients)
+                    .ToList();
+
+                // Удалить все связанные записи Carclient
+                if (carClientsToRemove.Count != 0)
                 {
-                    var carclient = dbContext.Carclients.First(cc => cc.IdCar == item.IdCar);
-                    carclient.IsDeleted = true;
-                    dbContext.Update(carclient);
+                    foreach (var item in carClientsToRemove)
+                    {
+                        var carclient = context.Carclients.First(cc => cc.IdCar == item.IdCar);
+                        carclient.IsDeleted = true;
+                        context.Update(carclient);
+                    }
                 }
-            }
 
-            // Найти саму машину для удаления
-            var carToRemove = dbContext.Cars.First(c => c.IdCar == _car.IdCar);
-            if (carToRemove != null)
-            {
-                carToRemove.IsDeleted = true;
-                dbContext.SaveChanges();
+                // Найти саму машину для удаления
+                var carToRemove = context.Cars.First(c => c.IdCar == _car.IdCar);
+                if (carToRemove != null)
+                {
+                    carToRemove.IsDeleted = true;
+                    context.SaveChanges();
+                } 
             }
         }
 

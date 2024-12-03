@@ -72,7 +72,7 @@ namespace AvtoService_3cursAA.Actions
             else
             {
                 // Данные не изменились, продолжаем редактирование 
-                var button = MessageBox.Show("Данные не изменились. Продолжить редактирование?.", "Редактирование",
+                var button = MessageBox.Show("Данные не изменились. Продолжить редактирование?", "Редактирование",
                     MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (button == MessageBoxResult.Yes)
                 {

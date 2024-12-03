@@ -352,13 +352,18 @@ namespace AvtoService_3cursAA.ActionsForEmployee
 
         private static void AddClientsForCar(Car car, List<Client> clients, Avtoservice3cursAaContext context)
         {
-            var carClientsToRemove = context.Carclients
-                .Where(cc => cc.IdCar == car.IdCar)
+            var carClientsToRemove = context.Cars
+                .Where(c => c.IdCar == car.IdCar)
+                .SelectMany(cc => cc.Carclients)
                 .ToList();
 
             if (carClientsToRemove.Count != 0)
             {
-                context.AllCarclients.RemoveRange(carClientsToRemove);
+                foreach (var carclient in carClientsToRemove)
+                {
+                    carclient.IsDeleted = true;
+                }
+                
             }
 
             // Добавьте новые связи Carclient

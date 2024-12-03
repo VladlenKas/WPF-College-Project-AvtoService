@@ -13,6 +13,7 @@
         Height="830" Width="600" 
         MinHeight="830" MinWidth="600" 
         Closed="Window_Closed"
+        Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>

@@ -46,8 +46,21 @@ namespace AvtoService_3cursAA.Actions.Cars
                 return 0;
             }
         }
+
         private string Description => DescriptionTextBox.Text;
-        private ImageSource Image => ImageCar.Source;
+        private ImageSource _imageNull { get; set; }
+        private ImageSource? _imageCarThis;
+        private ImageSource Image
+        {
+            get
+            {
+                return ImageCar.Source;
+            }
+            set
+            {
+                ImageCar.Source = value;
+            }
+        }
 
         string _file = "pack://application:,,,/AvtoService_3cursAA;component/Images/NoImageCar.jpg";
         public Car _selectedCarEdit;
@@ -62,12 +75,6 @@ namespace AvtoService_3cursAA.Actions.Cars
             InitializeComponent();
 
             DataContext = _selectedCarEdit;
-
-            if (_selectedCarEdit.Photo == null)
-            {
-                ImageCar.Source = new BitmapImage(new Uri(_file, UriKind.Absolute));
-            }
-
             clientManager = new ClientManager(ListSelectClients, ClientsComboBox, this, _selectedCarEdit);
         }
         public void DeletePriceInPriceView(Client client) => clientManager.DeleteClientInItemsView(client);
@@ -79,9 +86,47 @@ namespace AvtoService_3cursAA.Actions.Cars
 
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
+            // Находим автомобиль для сверки сведений
+            var _oldCar = dbContext.Cars.Single(c => c.IdCar == _selectedCarEdit.IdCar);
+
+            // Сравниваем, менялись ли изображения
+            bool carImageWasChanged = !ActionsData.AreImagesEqual(_imageCarThis, Image); // Предполагается, что у вас есть поле Image в модели Car
+
+            // Проверка на изменение данных автомобиля
+            bool isCarDataChanged =
+                _oldCar.Brand != Brand ||
+                _oldCar.Model != Model ||
+                _oldCar.Country != Country ||
+                _oldCar.Year != Year ||
+                _oldCar.Description != Description ||
+                carImageWasChanged;
+
+            // Проверка на валидность данных
             if (!DataValidate()) return;
-            ActionsData.EditCar(Brand, Model, Country, Year, Description, Image,
-                _selectedCarEdit, clientManager.ReturnClients());
+
+            if (isCarDataChanged)
+            {
+                // Данные изменились, вызываем метод редактирования
+                if (!ActionsData.AreImagesEqual(Image, _imageNull)) // Предполагается, что _imageNull определен как изображение по умолчанию
+                {
+                    ActionsData.EditCar(Brand, Model, Country, Year, Description, Image, _selectedCarEdit, clientManager.ReturnClients());
+                }
+                else
+                {
+                    ActionsData.EditCar(Brand, Model, Country, Year, Description, null, _selectedCarEdit, clientManager.ReturnClients());
+                }
+            }
+            else
+            {
+                // Данные не изменились, продолжаем редактирование 
+                var button = MessageBox.Show("Данные не изменились. Продолжить редактирование?", "Редактирование",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (button == MessageBoxResult.Yes)
+                {
+                    return;
+                }
+            }
+
             this.Close();
         }
 
@@ -171,6 +216,21 @@ namespace AvtoService_3cursAA.Actions.Cars
         private void DescriptionTextBox_Pasting(object sender, DataObjectPastingEventArgs e)
         {
             ActionsTextBox.ValidatePasteDescription(e);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            _imageNull = new BitmapImage(new Uri(_file, UriKind.Absolute));
+
+            if (_selectedCarEdit.Photo == null)
+            {
+                _imageCarThis = new BitmapImage(new Uri(_file, UriKind.Absolute));
+                ImageCar.Source = new BitmapImage(new Uri(_file, UriKind.Absolute));
+            }
+            else
+            {
+                _imageCarThis = ImageCar.Source;
+            }
         }
     }
 }
