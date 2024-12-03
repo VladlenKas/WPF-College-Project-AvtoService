@@ -45,7 +45,19 @@ namespace AvtoService_3cursAA.Actions
                 return 0;
             }
         }
-        private ImageSource Image => ImageDetail.Source;
+        private ImageSource _imageNull { get; set; }
+        private ImageSource? _imageDetailThis;
+        private ImageSource Image
+        {
+            get
+            {
+                return ImageDetail.Source;
+            }
+            set
+            {
+                ImageDetail.Source = value; 
+            }
+        }
 
         string _file = "pack://application:,,,/AvtoService_3cursAA;component/Images/NoImageDetail.jpg";
         public Detail _selectedDetailEdit;
@@ -59,11 +71,6 @@ namespace AvtoService_3cursAA.Actions
             InitializeComponent();
 
             DataContext = _selectedDetailEdit;
-
-            if (_selectedDetailEdit.Photo == null)
-            {
-                ImageDetail.Source = new BitmapImage(new Uri(_file, UriKind.Absolute));
-            }
         }
 
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
@@ -71,10 +78,46 @@ namespace AvtoService_3cursAA.Actions
             this.Close();
         }
 
-        private void ButtonAdd_Click(object sender, RoutedEventArgs e)
+        private void ButtonEdit_Click(object sender, RoutedEventArgs e)
         {
+            // Находим эту же деталь для сверки сведений
+            var _oldDetail = dbContext.Details.Single(d => d.IdDetail == _selectedDetailEdit.IdDetail);
+            // Сравниваем, менялись ли изображения
+            bool imageWasChanged = !ActionsData.AreImagesEqual(_imageDetailThis, Image);
+
+            // Проверка на изменение данных детали
+            bool isDetailDataChanged =
+                _oldDetail.Name != Name ||
+                _oldDetail.Cost != Cost ||
+                _oldDetail.Count != Count ||
+                imageWasChanged; 
+
+            // Проверка на валидность данных
             if (!DataValidate()) return;
-            ActionsData.EditDetail(Name, Cost, Count, Image, _selectedDetailEdit);
+
+            if (isDetailDataChanged)
+            {
+                // Данные изменились, вызываем метод редактирования
+                if (!ActionsData.AreImagesEqual(Image, _imageNull))
+                {
+                    ActionsData.EditDetail(Name, Cost, Count, Image, _selectedDetailEdit);
+                }
+                else
+                {
+                    ActionsData.EditDetail(Name, Cost, Count, null, _selectedDetailEdit);
+                }
+            }
+            else
+            {
+                // Данные не изменились, продолжаем редактирование 
+                var button = MessageBox.Show("Данные не изменились. Продолжить редактирование?", "Редактирование",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (button == MessageBoxResult.Yes)
+                {
+                    return; 
+                }
+            }
+
             this.Close();
         }
 
@@ -137,6 +180,21 @@ namespace AvtoService_3cursAA.Actions
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
             ImageDetail.Source = new BitmapImage(new Uri(_file, UriKind.Absolute));
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            _imageNull = new BitmapImage(new Uri(_file, UriKind.Absolute));
+
+            if (_selectedDetailEdit.Photo == null)
+            {
+                _imageDetailThis = new BitmapImage(new Uri(_file, UriKind.Absolute));
+                ImageDetail.Source = new BitmapImage(new Uri(_file, UriKind.Absolute));
+            }
+            else
+            {
+                _imageDetailThis = ImageDetail.Source;
+            }
         }
     }
 }

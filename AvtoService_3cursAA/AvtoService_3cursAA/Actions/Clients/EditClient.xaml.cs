@@ -53,9 +53,32 @@ namespace AvtoService_3cursAA.Actions
 
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
+            // Проверка на изменение данных клиента
+            bool isClientDataChanged =
+                _selectedClient.Name != Name ||
+                _selectedClient.Firstname != Firstname ||
+                _selectedClient.Patronymic != Patronymic ||
+                _selectedClient.Birthday != DateOnly.ParseExact(Birthday, "dd.MM.yyyy") ||
+                _selectedClient.Phone != Phone;
+
+            // Проверка на валидность данных
             if (!DataValidate()) return;
 
-            ActionsData.EditClient(Name, Firstname, Patronymic, Birthday, Phone, _selectedClient);
+            if (isClientDataChanged)
+            {
+                // Данные изменились, вызываем метод редактирования
+                ActionsData.EditClient(Name, Firstname, Patronymic, Birthday, Phone, _selectedClient);
+            }
+            else
+            {
+                // Данные не изменились, продолжаем редактирование 
+                var button = MessageBox.Show("Данные не изменились. Продолжить редактирование?.", "Редактирование",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (button == MessageBoxResult.Yes)
+                {
+                    return;
+                }
+            }
 
             this.Close();
         }

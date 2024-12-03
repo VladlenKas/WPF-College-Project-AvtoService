@@ -135,7 +135,10 @@
 
                     <TextBlock 
                         Height="Auto"
-                        VerticalAlignment="Top" Grid.ColumnSpan="2" Margin="80,0,0,0" Grid.RowSpan="2">
+                        VerticalAlignment="Top" 
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        Grid.RowSpan="2">
                             <Run 
                                 Text="Описание: "
                                 FontSize="14"

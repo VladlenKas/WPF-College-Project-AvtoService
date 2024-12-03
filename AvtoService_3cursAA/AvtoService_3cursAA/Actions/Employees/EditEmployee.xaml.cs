@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using AvtoService_3cursAA.CustomsElementsWpf;
+using System.Data;
 
 namespace AvtoService_3cursAA.ActionsEmployee
 {
@@ -38,7 +39,6 @@ namespace AvtoService_3cursAA.ActionsEmployee
         private Avtoservice3cursAaContext dbContext;
         private Employee _selectedEmployee;
         private Employee _thisEmployee;
-
         public EditEmployee(Employee selectedEmployee, Employee thisEmployee)
         {
             _selectedEmployee = selectedEmployee;
@@ -73,8 +73,36 @@ namespace AvtoService_3cursAA.ActionsEmployee
 
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
-            if (!DataValidate()) return;
-            ActionsData.EditEmployee(Name, Firstname, Patronymic, Birthday, Seniority, Role, Passport, Phone, Login, Password, _selectedEmployee);
+            // Проверка на валидность данных
+            if (!DataValidate()) return; 
+
+            bool isDataChanged =
+                _selectedEmployee.Name != Name ||
+                _selectedEmployee.Firstname != Firstname ||
+                _selectedEmployee.Patronymic != Patronymic ||
+                _selectedEmployee.Birthday != DateOnly.ParseExact(Birthday, "dd.MM.yyyy") ||
+                _selectedEmployee.Seniority != int.Parse(Seniority) ||
+                _selectedEmployee.IdRole != dbContext.Roles.Single(r => r.Name == Role).IdRole ||
+                _selectedEmployee.Passport != Passport ||
+                _selectedEmployee.Phone != Phone ||
+                _selectedEmployee.Login != Login ||
+                _selectedEmployee.Password != Password;
+
+            if (isDataChanged)
+            {
+                // Данные изменились, вызываем метод редактирования
+                ActionsData.EditEmployee(Name, Firstname, Patronymic, Birthday, Seniority, Role, Passport, Phone, Login, Password, _selectedEmployee);
+            }
+            else
+            {
+                // Данные не изменились, продолжаем редактирование 
+                var button = MessageBox.Show("Данные не изменились. Продолжить редактирование?.", "Редактирование", 
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (button == MessageBoxResult.Yes)
+                {
+                    return;
+                }
+            }
 
             this.Close();
         }
@@ -112,7 +140,7 @@ namespace AvtoService_3cursAA.ActionsEmployee
             }
             if (dbContext.Employees.Any(r => r.Passport == Passport && r.IdEmployee != _selectedEmployee.IdEmployee))
             {
-                errorsList.Add("Выбранный номер телефона уже существует. Пожалуйста, выберите другой");
+                errorsList.Add("Выбранный паспорт уже существует. Пожалуйста, выберите другой");
             }
 
             if (Phone.Length < 11)

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -251,7 +252,7 @@ namespace AvtoService_3cursAA.ActionsForEmployee
             }
         }
 
-        public static void EditDetail(string name, int cost, int count, ImageSource image, Detail detail)
+        public static void EditDetail(string name, int cost, int count, ImageSource? image, Detail detail)
         {
             using (var dbContext = new Avtoservice3cursAaContext())
             {
@@ -569,14 +570,16 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                 image.Source = new BitmapImage(new Uri(selectedFilePath));
             }
         }
-        private static byte[] ImageSourceToBytes(ImageSource imageSource)
+        public static byte[]? ImageSourceToBytes(ImageSource? imageSource)
         {
-            byte[] bytes = null;
+            byte[]? bytes = null;
+
             var bitmapSource = imageSource as BitmapSource;
             if (bitmapSource != null)
             {
                 var encoder = new JpegBitmapEncoder();
                 encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+
                 using (var stream = new MemoryStream())
                 {
                     encoder.Save(stream);
@@ -584,6 +587,37 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                 }
             }
             return bytes;
+        }
+
+        public static string GetImageHash(byte[] imageBytes)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                byte[] hashBytes = sha256.ComputeHash(imageBytes);
+                return Convert.ToBase64String(hashBytes);
+            }
+        }
+
+        public static bool AreImagesEqual(ImageSource img1, ImageSource img2)
+        {
+            if (img1.Width != img2.Width || img1.Height != img2.Height)
+            {
+                return false; // Изображения разного размера
+            }
+
+            byte[] bytesImg1 = ImageSourceToBytes(img1);
+            byte[] bytesImg2 = ImageSourceToBytes(img2);
+
+            // Сравниваем пиксели
+            for (int i = 0; i < bytesImg1.Length; i++)
+            {
+                if (bytesImg1[i] != bytesImg2[i])
+                {
+                    return false; // Найдено различие
+                }
+            }
+
+            return true; // Изображения идентичны
         }
     }
 }

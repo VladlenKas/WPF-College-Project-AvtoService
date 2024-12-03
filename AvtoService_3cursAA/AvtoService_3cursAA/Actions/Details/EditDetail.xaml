@@ -11,6 +11,7 @@
         Title="Редактирование детали" 
         Height="860" Width="600" 
         MinHeight="860" MinWidth="600" 
+        Loaded="Window_Loaded"
         Closed="Window_Closed"
         WindowStartupLocation="CenterScreen">
 
@@ -165,7 +166,7 @@
                     <Button 
                         Content="Сохранить изменения"
                         x:Name="ButtonAdd"
-                        Click="ButtonAdd_Click"
+                        Click="ButtonEdit_Click"
                         DockPanel.Dock="Bottom"
                         Margin="40 0"
                         Style="{StaticResource AuthButtonAct}"/>

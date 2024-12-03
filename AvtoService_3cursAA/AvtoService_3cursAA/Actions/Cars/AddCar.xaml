@@ -169,6 +169,7 @@
                                 <TextBlock Text="Год производства *"/>
                                 <Grid>
                                     <TextBox 
+                                        MaxLength="4"
                                         x:Name="YearTextBox"
                                         Text="{Binding Year}"
                                         PreviewTextInput="NumberTextBox_PreviewTextInput"
