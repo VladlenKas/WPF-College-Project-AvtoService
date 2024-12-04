@@ -1,7 +1,8 @@
 ﻿using AvtoService_3cursAA.ActionsForEmployee;
 using AvtoService_3cursAA.Classes;
+using AvtoService_3cursAA.DataActions;
 using AvtoService_3cursAA.Model;
-using AvtoService_3cursAA.UserControls.CarUC;
+using AvtoService_3cursAA.UserControls.DetailUC;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -22,16 +23,17 @@ using System.Windows.Shapes;
 namespace AvtoService_3cursAA.PagesMenuMechanic
 {
     /// <summary>
-    /// Логика взаимодействия для CarMechanic.xaml
+    /// Логика взаимодействия для CarDetail.xaml
     /// </summary>
-    public partial class CarMechanic : Page
+    public partial class DetailMechanic : Page
     {
         private Avtoservice3cursAaContext dbContext;
+        private Employee _selectUser;
         private Employee _thisUser;
 
-        private CarFilter carFilter; // Изменено на CarFilter
+        private DetailFilter detailFilter;
 
-        public CarMechanic(Employee employee)
+        public DetailMechanic(Employee employee)
         {
             this._thisUser = employee;
 
@@ -42,29 +44,31 @@ namespace AvtoService_3cursAA.PagesMenuMechanic
 
         private void UpdateItemsListView()
         {
-            dbContext = new();
+            dbContext = new Avtoservice3cursAaContext();
 
-            carFilter = new CarFilter(SearchTextBox, ComboBoxSort, SortCheckBox); // Используем CarFilter
-            ObservableCollection<Car> itemsList = new ObservableCollection<Car>(dbContext.Cars); // Изменено на Cars
+            detailFilter = new DetailFilter(SearchTextBox, ComboBoxSort, SortCheckBox, StartCostTextBox, FinishCostTextBox);
+            ObservableCollection<Detail> itemsList = new ObservableCollection<Detail>(dbContext.Details.ToList());
 
-            itemsList = carFilter.ApplySorter(itemsList);
-            itemsList = carFilter.ApplySearch(itemsList);
+            itemsList = detailFilter.ApplySorter(itemsList);
+            itemsList = detailFilter.ApplyStartCost(itemsList);
+            itemsList = detailFilter.ApplyFinishCost(itemsList);
+            itemsList = detailFilter.ApplySearch(itemsList);
 
             ListViewItems.Items.Clear();
             foreach (var item in itemsList)
             {
-                ListViewItems.Items.Add(new CarCardView(item)); // Изменено на CarCardView
+                ListViewItems.Items.Add(new DetailCardView(item));
             }
         }
 
         private void DataLoad()
         {
             // dbContext load
-            dbContext = new();
-            dbContext.Cars.Load(); // Изменено на Cars
+            dbContext = new Avtoservice3cursAaContext();
+            dbContext.Details.Load();
 
             // ComboBoxes load
-            var sorterList = FillDataFilterSorter.FillSorterCars(); // Изменено на FillSorterCars
+            var sorterList = FillDataFilterSorter.FillSorterDetails();
             ComboBoxSort.ItemsSource = sorterList;
         }
 
@@ -83,9 +87,25 @@ namespace AvtoService_3cursAA.PagesMenuMechanic
         {
             if (ListViewItems.Items != null)
             {
-                carFilter.ApplyClear(); // Используем ApplyClear из CarFilter
+                detailFilter.ApplyClear();
                 UpdateItemsListView();
             }
+        }
+
+        private void SearchByCost_Click(object sender, RoutedEventArgs e)
+        {
+            if (ListViewItems.Items != null)
+                UpdateItemsListView();
+        }
+
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            ActionsTextBox.ValidateInputNumbers(e);
+        }
+
+        private void TextBox_Pasting(object sender, DataObjectPastingEventArgs e)
+        {
+            ActionsTextBox.ValidatePasteNumbers(e);
         }
 
         private void SortCheckBox_Click(object sender, RoutedEventArgs e)

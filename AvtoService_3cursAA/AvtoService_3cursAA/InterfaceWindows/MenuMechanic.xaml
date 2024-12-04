@@ -88,10 +88,14 @@
                                DockPanel.Dock="Top"/>
 
                     <Button Style="{StaticResource NavigationButton}"
+                            Name="carMechanic"
+                            Click="CarMechanic_Click"
                             Content="Автомобили"
                             DockPanel.Dock="Top"/>
 
                     <Button Style="{StaticResource NavigationButton}"
+                            Name="detailMechnic"
+                            Click="DetailMechnic_Click"
                             Content="Детали"
                             DockPanel.Dock="Top"/>
 

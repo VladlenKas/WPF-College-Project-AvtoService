@@ -38,8 +38,15 @@ namespace AvtoService_3cursAA.InterfaceWindows
                 case 0:
                     ContentFrame.Navigate(new ClientsMechanic(_employee));
                     break;
+                case 1:
+                    ContentFrame.Navigate(new CarMechanic(_employee));
+                    break;
+                case 2:
+                    ContentFrame.Navigate(new DetailMechanic(_employee));
+                    break;
             }
         }
+       
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             this.Title = $"Меню менеджера. Вы вошли как: {_employee.FullName}";
@@ -56,6 +63,16 @@ namespace AvtoService_3cursAA.InterfaceWindows
         private void ButtonClients_Click(object sender, RoutedEventArgs e)
         {
             ChoosePage(0);
+        }
+
+        private void CarMechanic_Click(object sender, RoutedEventArgs e)
+        {
+            ChoosePage(1);
+        }
+
+        private void DetailMechnic_Click(object sender, RoutedEventArgs e)
+        {
+            ChoosePage(2);
         }
     }
 }
