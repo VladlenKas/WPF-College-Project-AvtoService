@@ -9,7 +9,7 @@
             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <Grid>
         <TextBox 
-            Tag="8xxx 80xxxx"
+            Tag="xxxx xxxxxx"
             MaxLength="11"
             x:Name="passportTextBox"
             Style="{StaticResource ActionTextBox}"

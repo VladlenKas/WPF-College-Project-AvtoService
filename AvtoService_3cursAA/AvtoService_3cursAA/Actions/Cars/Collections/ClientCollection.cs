@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace AvtoService_3cursAA.PagesMenuAdmin.Collections
 {
     // Редактирование
-    internal class ClientCollection
+    public class ClientCollection
     {
         private EditCar _parentWindow;
         public ObservableCollection<ClientItemForEditCar> Clients { get; set; }

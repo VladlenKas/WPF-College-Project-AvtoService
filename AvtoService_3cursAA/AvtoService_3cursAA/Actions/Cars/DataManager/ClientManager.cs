@@ -28,7 +28,7 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
         private ObservableCollection<Client> _filteredClients;// отфильтрованный список клиентов в комбобокс
         private TextBox _searchTextBox; // текстбокс внутри комбобокса
 
-        private ClientCollection ClientCollection; // юзер контролы клиентов для ClientCollection
+        public ClientCollection ClientCollection; // юзер контролы клиентов для ClientCollection
 
         // поля для конструктора
         private ItemsControl _listViewItems; 
@@ -90,8 +90,8 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
             dbContext.Cars.Include(c => c.Carclients).Load();
 
             // Загрузка всех клиентов, кроме тех, которые уже привязаны к машине
-            var clientsAlreadyAssigned = _car
-                .Carclients
+            var clientsAlreadyAssigned = dbContext.Carclients
+                .Where(cc => cc.IdCar == _car.IdCar)
                 .Select(cc => cc.IdClient)
                 .ToList();
 
@@ -108,13 +108,11 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
             _listViewItems.ItemsSource = ClientCollection.Clients;
 
             // Удаляем уже привязанных клиентов с комбобокса и возвращаем их в коллекцию выбранных клиентов
-            foreach (var client in listAllClients)
+            foreach (var clientId in clientsAlreadyAssigned)
             {
-                if (clientsAlreadyAssigned.Contains(client.IdClient))
-                {
-                    ClientCollection.AddClient(client); // добавляем в itemSource ItemControl
-                    Clients.Remove(client); // удаляем его из комбобокса
-                }   
+                var client = dbContext.Clients.Single(c => c.IdClient == clientId);
+                ClientCollection.AddClient(client); // добавляем в itemSource ItemControl
+                Clients.Remove(client); // удаляем его из комбобокса
             }
             // обновление комбобокса
             FillClients();

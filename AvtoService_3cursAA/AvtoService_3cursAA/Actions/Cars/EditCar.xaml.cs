@@ -3,6 +3,7 @@ using AvtoService_3cursAA.DataActions;
 using AvtoService_3cursAA.Model;
 using AvtoService_3cursAA.PagesMenuAdmin.Collections;
 using AvtoService_3cursAA.PagesMenuOperator.DataManager;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,10 +88,29 @@ namespace AvtoService_3cursAA.Actions.Cars
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
             // Находим автомобиль для сверки сведений
-            var _oldCar = dbContext.Cars.Single(c => c.IdCar == _selectedCarEdit.IdCar);
+            var _oldCar = dbContext.Cars
+                .Include(c => c.Carclients)
+                .Where(c => c.Carclients.Any(cc => cc.IsDeleted != true))
+                .Single(c => c.IdCar == _selectedCarEdit.IdCar);
 
             // Сравниваем, менялись ли изображения
             bool carImageWasChanged = !ActionsData.AreImagesEqual(_imageCarThis, Image); // Предполагается, что у вас есть поле Image в модели Car
+
+            // Проверяем, менялись ли пользователи
+            bool clientsChenged = false;
+            foreach (var clientUserControl in clientManager.ClientCollection.Clients)
+            {
+                var carclientOld = dbContext.AllCarclients
+                    .Where(cc => cc.IsDeleted != true)
+                    .SingleOrDefault(cc => cc.IdClient == clientUserControl.Client.IdClient && cc.IdCar == _oldCar.IdCar && cc.IsDeleted != true);
+
+                if (carclientOld == null ||
+                    ListSelectClients.Items.Count != dbContext.Carclients.Where(cc => cc.IdCar == _oldCar.IdCar).ToList().Count)
+                {
+                    clientsChenged = true;
+                    break;
+                }
+            }
 
             // Проверка на изменение данных автомобиля
             bool isCarDataChanged =
@@ -99,6 +119,7 @@ namespace AvtoService_3cursAA.Actions.Cars
                 _oldCar.Country != Country ||
                 _oldCar.Year != Year ||
                 _oldCar.Description != Description ||
+                clientsChenged ||
                 carImageWasChanged;
 
             // Проверка на валидность данных

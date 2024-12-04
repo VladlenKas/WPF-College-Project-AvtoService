@@ -51,7 +51,7 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                         {
                             // Находим автомобиль
                             int carId = carClient.IdCar;
-                            Car car = context.Cars.Include(c => c.Carclients).First(c => c.IdCar == carId);
+                            Car car = context.Cars.Include(c => c.Carclients).Single(c => c.IdCar == carId);
 
                             // Находим всех клиентов этого автомобиля
                             var clientsAlreadyAssigned = car
@@ -69,9 +69,9 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                     }
 
                     // Удаляем все записи
-                    foreach (var item in carsToRemove)
+                    foreach (var carclientRemove in carClients)
                     {
-                        var carclient = context.Carclients.First(cc => cc.IdCar == item.IdCar);
+                        var carclient = context.Carclients.Single(cc => cc.IdCar == carclientRemove.IdCar && cc.IdClient == client.IdClient);
                         carclient.IsDeleted = true;
                         context.Update(carclient);
                     }
@@ -80,12 +80,12 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                     foreach (var car in carsToRemove)
                     {
                         carsStr += $"{car.Brand} {car.Model}, ";
-                        var carToRemove = context.Cars.First(c => c.IdCar == car.IdCar);
+                        var carToRemove = context.Cars.Single(c => c.IdCar == car.IdCar);
                         carToRemove.IsDeleted = true;
                     }
 
                     // Удаляем клиента
-                    var clientToRemove = context.Clients.First(c => c.IdClient == client.IdClient);
+                    var clientToRemove = context.Clients.Single(c => c.IdClient == client.IdClient);
                     clientToRemove.IsDeleted = true;
                     context.SaveChanges();
 
@@ -276,7 +276,7 @@ namespace AvtoService_3cursAA.ActionsForEmployee
         {
             using (var dbContext = new Avtoservice3cursAaContext())
             {
-                var thisCar = dbContext.Cars.First(r => r.IdCar == car.IdCar);
+                var thisCar = dbContext.Cars.Single(r => r.IdCar == car.IdCar);
 
                 byte[] newImage = ImageSourceToBytes(image);
 
@@ -352,30 +352,51 @@ namespace AvtoService_3cursAA.ActionsForEmployee
 
         private static void AddClientsForCar(Car car, List<Client> clients, Avtoservice3cursAaContext context)
         {
+            // Находим все связи этого авто
             var carClientsToRemove = context.Cars
                 .Where(c => c.IdCar == car.IdCar)
                 .SelectMany(cc => cc.Carclients)
+                .Where(cc => cc.IsDeleted != true)
                 .ToList();
 
+            // Оставляем только те связи, которых не было
+            foreach (var client in new List<Client>(clients))
+            {
+                var saveClient = carClientsToRemove.SingleOrDefault(c => c.IdClient == client.IdClient);
+                if (saveClient != null)
+                {
+                    carClientsToRemove.Remove(saveClient);
+                    clients.Remove(client);
+                }
+            }
+
+            // Удаляем новые/удаленные записи
             if (carClientsToRemove.Count != 0)
             {
                 foreach (var carclient in carClientsToRemove)
                 {
                     carclient.IsDeleted = true;
                 }
-                
             }
 
             // Добавьте новые связи Carclient
             foreach (var client in clients)
             {
-                Carclient carclient = new Carclient()
+                var carclientOld = context.AllCarclients.SingleOrDefault(c => c.IdCar == car.IdCar && c.IdClient == client.IdClient);
+                if (carclientOld != null)
                 {
-                    IdCar = car.IdCar,
-                    IdClient = client.IdClient,
-                };
-                context.Add(carclient);
-            }
+                    carclientOld.IsDeleted = false;
+                }
+                else
+                {
+                    Carclient carclient = new Carclient()
+                    {
+                        IdCar = car.IdCar,
+                        IdClient = client.IdClient,
+                    };
+                    context.Add(carclient);
+                }
+            } 
         }
 
         public static void AddOrderAll(Employee employee, Client client, Car car, 

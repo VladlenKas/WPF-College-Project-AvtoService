@@ -8,7 +8,7 @@
              
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <Grid>
-        <TextBox Tag="31.12.2025"
+        <TextBox Tag="dd.mm.yyyy"
                  x:Name="dateTextBox"
                  Style="{StaticResource ActionTextBox}"
                  PreviewKeyDown="dateTextBox_PreviewKeyDown"

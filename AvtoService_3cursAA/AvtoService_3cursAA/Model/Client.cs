@@ -27,7 +27,11 @@ public class Client
     {
         get
         {
-            return Carclients?.Select(cc => ($"ID: [{cc.IdCar}] {cc.IdCarNavigation.Brand} {cc.IdCarNavigation.Model}")).ToList() ?? new List<string>();
+            return Carclients
+                .Where(cc => cc.IsDeleted != true)?
+                .Where(cc => cc.IdCarNavigation.IsDeleted != true)
+                .Select(cc => cc.IdCarNavigation.Title)
+                .ToList() ?? new List<string>();
         }
     }
     public virtual ICollection<Carclient> Carclients { get; set; } = new List<Carclient>();

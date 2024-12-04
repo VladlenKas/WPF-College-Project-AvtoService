@@ -35,7 +35,7 @@
 
     <Grid Background="#ffffff">
         <Grid.RowDefinitions>
-            <RowDefinition Height="300"/>
+            <RowDefinition Height="280"/>
             <RowDefinition Height="50"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
@@ -252,7 +252,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Bottom"
                                 Width="300"
-                                Content="Добавить автомобиль"
+                                Content="Сохранить изменения"
                                 x:Name="ButtonAdd"
                                 Click="ButtonAdd_Click"
                                 DockPanel.Dock="Left"

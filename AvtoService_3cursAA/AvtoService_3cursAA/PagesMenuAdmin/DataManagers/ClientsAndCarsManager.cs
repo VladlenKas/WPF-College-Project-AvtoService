@@ -314,8 +314,13 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                 if (SelectedClient != null)
                 {
                     List<Car> cars = new List<Car>(dbContext.Cars); // исходный список машин
-                    var carsId = SelectedClient.Carclients.Select(cc => cc.IdCarNavigation.IdCar); // id машин выбранного клиента
-                    List<Car> filteredCars = cars.Where(car => carsId.Contains(car.IdCar)).ToList(); // все машины клиента
+                    var carsId = SelectedClient.Carclients
+                        .Where(cc => cc.IsDeleted != true)
+                        .Select(cc => cc.IdCarNavigation.IdCar); // id машин выбранного клиента
+                    List<Car> filteredCars = cars
+                        .Where(car => carsId
+                        .Contains(car.IdCar))
+                        .ToList(); // все машины клиента
 
                     _cars = new ObservableCollection<Car>(filteredCars);
                     _filteredCars = new ObservableCollection<Car>(filteredCars);
