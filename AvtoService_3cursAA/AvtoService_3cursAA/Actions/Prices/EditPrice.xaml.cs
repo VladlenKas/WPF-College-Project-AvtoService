@@ -124,9 +124,13 @@ namespace AvtoService_3cursAA.Actions
             dbContext = new();
             List<string> errorsList = new();
 
-            if (string.IsNullOrWhiteSpace(Name) || Cost == 0)
+            if (Cost == 0)
             {
-                errorsList.Add("Заполните все обязательные поля");
+                errorsList.Add("Услуга не может быть бесплатной");
+            }
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                errorsList.Add("Заполните поле с названием");
             }
 
             if (dbContext.Prices.Any(r => r.Name.Replace(" ", "").ToLower() == Name.Replace(" ", "").ToLower()

@@ -47,22 +47,27 @@ namespace AvtoService_3cursAA.PagesMenuOperator
         {
             dbContext = new Avtoservice3cursAaContext();
 
-            detailFilter = new DetailFilter(SearchTextBox, ComboBoxSort, SortCheckBox, StartCostTextBox, FinishCostTextBox);
-
+            detailFilter = new DetailFilter(SearchTextBox, ComboBoxFilter, ComboBoxSort, SortCheckBox, StartCostTextBox, FinishCostTextBox);
             ObservableCollection<Detail> itemsList = new ObservableCollection<Detail>(dbContext.Details.ToList());
 
             itemsList = detailFilter.ApplySorter(itemsList);
             itemsList = detailFilter.ApplyStartCost(itemsList);
             itemsList = detailFilter.ApplyFinishCost(itemsList);
             itemsList = detailFilter.ApplySearch(itemsList);
+            itemsList = detailFilter.ApplyFilter(itemsList);
 
             ListViewItems.Items.Clear();
 
             foreach (var item in itemsList)
             {
-                var detailCardEdit = new DetailCardEdit(item, this);
-                detailCardEdit.RemoveDetailRequested += DetailCardEdit_RemoveDetailRequested; // Подписка на событие удаления
-                ListViewItems.Items.Add(detailCardEdit);
+                SolidColorBrush brush = new SolidColorBrush(Colors.LightGray);
+                if (item.Count == 0)
+                {
+                    brush = new SolidColorBrush(Colors.DarkRed);
+                }
+
+                var userControl = new DetailCardView(item, brush);
+                ListViewItems.Items.Add(userControl);
             }
         }
 
@@ -74,7 +79,9 @@ namespace AvtoService_3cursAA.PagesMenuOperator
 
             // ComboBoxes load
             var sorterList = FillDataFilterSorter.FillSorterDetails();
+            var filterList = FillDataFilterSorter.FillSorterDetailsCount();
             ComboBoxSort.ItemsSource = sorterList;
+            ComboBoxFilter.ItemsSource = filterList;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -137,6 +144,12 @@ namespace AvtoService_3cursAA.PagesMenuOperator
             window.ShowDialog();
 
             UpdateItemsListView();
+        }
+
+        private void ComboBoxFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ListViewItems.Items != null)
+                UpdateItemsListView();
         }
     }
 }

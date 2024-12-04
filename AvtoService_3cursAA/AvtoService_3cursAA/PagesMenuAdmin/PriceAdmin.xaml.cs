@@ -46,12 +46,12 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         {
             dbContext = new();
 
-            priceFilter = new PriceFilter(SearchTextBox, ComboBoxSort, SortCheckBox, StartCostTextBox, FinishCostTextBox);
+            priceFilter = new PriceFilter(SearchTextBox, ComboBoxSort, SortCheckBox, null, null);
             ObservableCollection<Price> itemsList = new ObservableCollection<Price>(dbContext.Prices);
 
             itemsList = priceFilter.ApplySorter(itemsList);
-            itemsList = priceFilter.ApplyStartCost(itemsList);
-            itemsList = priceFilter.ApplyFinishCost(itemsList);
+            /*itemsList = priceFilter.ApplyStartCost(itemsList);
+            itemsList = priceFilter.ApplyFinishCost(itemsList);*/
             itemsList = priceFilter.ApplySearch(itemsList);
 
             ListViewItems.Items.Clear();
@@ -59,7 +59,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             {
                 ListViewItems.Items.Add(new PriceCardView(item));
             }
-
         }
         private void DataLoad()
         {

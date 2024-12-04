@@ -101,5 +101,25 @@ namespace AvtoService_3cursAA.DataActions
                 e.CancelCommand(); // Блокируем вставку
             }
         }
+
+        public static void ValidateInputTitle(TextCompositionEventArgs e)
+        {
+            // Разрешаем только кириллицу, цифры. специальные символы, латиниицу
+            if (!Regex.IsMatch(e.Text, @"^[a-zA-Zа-яА-ЯёЁ0-9\s-]+$"))
+            {
+                e.Handled = true; // Блокируем ввод
+            }
+        }
+
+        public static void ValidatePasteTitle(DataObjectPastingEventArgs e)
+        {
+            // Если да, то передаем его в отдельную строку
+            string pastedText = e.DataObject.GetData(DataFormats.Text) as string;
+
+            if (!Regex.IsMatch(pastedText, @"^[a-zA-Zа-яА-ЯёЁ0-9\s-]+$"))
+            {
+                e.CancelCommand(); // Блокируем вставку
+            }
+        }
     }
 }

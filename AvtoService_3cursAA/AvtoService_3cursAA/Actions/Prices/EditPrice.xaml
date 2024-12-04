@@ -124,6 +124,7 @@
                             <TextBlock Text="Название *"/>
                             <Grid>
                                 <TextBox 
+                                    MaxLength="20"
                                     x:Name="NameTextBox"
                                     Text="{Binding Name}"
                                     PreviewTextInput="TextBox_PreviewTextInput"
@@ -133,9 +134,10 @@
                         </StackPanel>
 
                         <StackPanel>
-                            <TextBlock Text="Цена *"/>
+                            <TextBlock Text="Цена (руб.) *"/>
                             <Grid>
                                 <TextBox 
+                                    MaxLength="5"
                                     x:Name="CostTextBox"
                                     Text="{Binding Cost}"
                                     PreviewTextInput="NumberTextBox_PreviewTextInput"

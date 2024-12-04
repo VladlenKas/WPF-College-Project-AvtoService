@@ -187,6 +187,7 @@
                           x:Name="HidePassCheckBox"
                           Click="HidePassCheckBox_Click"
                           Style="{StaticResource AuthCheckBox}"/>
+
             </StackPanel>
         </DockPanel>
         

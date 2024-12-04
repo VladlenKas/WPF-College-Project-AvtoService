@@ -123,6 +123,7 @@
                             <TextBlock Text="Название *"/>
                             <Grid>
                                 <TextBox 
+                                    MaxLength="20"
                                     x:Name="NameTextBox"
                                     Text="{Binding Name}"
                                     PreviewTextInput="TextBox_PreviewTextInput"
@@ -132,9 +133,10 @@
                         </StackPanel>
 
                         <StackPanel>
-                            <TextBlock Text="Цена *"/>
+                            <TextBlock Text="Цена (руб.) *"/>
                             <Grid>
                                 <TextBox 
+                                    MaxLength="5"
                                     x:Name="CostTextBox"
                                     Text="{Binding Cost}"
                                     PreviewTextInput="NumberTextBox_PreviewTextInput"
@@ -147,11 +149,12 @@
                             <TextBlock Text="Количество *"/>
                             <Grid>
                                 <TextBox 
+                                    MaxLength="5"
                                     x:Name="CountTextBox"
                                     Text="{Binding Count}"
                                     PreviewTextInput="NumberTextBox_PreviewTextInput"
                                     DataObject.Pasting="NumberTextBox_Pasting"/>
-                                <materialDesign:PackIcon Kind="Counter"/>
+                                <materialDesign:PackIcon Kind="NumericThreeBoxOutline"/>
                             </Grid>
                         </StackPanel>
                     </StackPanel>

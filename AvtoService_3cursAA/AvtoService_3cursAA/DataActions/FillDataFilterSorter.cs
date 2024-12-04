@@ -20,12 +20,12 @@ namespace AvtoService_3cursAA.ActionsForEmployee
         private readonly static Avtoservice3cursAaContext dbContext = new Avtoservice3cursAaContext();
         private readonly static List<object> _filterList = new List<object>
         {
-            "Без фильтров",
+            "Без фильтрации",
             new Separator { Margin = new Thickness(0, 5, 0, 5), Width = 150 }
         };
         private readonly static List<object> _sorterList = new List<object>
         {
-            "Без сортировки",
+            "По дате добавления",
             new Separator { Margin = new Thickness(0, 5, 0, 5), Width = 150 }
         };
 
@@ -128,6 +128,7 @@ namespace AvtoService_3cursAA.ActionsForEmployee
             sorterList.AddRange(strings);
             return sorterList;
         }
+
         public static List<object> FillSorterDetails()
         {
             var sorterList = new List<object>(_sorterList);
@@ -153,6 +154,18 @@ namespace AvtoService_3cursAA.ActionsForEmployee
             };
             sorterList.AddRange(strings);
             return sorterList;
+        }
+
+        public static List<object> FillSorterDetailsCount()
+        {
+            var filterList = new List<object>(_filterList);
+            var strings = new List<object>
+            {
+                "Имеется на слкаде",
+                "Нет на складе"
+            };
+            filterList.AddRange(strings);
+            return filterList;
         }
     }
 }

@@ -73,9 +73,13 @@ namespace AvtoService_3cursAA.Actions.Details
             dbContext = new();
             List<string> errorsList = new();
 
-            if (string.IsNullOrWhiteSpace(Name) || Cost == 0)
+            if (Cost == 0)
             {
-                errorsList.Add("Заполните все обязательные поля");
+                errorsList.Add("Товар не может быть бесплатным");
+            }
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                errorsList.Add("Заполните поле с названием");
             }
 
             if (dbContext.Details.Any(r => r.Name.Replace(" ", "").ToLower() == Name.Replace(" ", "").ToLower()))
@@ -110,12 +114,12 @@ namespace AvtoService_3cursAA.Actions.Details
 
         private void NumberTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            ActionsTextBox.ValidateInputNumbers(e);
+            ActionsTextBox.ValidateInputTitle(e);
         }
 
         private void NumberTextBox_Pasting(object sender, DataObjectPastingEventArgs e)
         {
-            ActionsTextBox.ValidatePasteNumbers(e);
+            ActionsTextBox.ValidatePasteTitle(e);
         }
 
         private void ImageChange_Click(object sender, RoutedEventArgs e)

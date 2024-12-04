@@ -132,7 +132,7 @@
 
                         <ComboBox 
                             Name="ComboBoxSort"
-                            Width="350"
+                            Width="400"
                             SelectedIndex="0"
                             Style="{StaticResource ComboBoxSupportive}"
                             SelectionChanged="ComboBoxSort_SelectionChanged"/>
@@ -143,7 +143,7 @@
                             Click="SortCheckBox_Click"/>
                     </Grid>
 
-                    <Grid 
+                    <!--<Grid 
                         DockPanel.Dock="Left"
                         VerticalAlignment="Bottom"
                         Margin="0 0 10 0">
@@ -186,7 +186,7 @@
                             Height="20"
                             Kind="Search"
                             Style="{StaticResource CardIconStyle}"/>
-                    </Grid>
+                    </Grid>-->
                 </DockPanel>
             </Grid>
 

@@ -16,10 +16,11 @@
                       Opacity="0.1"
                       Direction="90"/>
     </UserControl.Resources>
-
+    
     <Border
+        Name="border"
         BorderThickness="2"
-        BorderBrush="#30000000"
+        BorderBrush="{Binding SolidColorBrush}"
         Margin="15"
         CornerRadius="30"
         Effect="{StaticResource dropShadowBorder}">

@@ -133,6 +133,7 @@
                                 <TextBlock Text="Бренд *"/>
                                 <Grid>
                                     <TextBox 
+                                        MaxLength="20"
                                         x:Name="BrandTextBox"
                                         Text="{Binding Brand}"/>
                                     <materialDesign:PackIcon Kind="Edit"/>
@@ -143,6 +144,7 @@
                                 <TextBlock Text="Модель *"/>
                                 <Grid>
                                     <TextBox 
+                                        MaxLength="20"
                                         x:Name="ModelTextBox"
                                         Text="{Binding Model}"/>
                                     <materialDesign:PackIcon Kind="Edit"/>
@@ -204,6 +206,15 @@
                                         VerticalAlignment="Top"
                                         x:Name="ClientsComboBox"/>
                                     <materialDesign:PackIcon Kind="User"/>
+                                    <TextBlock 
+                                        IsHitTestVisible="False"
+                                        Name="TextForPrices"
+                                        Style="{StaticResource MenuTextBlock}"
+                                        Margin="35 0 0 20"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Left"
+                                        Text="Выберите клиента"
+                                        Visibility="Visible"/>
                                 </Grid>
 
                                 <TextBlock 

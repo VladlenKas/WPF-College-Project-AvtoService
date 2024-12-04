@@ -19,11 +19,17 @@ namespace AvtoService_3cursAA.UserControls.DetailUC
     /// <summary>
     /// Логика взаимодействия для DetailCardView.xaml
     /// </summary>
+    
     public partial class DetailCardView : UserControl
     {
-        public DetailCardView(Detail detail)
+        public SolidColorBrush SolidColorBrush { get; set; }
+        public DetailCardView(Detail detail, SolidColorBrush solidColorBrush)
         {
+            SolidColorBrush = solidColorBrush;
+
             InitializeComponent();
+            border.BorderBrush = SolidColorBrush;
+
             DataContext = detail;
 
             if (detail.Photo == null)

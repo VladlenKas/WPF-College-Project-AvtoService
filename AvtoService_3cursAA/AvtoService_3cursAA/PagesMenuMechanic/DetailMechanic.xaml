@@ -69,17 +69,62 @@
                                                  IsHitTestVisible="False"
                                                  Foreground="#000000"/>
                     </Grid>
-
+                    
                     <!-- Button clear data -->
                     <Grid 
-                        Margin="15 0 0 0"
+                        Margin="15 0 50 0"
                         VerticalAlignment="Top"
                         DockPanel.Dock="Left">
                         <Button
                             Style="{StaticResource DeleteButtonSmall}"
-                            Click="SearchByCost_Click"/>
+                            Click="ClearDataButton_Click"/>
                         <materialDesign:PackIcon 
                             Kind="Loop"
+                            Style="{StaticResource CardIconStyle}"/>
+                    </Grid>
+
+                    <Grid 
+                        DockPanel.Dock="Left"
+                        VerticalAlignment="Top"
+                        Margin="0 0 10 0">
+                        <TextBox
+                            Width="200" 
+                            MaxLength="4"
+                            Tag="Цена от:"
+                            x:Name="StartCostTextBox"
+                            DataObject.Pasting="TextBox_Pasting"
+                            PreviewTextInput="TextBox_PreviewTextInput"/>
+                        <materialDesign:PackIcon 
+                            Kind="ArrowUpward"
+                            IsHitTestVisible="False"
+                            Foreground="#000000"/>
+                    </Grid>
+
+                    <Grid 
+                        DockPanel.Dock="Left"
+                        VerticalAlignment="Top"
+                        Margin="0 0 10 0">
+                        <TextBox
+                            Width="200" 
+                            MaxLength="4"
+                            Tag="Цена до:"
+                            x:Name="FinishCostTextBox"
+                            DataObject.Pasting="TextBox_Pasting"
+                            PreviewTextInput="TextBox_PreviewTextInput"/>
+                        <materialDesign:PackIcon 
+                            Kind="ArrowBottom"
+                            IsHitTestVisible="False"
+                            Foreground="#000000"/>
+                    </Grid>
+
+                    <Grid VerticalAlignment="Top">
+                        <Button
+                            Style="{StaticResource NextButtonSmall}"
+                            Click="SearchByCost_Click"/>
+                        <materialDesign:PackIcon 
+                            Width="20"
+                            Height="20"
+                            Kind="Search"
                             Style="{StaticResource CardIconStyle}"/>
                     </Grid>
 
@@ -126,13 +171,13 @@
                     <!-- Name page -->
                     <TextBlock Style="{StaticResource HeaderTextBlock}" Text="Детали"/>
                     <Grid
-                        Margin="0 0 50 0"
+                        Margin="0 0 20 0"
                         DockPanel.Dock="Left" 
                         VerticalAlignment="Bottom">
 
                         <ComboBox 
                             Name="ComboBoxSort"
-                            Width="350"
+                            Width="400"
                             SelectedIndex="0"
                             Style="{StaticResource ComboBoxSupportive}"
                             SelectionChanged="ComboBoxSort_SelectionChanged"/>
@@ -143,51 +188,17 @@
                             Click="SortCheckBox_Click"/>
                     </Grid>
 
-                    <Grid 
-                        DockPanel.Dock="Left"
-                        VerticalAlignment="Bottom"
-                        Margin="0 0 10 0">
-                        <TextBox
-                            Width="200" 
-                            MaxLength="4"
-                            Tag="Цена от:"
-                            x:Name="StartCostTextBox"
-                            DataObject.Pasting="TextBox_Pasting"
-                            PreviewTextInput="TextBox_PreviewTextInput"/>
-                        <materialDesign:PackIcon 
-                            Kind="ArrowUpward"
-                            IsHitTestVisible="False"
-                            Foreground="#000000"/>
+                    <!-- Button filter -->
+                    <Grid DockPanel.Dock="Left"
+                          VerticalAlignment="Bottom">
+                        <ComboBox 
+                            Width="250"
+                            x:Name="ComboBoxFilter"
+                            SelectedIndex="0"
+                            Style="{StaticResource ComboBoxSupportive}"
+                            SelectionChanged="ComboBoxFilter_SelectionChanged"/>
+                        <materialDesign:PackIcon Kind="Filter"/>
                     </Grid>
-
-                    <Grid 
-                        DockPanel.Dock="Left"
-                        VerticalAlignment="Bottom"
-                        Margin="0 0 10 0">
-                        <TextBox
-                            Width="200" 
-                            MaxLength="4"
-                            Tag="Цена до:"
-                            x:Name="FinishCostTextBox"
-                            DataObject.Pasting="TextBox_Pasting"
-                            PreviewTextInput="TextBox_PreviewTextInput"/>
-                        <materialDesign:PackIcon 
-                            Kind="ArrowBottom"
-                            IsHitTestVisible="False"
-                            Foreground="#000000"/>
-                    </Grid>
-
-                    <Grid VerticalAlignment="Bottom">
-                        <Button
-                            Style="{StaticResource NextButtonSmall}"
-                            Click="SearchByCost_Click"/>
-                        <materialDesign:PackIcon 
-                            Width="20"
-                            Height="20"
-                            Kind="Search"
-                            Style="{StaticResource CardIconStyle}"/>
-                    </Grid>
-
                 </DockPanel>
             </Grid>
 

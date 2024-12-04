@@ -49,13 +49,13 @@ namespace AvtoService_3cursAA.PagesMenuOperator
         {
             dbContext = new Avtoservice3cursAaContext();
 
-            priceFilter = new PriceFilter(SearchTextBox, ComboBoxSort, SortCheckBox, StartCostTextBox, FinishCostTextBox);
+            priceFilter = new PriceFilter(SearchTextBox, ComboBoxSort, SortCheckBox, null, null);
 
             ObservableCollection<Price> itemsList = new ObservableCollection<Price>(dbContext.Prices.ToList());
 
             itemsList = priceFilter.ApplySorter(itemsList);
-            itemsList = priceFilter.ApplyStartCost(itemsList);
-            itemsList = priceFilter.ApplyFinishCost(itemsList);
+            /*itemsList = priceFilter.ApplyStartCost(itemsList);
+            itemsList = priceFilter.ApplyFinishCost(itemsList);*/
             itemsList = priceFilter.ApplySearch(itemsList);
 
             ListViewItems.Items.Clear();

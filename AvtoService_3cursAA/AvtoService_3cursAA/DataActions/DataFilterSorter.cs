@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Collections.ObjectModel;
+using MaterialDesignColors;
 
 namespace AvtoService_3cursAA.Classes
 {
@@ -230,7 +231,7 @@ namespace AvtoService_3cursAA.Classes
     public class PriceFilter : DataFilterSorter
     {
         public PriceFilter(TextBox searchTextBox, ComboBox sorterComboBox, CheckBox ascendingCheckBox, TextBox startCostTextBox, TextBox finishCostTextBox)
-            : base(searchTextBox, null, sorterComboBox, ascendingCheckBox, startCostTextBox, finishCostTextBox) { }
+            : base(searchTextBox, null, sorterComboBox, ascendingCheckBox, null, null /*startCostTextBox, finishCostTextBox*/) { }
 
         // Поиск по названию
         public ObservableCollection<Price> ApplySearch(ObservableCollection<Price> prices)
@@ -243,7 +244,7 @@ namespace AvtoService_3cursAA.Classes
             return prices;
         }
 
-        // Начальная точка цены
+        /*// Начальная точка цены
         public ObservableCollection<Price> ApplyStartCost(ObservableCollection<Price> prices)
         {
             string startCost = _startCostTextBox.Text.ToLower();
@@ -269,7 +270,7 @@ namespace AvtoService_3cursAA.Classes
                 }
             }
             return prices;
-        }
+        }*/
 
         // Сортировка
         public ObservableCollection<Price> ApplySorter(ObservableCollection<Price> prices)
@@ -326,8 +327,25 @@ namespace AvtoService_3cursAA.Classes
 
     public class DetailFilter : DataFilterSorter
     {
-        public DetailFilter(TextBox searchTextBox, ComboBox sorterComboBox, CheckBox ascendingCheckBox, TextBox startCostTextBox, TextBox finishCostTextBox)
-            : base(searchTextBox, null, sorterComboBox, ascendingCheckBox, startCostTextBox, finishCostTextBox) { }
+        public DetailFilter(TextBox searchTextBox, ComboBox filterComboBox, ComboBox sorterComboBox, CheckBox ascendingCheckBox, 
+            TextBox startCostTextBox, TextBox finishCostTextBox)
+            : base(searchTextBox, filterComboBox, sorterComboBox, ascendingCheckBox, startCostTextBox, finishCostTextBox) { }
+
+        // Поиск по фильтру
+        public ObservableCollection<Detail> ApplyFilter(ObservableCollection<Detail> details)
+        {
+            int sortIndex = _filterComboBox.SelectedIndex;
+
+            switch (sortIndex)
+            {
+                case 2:
+                    return new ObservableCollection<Detail>(details.Where(d => d.Count != 0));
+                case 3:
+                    return new ObservableCollection<Detail>(details.Where(d => d.Count == 0));
+                default:
+                    return new ObservableCollection<Detail>(details);
+            }
+        }
 
         // Поиск по названию
         public ObservableCollection<Detail> ApplySearch(ObservableCollection<Detail> details)
@@ -413,6 +431,7 @@ namespace AvtoService_3cursAA.Classes
         // Очистка
         public void ApplyClear()
         {
+            _filterComboBox.SelectedIndex = 0;
             _searchTextBox.Text = string.Empty;
             _startCostTextBox.Text = string.Empty;
             _finishCostTextBox.Text = string.Empty;
