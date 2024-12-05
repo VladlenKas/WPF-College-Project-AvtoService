@@ -54,8 +54,7 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                             Car car = context.Cars.Include(c => c.Carclients).Single(c => c.IdCar == carId);
 
                             // Находим всех клиентов этого автомобиля
-                            var clientsAlreadyAssigned = car
-                                .Carclients
+                            var clientsAlreadyAssigned = car.Carclients
                                 .Select(cc => cc.IdClient)
                                 .ToList();
 

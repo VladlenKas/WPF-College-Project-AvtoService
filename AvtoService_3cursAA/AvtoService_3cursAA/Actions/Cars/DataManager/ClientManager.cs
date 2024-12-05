@@ -17,6 +17,7 @@ using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using AvtoService_3cursAA.DataActions;
 using System.Xml.Linq;
+using MaterialDesignThemes.Wpf;
 
 namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
 {
@@ -181,8 +182,16 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
                 }
             }
 
-            _comboBoxClients.ItemsSource = FilteredClients; // Обновляем источник данных комбобокса
-            _comboBoxClients.DisplayMemberPath = "FullName"; // Устанавливаем отображаемое свойство
+            if (FilteredClients.Count != 0)
+            {
+                _comboBoxClients.ItemsSource = FilteredClients; // Обновляем источник данных комбобокса
+                _comboBoxClients.DisplayMemberPath = "FullName"; // Устанавливаем отображаемое свойство 
+            }
+            else
+            {
+                var emptyMessage = new { FullName = "Ничего не найдено" };
+                _comboBoxClients.ItemsSource = new List<object> { emptyMessage };
+            }
         }
 
         /// <summary>
@@ -207,13 +216,29 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
         {
             dbContext = new Avtoservice3cursAaContext();
 
-            if (client.CarList.Count >= 3)
+            // Если это наш клиент, то ничего не обратываем
+            var carClientsToThisCar = dbContext.Cars
+                    .Where(cc => cc.IdCar == _car.IdCar)
+                    .SelectMany(c => c.Carclients)
+                    .ToList();
+
+            bool thisClient = false;
+            foreach (var carclient in carClientsToThisCar)
+            {
+                if (carclient.IdClient == client.IdClient)
+                {
+                    thisClient = true;
+                    break;
+                }
+            }
+
+            if (client.CarList.Count >= 3 && thisClient is false)
             {
                 MessageBox.Show("У данного пользователя уже есть 3 автомобиля." +
                     "\nУдалите автомобиль у выбранного клиента или выберите другого клиента",
                     "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
-            }
+            } 
 
             return true;
         }
@@ -252,6 +277,8 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             FilterText = _searchTextBox.Text; // Вызываем метод фильтрации при изменении текста
+
+            _comboBoxClients.IsDropDownOpen = true; // раскрываем комбобокс при вводе
         }
         #endregion
 
@@ -411,8 +438,16 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
                 }
             }
 
-            _comboBoxClients.ItemsSource = FilteredClients; // Обновляем источник данных комбобокса
-            _comboBoxClients.DisplayMemberPath = "FullName"; // Устанавливаем отображаемое свойство
+            if (FilteredClients.Count != 0)
+            {
+                _comboBoxClients.ItemsSource = FilteredClients; // Обновляем источник данных комбобокса
+                _comboBoxClients.DisplayMemberPath = "FullName"; // Устанавливаем отображаемое свойство 
+            }
+            else
+            {
+                var emptyMessage = new { FullName = "Ничего не найдено" };
+                _comboBoxClients.ItemsSource = new List<object> { emptyMessage };
+            }
         }
 
         /// <summary>

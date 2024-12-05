@@ -159,8 +159,16 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                 }
             }
 
-            _comboBoxDetails.ItemsSource = FilteredDetails; // Обновляем источник данных комбобокса
-            _comboBoxDetails.DisplayMemberPath = "Name"; // Устанавливаем отображаемое свойство
+            if (FilteredDetails.Count != 0)
+            {
+                _comboBoxDetails.ItemsSource = FilteredDetails; // Обновляем источник данных комбобокса
+                _comboBoxDetails.DisplayMemberPath = "Name"; // Устанавливаем отображаемое свойство 
+            }
+            else
+            {
+                var emptyMessage = new { Name = "Ничего не найдено" };
+                _comboBoxDetails.ItemsSource = new List<object> { emptyMessage };
+            }
         }
 
         public void LoadDetailInDetailView(Detail detail)
@@ -239,6 +247,8 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         {
             _placeHolder.Visibility = string.IsNullOrWhiteSpace(_searchTextBox.Text) ? Visibility.Visible : Visibility.Hidden;
             FilterText = _searchTextBox.Text; // Вызываем метод фильтрации при изменении текста
+
+            _comboBoxDetails.IsDropDownOpen = true; // раскрываем комбобокс при вводе
         }
         #endregion
 

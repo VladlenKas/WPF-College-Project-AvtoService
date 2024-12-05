@@ -181,6 +181,16 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                         }
                     }
                 }
+
+                if (FilteredClients.Count == 0)
+                {
+                    var emptyMessage = new { FullName = "Ничего не найдено" };
+                    _comboBoxClients.ItemsSource = new List<object> { emptyMessage };
+                }
+                else
+                {
+                    _comboBoxClients.ItemsSource = FilteredClients;
+                }
             }
             #endregion
 
@@ -197,12 +207,22 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                     _searchTextBox.TextChanged -= SearchTextBox_TextChanged;
 
                     // передаем выбранного пользователя в свойство и сбрасываем выбор
-                    SelectedClient = _comboBoxClients.SelectedItem as Client;
-                    _comboBoxClients.SelectedIndex = -1;
+                    if (_comboBoxClients.SelectedItem is Client)
+                    {
+                        SelectedClient = _comboBoxClients.SelectedItem as Client;
 
-                    // выводим выбранного пользователя в текстблок
-                    _placeHolder.Visibility = Visibility.Visible;
-                    _placeHolder.Text = SelectedClient.FullName;
+                        // выводим выбранного пользователя в текстблок
+                        _placeHolder.Visibility = Visibility.Visible;
+                        _placeHolder.Text = SelectedClient.FullName;
+                    }
+                    else
+                    {
+                        _placeHolder.Visibility = Visibility.Visible;
+                        _placeHolder.Text = "Выберите клиента";
+                        _comboBoxClients.ItemsSource = Clients;
+                    }
+
+                    _comboBoxClients.SelectedIndex = -1;
 
                     // очищаем строку от поиска
                     _searchTextBox.Text = string.Empty;
@@ -220,6 +240,8 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                 _placeHolder.Text = "Выберите клиента";
                 _placeHolder.Visibility = string.IsNullOrWhiteSpace(_searchTextBox.Text) ? Visibility.Visible : Visibility.Hidden;
                 FilterText = _searchTextBox.Text; // Вызываем метод фильтрации при изменении текста
+
+                _comboBoxClients.IsDropDownOpen = true; // раскрываем комбобокс при вводе
             }
             #endregion
         }
@@ -390,6 +412,16 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                         }
                     }
                 }
+
+                if (FilteredCars.Count == 0)
+                {
+                    var emptyMessage = new { Title = "Ничего не найдено" };
+                    _comboBoxCars.ItemsSource = new List<object> { emptyMessage };
+                }
+                else
+                {
+                    _comboBoxCars.ItemsSource = FilteredCars;
+                }
             }
 
             #endregion
@@ -407,14 +439,23 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                     _comboBoxCars.SelectionChanged -= ComboBoxCars_SelectionChanged;
                     _searchTextBox.TextChanged -= SearchTextBox_TextChanged;
 
-                    // передаем выбранное авто в свойство и сбрасываем выбор
-                    SelectedCar = _comboBoxCars.SelectedItem as Car;
+                    if (_comboBoxCars.SelectedItem is Car)
+                    {
+                        // передаем выбранное авто в свойство и сбрасываем выбор
+                        SelectedCar = _comboBoxCars.SelectedItem as Car;
+
+                        // выводим выбранного пользователя в текстблок
+                        _placeHolder.Visibility = Visibility.Visible;
+                        _placeHolder.Text = SelectedClient.FullName;
+                    }
+                    else
+                    {
+                        _placeHolder.Visibility = Visibility.Visible;
+                        _placeHolder.Text = "Выберите автомобиль";
+                        _comboBoxCars.ItemsSource = Cars;
+                    }
+
                     _comboBoxCars.SelectedIndex = -1;
-
-                    // выводим выбранное авто в текстблок
-                    _placeHolder.Visibility = Visibility.Visible;
-                    _placeHolder.Text = SelectedCar.Title;
-
                     // очищаем строку от поиска
                     _searchTextBox.Text = string.Empty;
 
@@ -432,6 +473,8 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                 _placeHolder.Text = "Выберите автомобиль";
                 _placeHolder.Visibility = string.IsNullOrWhiteSpace(_searchTextBox.Text) ? Visibility.Visible : Visibility.Hidden;
                 FilterText = _searchTextBox.Text; // Вызываем метод фильтрации при изменении текста
+
+                _comboBoxCars.IsDropDownOpen = true; // раскрываем комбобокс при вводе
             }
 
             #endregion

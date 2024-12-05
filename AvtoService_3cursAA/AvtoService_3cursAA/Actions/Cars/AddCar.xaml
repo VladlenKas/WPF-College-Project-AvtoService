@@ -29,7 +29,7 @@
 
         <Style 
             TargetType="{x:Type ComboBox}" 
-            BasedOn="{StaticResource ComboBoxAction}"/>
+            BasedOn="{StaticResource ComboBoxActionSearch}"/>
     </Window.Resources>
 
     <Grid Background="#ffffff">

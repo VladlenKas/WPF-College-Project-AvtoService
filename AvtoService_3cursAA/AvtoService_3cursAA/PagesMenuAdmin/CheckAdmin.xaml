@@ -19,7 +19,8 @@
         </Style>
 
         <!-- TextBox Search -->
-        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource ActionTextBox}">
+        <Style TargetType="{x:Type TextBox}" 
+               BasedOn="{StaticResource ActionTextBox}">
             <Setter Property="BorderThickness" Value="1.5"/>
         </Style>
 
@@ -30,11 +31,14 @@
             <Setter Property="Height" Value="35"/>
         </Style>
 
-        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource ComboBoxAction}">
+        <Style TargetType="{x:Type ComboBox}" 
+               BasedOn="{StaticResource ComboBoxActionSearch}">
             <Setter Property="Effect" Value="{x:Null}"/>
         </Style>
 
-        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ActionTextBlock}" x:Key="header">
+        <Style TargetType="{x:Type TextBlock}" 
+               BasedOn="{StaticResource ActionTextBlock}" 
+               x:Key="header">
             <Setter Property="Foreground" Value="Black"/>
         </Style>
 
@@ -325,6 +329,7 @@
                                         <TextBlock Text="Тип ремонта" Style="{StaticResource header}"/>
                                         <Grid>
                                             <ComboBox
+                                                Style="{StaticResource ComboBoxAction}"
                                                 IsHitTestVisible="True"
                                                 Name="TypeOfRepairComboBox"
                                                 SelectionChanged="TypeOfRepairComboBox_SelectionChanged"

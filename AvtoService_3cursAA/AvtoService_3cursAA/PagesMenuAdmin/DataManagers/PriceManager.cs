@@ -155,8 +155,16 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                 }
             }
 
-            _comboBoxPrices.ItemsSource = FilteredPrices; // Обновляем источник данных комбобокса
-            _comboBoxPrices.DisplayMemberPath = "Name"; // Устанавливаем отображаемое свойство
+            if (FilteredPrices.Count != 0)
+            {
+                _comboBoxPrices.ItemsSource = FilteredPrices; // Присваиваем список 
+                _comboBoxPrices.DisplayMemberPath = "Name"; // Устанавливаем отображаемое свойство
+            }
+            else
+            {
+                var emptyMessage = new { Name = "Ничего не найдено" };
+                _comboBoxPrices.ItemsSource = new List<object> { emptyMessage };
+            }
         }
 
         public List<Price> ReturnPrices()
@@ -209,6 +217,8 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
         {
             _placeHolder.Visibility = string.IsNullOrWhiteSpace(_searchTextBox.Text) ? Visibility.Visible : Visibility.Hidden;
             FilterText = _searchTextBox.Text; // Вызываем метод фильтрации при изменении текста
+
+            _comboBoxPrices.IsDropDownOpen = true; // раскрываем комбобокс при вводе
         }
         #endregion
 
