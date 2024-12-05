@@ -78,6 +78,7 @@
                     <TextBlock Text="Имя *"/>
                     <Grid>
                         <TextBox x:Name="NameTextBox"
+                                 MaxLength="15"
                                  PreviewTextInput="TextBox_PreviewTextInput"
                                  DataObject.Pasting="TextBox_Pasting"/>
                         <materialDesign:PackIcon Kind="User"/>
@@ -88,6 +89,7 @@
                     <TextBlock Text="Фамилия *"/>
                     <Grid>
                         <TextBox x:Name="FirstnameTextBox"
+                                 MaxLength="15"
                                  PreviewTextInput="TextBox_PreviewTextInput"
                                  DataObject.Pasting="TextBox_Pasting"/>
                         <materialDesign:PackIcon Kind="User"/>
@@ -98,6 +100,7 @@
                     <TextBlock Text="Отчество (при наличии)"/>
                     <Grid>
                         <TextBox x:Name="PatronymicTextBox"
+                                 MaxLength="15"
                                  PreviewTextInput="TextBox_PreviewTextInput"
                                  DataObject.Pasting="TextBox_Pasting"/>
                         <materialDesign:PackIcon Kind="User"/>
@@ -171,7 +174,9 @@
                 <StackPanel>
                     <TextBlock Text="Логин *"/>
                     <Grid>
-                        <TextBox x:Name="LoginTextBox"/>
+                        <TextBox 
+                            MaxLength="45"
+                            x:Name="LoginTextBox"/>
                         <materialDesign:PackIcon Kind="Email"/>
                     </Grid>
                 </StackPanel>
@@ -179,8 +184,14 @@
                 <StackPanel>
                     <TextBlock Text="Пароль *"/>
                     <Grid>
-                        <TextBox Visibility="Hidden" x:Name="PassVisTextBox"/>
-                        <PasswordBox Style="{StaticResource ActionPassBox}" x:Name="PassHidTextBox"/>
+                        <TextBox 
+                            MaxLength="45"
+                            Visibility="Hidden" 
+                            x:Name="PassVisTextBox"/>
+                        <PasswordBox 
+                            MaxLength="45"
+                            Style="{StaticResource ActionPassBox}" 
+                            x:Name="PassHidTextBox"/>
                         <materialDesign:PackIcon Kind="Password"/>
                     </Grid>
                 </StackPanel>

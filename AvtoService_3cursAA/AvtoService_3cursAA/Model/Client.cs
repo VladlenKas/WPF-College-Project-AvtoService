@@ -35,4 +35,14 @@ public class Client
         }
     }
     public virtual ICollection<Carclient> Carclients { get; set; } = new List<Carclient>();
+
+    // Новое свойство для контроля переноса текста
+    public bool IsTextWrapped
+    {
+        get
+        {
+            // Логика определения необходимости переноса текста
+            return FullName.Length > 40; // Пример: перенос, если длина больше 40 символов
+        }
+    }
 }

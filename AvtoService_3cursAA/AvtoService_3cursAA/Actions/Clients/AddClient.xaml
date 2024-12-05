@@ -52,6 +52,7 @@
                     <TextBlock Text="Имя *"/>
                     <Grid>
                         <TextBox x:Name="NameTextBox"
+                                 MaxLength="15"
                                  PreviewTextInput="TextBox_PreviewTextInput"
                                  DataObject.Pasting="TextBox_Pasting"/>
                         <materialDesign:PackIcon Kind="User"/>
@@ -62,6 +63,7 @@
                     <TextBlock Text="Фамилия *"/>
                     <Grid>
                         <TextBox x:Name="FirstnameTextBox"
+                                 MaxLength="15"
                                  PreviewTextInput="TextBox_PreviewTextInput"
                                  DataObject.Pasting="TextBox_Pasting"/>
                         <materialDesign:PackIcon Kind="User"/>
@@ -73,6 +75,7 @@
                     <Grid>
                         <TextBox x:Name="PatronymicTextBox"
                                  PreviewTextInput="TextBox_PreviewTextInput"
+                                 MaxLength="15"
                                  DataObject.Pasting="TextBox_Pasting"/>
                         <materialDesign:PackIcon Kind="User"/>
                     </Grid>

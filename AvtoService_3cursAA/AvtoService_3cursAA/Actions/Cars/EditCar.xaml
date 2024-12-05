@@ -173,7 +173,7 @@
                                         Text="{Binding Year}"
                                         PreviewTextInput="NumberTextBox_PreviewTextInput"
                                         DataObject.Pasting="NumberTextBox_Pasting"/>
-                                    <materialDesign:PackIcon Kind="Clock"/>
+                                    <materialDesign:PackIcon Kind="ClockOutline"/>
                                 </Grid>
                             </StackPanel>
                         </StackPanel>

@@ -149,7 +149,15 @@
                       RowStyle="{StaticResource MenuDataGridRow}"
                       CellStyle="{StaticResource MenuDataGridCell}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ФИО" Binding="{Binding FullName}"/>
+                        <DataGridTemplateColumn Header="ФИО" MaxWidth="300">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock 
+                                        Text="{Binding FullName}" 
+                                        TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Дата рождения" Binding="{Binding Birthday, StringFormat={}{0:dd.MM.yyyy}}"/>
                         <DataGridTextColumn Header="Телефон" Binding="{Binding Phone, StringFormat={}{0:+7 (000) 000-00-00}}"/>
                         <DataGridTemplateColumn Header="Машины">

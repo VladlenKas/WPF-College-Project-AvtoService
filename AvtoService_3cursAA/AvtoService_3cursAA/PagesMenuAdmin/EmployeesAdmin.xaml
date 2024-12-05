@@ -183,13 +183,40 @@
                     CellStyle="{StaticResource MenuDataGridCell}"
                     SelectionChanged="EmployeesDataGrid_SelectionChanged">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ФИО" Binding="{Binding FullName}"/>
+                        <DataGridTemplateColumn Header="ФИО" MaxWidth="300">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock 
+                                        Text="{Binding FullName}" 
+                                        TextWrapping="Wrap" 
+                                        MaxWidth="300"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Дата рождения" Binding="{Binding Birthday, StringFormat={}{0:dd.MM.yyyy}}"/>
                         <DataGridTextColumn Header="Стаж работы" Binding="{Binding Seniority, StringFormat={}{0} лет}" />
                         <DataGridTextColumn Header="Паспорт" Binding="{Binding Passport}"/>
                         <DataGridTextColumn Header="Номер телефона" Binding="{Binding Phone, StringFormat={}{0:(###) ###-##-##}}"/>
-                        <DataGridTextColumn Header="Логин" Binding="{Binding Login}"/>
-                        <DataGridTextColumn Header="Пароль" Binding="{Binding Password}"/>
+                        <DataGridTemplateColumn Header="Логин" MaxWidth="100">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock 
+                                        Text="{Binding Login}" 
+                                        TextWrapping="Wrap" 
+                                        MaxWidth="100"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Пароль" MaxWidth="100">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock 
+                                        Text="{Binding Password}" 
+                                        TextWrapping="Wrap" 
+                                        MaxWidth="100"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Должность" Binding="{Binding IdRoleNavigation.Name}"/>
                         <DataGridTemplateColumn Header="Действия" CellTemplate="{StaticResource ActionsTemplate}"/>
                     </DataGrid.Columns>

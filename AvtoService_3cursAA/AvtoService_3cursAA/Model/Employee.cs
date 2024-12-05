@@ -15,7 +15,7 @@ public partial class Employee
 
     public string? Patronymic { get; set; }
 
-    public string? FullName => $"{Firstname} {Name} {Patronymic}";
+    public string FullName => $"{Firstname} {Name} {Patronymic}";
 
     public DateOnly Birthday { get; set; }
 
@@ -34,4 +34,16 @@ public partial class Employee
     public virtual Role IdRoleNavigation { get; set; } = null!;
 
     public virtual ICollection<Sale> Sales { get; set; } = new List<Sale>();
+
+    // Новое свойство для контроля переноса текста
+    public bool IsTextWrapped
+    {
+        get
+        {
+            // Логика определения необходимости переноса текста
+            return FullName.Length > 40 ||
+                Login.Length > 15 ||
+                Password.Length > 15; // Пример: перенос, если длина больше 40 символов
+        }
+    }
 }
