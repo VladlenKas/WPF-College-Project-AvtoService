@@ -142,27 +142,39 @@
             </Grid>
 
             <!-- DataGrid -->
-            <DataGrid Name="ClientsDataGrid"
+            <Grid>
+                <DataGrid Name="ClientsDataGrid"
                       Style="{StaticResource MenuDataGrid}"
                       ColumnHeaderStyle="{StaticResource MenuDataGridColumnHeader}"
                       RowStyle="{StaticResource MenuDataGridRow}"
                       CellStyle="{StaticResource MenuDataGridCell}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="ФИО" Binding="{Binding FullName}"/>
-                    <DataGridTextColumn Header="Дата рождения" Binding="{Binding Birthday, StringFormat={}{0:dd.MM.yyyy}}"/>
-                    <DataGridTextColumn Header="Телефон" Binding="{Binding Phone, StringFormat={}{0:# (###) ###-##-##}}"/>
-                    <DataGridTemplateColumn Header="Машины">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ComboBox 
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ФИО" Binding="{Binding FullName}"/>
+                        <DataGridTextColumn Header="Дата рождения" Binding="{Binding Birthday, StringFormat={}{0:dd.MM.yyyy}}"/>
+                        <DataGridTextColumn Header="Телефон" Binding="{Binding Phone, StringFormat={}{0:# (###) ###-##-##}}"/>
+                        <DataGridTemplateColumn Header="Машины">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox 
                                     ItemsSource="{Binding CarList}" 
                                     Style="{StaticResource ComboBoxDataGrid}"
                                     SelectedIndex="0"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <TextBlock 
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Left"
+                    Name="textFound"
+                    FontSize="26"
+                    Style="{StaticResource HeaderTextBlock}" 
+                    Text="Ничего не найдено"
+                    Margin="20 65"
+                    Visibility="Collapsed"/>
+            </Grid>
         </DockPanel>
     </Grid>
 </Page>

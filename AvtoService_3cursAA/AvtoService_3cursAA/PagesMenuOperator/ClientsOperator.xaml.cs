@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Media.TextFormatting;
 
 namespace AvtoService_3cursAA.PagesMenuOperator
 {
@@ -55,6 +56,15 @@ namespace AvtoService_3cursAA.PagesMenuOperator
 
             ClientsDataGrid.ItemsSource = null;
             ClientsDataGrid.ItemsSource = clientList;
+
+            if (clientList.Count == 0)
+            {
+                textFound.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                textFound.Visibility = Visibility.Hidden;
+            }
         }
 
         private void DataLoad()

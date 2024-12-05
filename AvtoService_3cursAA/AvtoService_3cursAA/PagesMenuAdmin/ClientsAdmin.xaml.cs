@@ -15,6 +15,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.TextFormatting;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
@@ -52,6 +53,15 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
             ClientsDataGrid.ItemsSource = null;
             ClientsDataGrid.ItemsSource = clientList;
+
+            if (clientList.Count == 0)
+            {
+                textFound.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                textFound.Visibility = Visibility.Hidden;
+            }
         }
 
         private void DataLoad()

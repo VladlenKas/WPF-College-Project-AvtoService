@@ -62,6 +62,15 @@ namespace AvtoService_3cursAA.PagesMenuOperator
                 carCardEdit.RemoveCarRequested += CarCardEdit_RemoveCarRequested; // Подписка на событие удаления
                 ListViewItems.Items.Add(carCardEdit);
             }
+
+            if (ListViewItems.Items.Count == 0)
+            {
+                textFound.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                textFound.Visibility = Visibility.Hidden;
+            }
         }
 
         private void DataLoad()

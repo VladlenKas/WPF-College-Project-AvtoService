@@ -17,6 +17,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.TextFormatting;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
@@ -55,6 +56,15 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             foreach (var item in itemsList)
             {
                 ListViewItems.Items.Add(new CarCardView(item)); // Изменено на CarCardView
+            }
+
+            if (ListViewItems.Items.Count == 0)
+            {
+                textFound.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                textFound.Visibility = Visibility.Hidden;
             }
         }
 

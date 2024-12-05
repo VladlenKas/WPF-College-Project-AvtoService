@@ -53,6 +53,15 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
             EmployeesDataGrid.ItemsSource = null;
             EmployeesDataGrid.ItemsSource = employeesList;
+
+            if (employeesList.Count == 0)
+            {
+                textFound.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                textFound.Visibility = Visibility.Hidden;
+            }
         }
 
         private void DataLoad()

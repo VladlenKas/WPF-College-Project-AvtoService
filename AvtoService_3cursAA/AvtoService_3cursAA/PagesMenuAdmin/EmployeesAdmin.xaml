@@ -175,24 +175,36 @@
             </Grid>
 
             <!-- DataGrid -->
-            <DataGrid Name="EmployeesDataGrid"
-                      Style="{StaticResource MenuDataGrid}"
-                      ColumnHeaderStyle="{StaticResource MenuDataGridColumnHeader}"
-                      RowStyle="{StaticResource MenuDataGridRow}"
-                      CellStyle="{StaticResource MenuDataGridCell}"
-                      SelectionChanged="EmployeesDataGrid_SelectionChanged">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="ФИО" Binding="{Binding FullName}"/>
-                    <DataGridTextColumn Header="Дата рождения" Binding="{Binding Birthday, StringFormat={}{0:dd.MM.yyyy}}"/>
-                    <DataGridTextColumn Header="Стаж работы" Binding="{Binding Seniority, StringFormat={}{0} лет}" />
-                    <DataGridTextColumn Header="Паспорт" Binding="{Binding Passport}"/>
-                    <DataGridTextColumn Header="Номер телефона" Binding="{Binding Phone, StringFormat={}{0:(###) ###-##-##}}"/>
-                    <DataGridTextColumn Header="Логин" Binding="{Binding Login}"/>
-                    <DataGridTextColumn Header="Пароль" Binding="{Binding Password}"/>
-                    <DataGridTextColumn Header="Должность" Binding="{Binding IdRoleNavigation.Name}"/>
-                    <DataGridTemplateColumn Header="Действия" CellTemplate="{StaticResource ActionsTemplate}"/>
-                </DataGrid.Columns>
-            </DataGrid>
+            <Grid>
+                <DataGrid Name="EmployeesDataGrid"
+                    Style="{StaticResource MenuDataGrid}"
+                    ColumnHeaderStyle="{StaticResource MenuDataGridColumnHeader}"
+                    RowStyle="{StaticResource MenuDataGridRow}"
+                    CellStyle="{StaticResource MenuDataGridCell}"
+                    SelectionChanged="EmployeesDataGrid_SelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ФИО" Binding="{Binding FullName}"/>
+                        <DataGridTextColumn Header="Дата рождения" Binding="{Binding Birthday, StringFormat={}{0:dd.MM.yyyy}}"/>
+                        <DataGridTextColumn Header="Стаж работы" Binding="{Binding Seniority, StringFormat={}{0} лет}" />
+                        <DataGridTextColumn Header="Паспорт" Binding="{Binding Passport}"/>
+                        <DataGridTextColumn Header="Номер телефона" Binding="{Binding Phone, StringFormat={}{0:(###) ###-##-##}}"/>
+                        <DataGridTextColumn Header="Логин" Binding="{Binding Login}"/>
+                        <DataGridTextColumn Header="Пароль" Binding="{Binding Password}"/>
+                        <DataGridTextColumn Header="Должность" Binding="{Binding IdRoleNavigation.Name}"/>
+                        <DataGridTemplateColumn Header="Действия" CellTemplate="{StaticResource ActionsTemplate}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <TextBlock 
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Left"
+                    Name="textFound"
+                    FontSize="26"
+                    Style="{StaticResource HeaderTextBlock}" 
+                    Text="Ничего не найдено"
+                    Margin="20 65"
+                    Visibility="Collapsed"/>
+            </Grid>
         </DockPanel>
     </Grid>
 </Page>

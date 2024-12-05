@@ -66,6 +66,15 @@ namespace AvtoService_3cursAA.PagesMenuOperator
                 priceCardEdit.RemovePriceRequested += PriceCardEdit_RemovePriceRequested; // Подписка на событие удаления
                 ListViewItems.Items.Add(priceCardEdit);
             }
+
+            if (ListViewItems.Items.Count == 0)
+            {
+                textFound.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                textFound.Visibility = Visibility.Hidden;
+            }
         }
 
         private void DataLoad()

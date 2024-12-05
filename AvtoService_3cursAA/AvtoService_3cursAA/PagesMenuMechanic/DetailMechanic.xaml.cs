@@ -68,6 +68,15 @@ namespace AvtoService_3cursAA.PagesMenuMechanic
                 var userControl = new DetailCardView(item, brush);
                 ListViewItems.Items.Add(userControl);
             }
+
+            if (ListViewItems.Items.Count == 0)
+            {
+                textFound.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                textFound.Visibility = Visibility.Hidden;
+            }
         }
 
         private void DataLoad()

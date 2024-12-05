@@ -51,6 +51,15 @@ namespace AvtoService_3cursAA.PagesMenuMechanic
 
             ClientsDataGrid.ItemsSource = null;
             ClientsDataGrid.ItemsSource = clientList;
+
+            if (clientList.Count == 0)
+            {
+                textFound.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                textFound.Visibility = Visibility.Hidden;
+            }
         }
 
         private void DataLoad()

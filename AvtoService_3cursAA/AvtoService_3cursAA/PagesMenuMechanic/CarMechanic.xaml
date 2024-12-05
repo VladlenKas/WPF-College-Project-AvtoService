@@ -150,17 +150,26 @@
                 HorizontalScrollBarVisibility="Visible"
                 Grid.Row="2">
 
-                <ItemsControl 
-                    x:Name="ListViewItems">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel 
-                                Orientation="Horizontal" 
-                                Width="1400"
-                                HorizontalAlignment="Left"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
+                <Grid>
+                    <TextBlock 
+                        Name="textFound"
+                        FontSize="42"
+                        Style="{StaticResource HeaderTextBlock}" 
+                        Text="Ничего не найдено"
+                        Margin="0 30"
+                        Visibility="Collapsed"/>
+                    <ItemsControl 
+                        x:Name="ListViewItems">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel 
+                                    Orientation="Horizontal" 
+                                    Width="1400"
+                                    HorizontalAlignment="Left"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Grid>
             </ScrollViewer>
         </DockPanel>
     </Grid>

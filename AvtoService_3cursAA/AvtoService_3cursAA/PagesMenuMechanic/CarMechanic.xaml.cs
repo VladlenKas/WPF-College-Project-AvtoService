@@ -55,6 +55,15 @@ namespace AvtoService_3cursAA.PagesMenuMechanic
             {
                 ListViewItems.Items.Add(new CarCardView(item)); // Изменено на CarCardView
             }
+
+            if (ListViewItems.Items.Count == 0)
+            {
+                textFound.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                textFound.Visibility = Visibility.Hidden;
+            }
         }
 
         private void DataLoad()
