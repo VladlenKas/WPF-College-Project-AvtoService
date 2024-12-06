@@ -350,7 +350,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                     // Подключаем триггеры
                     _searchTextBox.Visibility = Visibility.Visible;
                     _searchTextBox.TextChanged += SearchTextBox_TextChanged;
-                    _comboBoxCars.SelectionChanged += ComboBoxCars_SelectionChanged;
 
                     _comboBoxCars.ItemsSource = FilteredCars; // Передаем источник данных комбобокса
 
@@ -364,9 +363,9 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
 
                     _searchTextBox.Visibility = Visibility.Hidden;
                     _searchTextBox.TextChanged -= SearchTextBox_TextChanged;
-                    _comboBoxCars.SelectionChanged -= ComboBoxCars_SelectionChanged;
 
-                    _comboBoxCars.ItemsSource = FilteredCars; // Передаем источник данных комбобокса
+                    var emptyMessage = new { Title = "Пусто" };
+                    _comboBoxCars.ItemsSource = new List<object> { emptyMessage }; 
 
                     SelectedCar = null;
                     _placeHolder.Text = "Сначала выберите клиента";
@@ -386,7 +385,11 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                 _searchTextBox = textBox;
                 _searchTextBox.Visibility = Visibility.Hidden;
 
-                _comboBoxCars.ItemsSource = FilteredCars; // Передаем источник данных комбобокса
+                _searchTextBox.TextChanged -= SearchTextBox_TextChanged;
+                _comboBoxCars.SelectionChanged += ComboBoxCars_SelectionChanged;
+
+                var emptyMessage = new { Title = "Пусто" };
+                _comboBoxCars.ItemsSource = new List<object> { emptyMessage };
             }
 
             // Фильтруем комбобокс на основе вводимого текста
@@ -451,8 +454,15 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                     else
                     {
                         _placeHolder.Visibility = Visibility.Visible;
-                        _placeHolder.Text = "Выберите автомобиль";
                         _comboBoxCars.ItemsSource = Cars;
+                        if (_selectedClient != null)
+                        {
+                            _placeHolder.Text = "Выберите автомобиль";
+                        }
+                        else
+                        {
+                            _placeHolder.Text = "Сначала выберите клиента";
+                        }
                     }
 
                     _comboBoxCars.SelectedIndex = -1;
@@ -460,8 +470,17 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                     _searchTextBox.Text = string.Empty;
 
                     // возобновляем тригеры
-                    _comboBoxCars.SelectionChanged += ComboBoxCars_SelectionChanged;
-                    _searchTextBox.TextChanged += SearchTextBox_TextChanged;
+                    if (_selectedClient != null)
+                    {
+                        _comboBoxCars.SelectionChanged += ComboBoxCars_SelectionChanged;
+                        _searchTextBox.TextChanged += SearchTextBox_TextChanged;
+                    }
+                    else
+                    {
+                        var emptyMessage = new { Title = "Пусто" };
+                        _comboBoxCars.ItemsSource = new List<object> { emptyMessage };
+                        _comboBoxCars.SelectionChanged += ComboBoxCars_SelectionChanged;
+                    }
                 }
             }
 

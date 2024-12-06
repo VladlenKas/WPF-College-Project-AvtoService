@@ -208,7 +208,7 @@
                                     <materialDesign:PackIcon Kind="User"/>
                                     <TextBlock 
                                         IsHitTestVisible="False"
-                                        Name="TextForPrices"
+                                        Name="TextForCar"
                                         Style="{StaticResource MenuTextBlock}"
                                         Margin="35 0 0 20"
                                         VerticalAlignment="Center"

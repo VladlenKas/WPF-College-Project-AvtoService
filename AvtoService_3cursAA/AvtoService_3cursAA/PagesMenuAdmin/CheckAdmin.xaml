@@ -68,7 +68,29 @@
                 <DockPanel Grid.Column="1" LastChildFill="False">
 
                     <!-- Name page -->
-                    <TextBlock Text="Оформление чека" Style="{StaticResource HeaderTextBlock}"/>
+                    <TextBlock 
+                        Text="Оформление чека" 
+                        Style="{StaticResource HeaderTextBlock}"
+                        Margin="0 0 15 0"/>
+
+                    <DockPanel HorizontalAlignment="Left">
+
+                        <RadioButton
+                                Margin="0 0 5 0"
+                                DockPanel.Dock="Left"
+                                VerticalAlignment="Center"
+                                Content="Деталей"
+                                Name="detailsRadioButton"
+                                Click="CheckingRadioButtonsClick"/>
+
+                        <RadioButton
+                            Margin="0 0 5 0"
+                            DockPanel.Dock="Left"
+                            VerticalAlignment="Center"
+                            Content="Услуг"
+                            Name="pricesRadioButton"
+                            Click="CheckingRadioButtonsClick"/>
+                    </DockPanel>
 
                     <!-- User's name and role-->
                     <Grid DockPanel.Dock="Right">
@@ -118,8 +140,9 @@
 
                 <Border Margin="20 40 20 20">
                     <Grid>
-                        <DockPanel
-                            HorizontalAlignment="Left">
+                        <DockPanel 
+                            HorizontalAlignment="Right">
+
                             <TextBlock
                                 DockPanel.Dock="Left"
                                 Style="{x:Null}"
@@ -129,83 +152,43 @@
                                 VerticalAlignment="Center"
                                 FontFamily="Calibri"
                                 FontWeight="Bold"
-                                Text="Оформить чек для: "/>
+                                Text="Сохранить как: "/>
 
-                            <RadioButton
+                            <Grid 
                                 Margin="0 0 5 0"
                                 DockPanel.Dock="Left"
-                                VerticalAlignment="Center"
-                                Content="Деталей"
-                                Name="detailsRadioButton"
-                                Click="CheckingRadioButtonsClick"/>
+                                Name="wordGrid">
+                                <Button 
+                                    Name="wordButton"
+                                    Width="Auto"
+                                    Style="{StaticResource WordButton}"
+                                    Click="wordButton_Click"/>
+                                <materialDesign:PackIcon 
+                                    Height="28"
+                                    Width="28"
+                                    Kind="FileWordBox"
+                                    Style="{StaticResource CardIconStyle}"/>
+                            </Grid>
 
-                            <RadioButton
+                            <Grid 
                                 Margin="0 0 5 0"
                                 DockPanel.Dock="Left"
-                                VerticalAlignment="Center"
-                                Content="Услуг"
-                                Name="pricesRadioButton"
-                                Click="CheckingRadioButtonsClick"/>
+                                Name="excelGrid">
+                                <Button 
+                                    Name="excelButton"
+                                    Width="Auto"
+                                    Style="{StaticResource EditButton}"
+                                    Click="excelButton_Click"/>
+                                <materialDesign:PackIcon 
+                                    Height="28"
+                                    Width="28"
+                                    Kind="FileExcelBox"
+                                    Style="{StaticResource CardIconStyle}"/>
+                            </Grid>
 
-                            <RadioButton
-                                IsChecked="True"
-                                Margin="0 0 5 0"
-                                DockPanel.Dock="Left"
-                                VerticalAlignment="Center"
-                                Content="Оба сразу"
-                                Name="allRadioButton"
-                                Click="CheckingRadioButtonsClick"/>
-                        </DockPanel>
-                        
-                        <DockPanel 
-                            HorizontalAlignment="Right">
-
-                        <TextBlock
-                            DockPanel.Dock="Left"
-                            Style="{x:Null}"
-                            FontSize="26" 
-                            Margin="0 0 10 0"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            FontFamily="Calibri"
-                            FontWeight="Bold"
-                            Text="Сохранить как: "/>
-
-                        <Grid 
-                            Margin="0 0 5 0"
-                            DockPanel.Dock="Left"
-                            Name="wordGrid">
-                            <Button 
-                                Name="wordButton"
-                                Width="Auto"
-                                Style="{StaticResource WordButton}"
-                                Click="wordButton_Click"/>
-                            <materialDesign:PackIcon 
-                                Height="28"
-                                Width="28"
-                                Kind="FileWordBox"
-                                Style="{StaticResource CardIconStyle}"/>
-                        </Grid>
-
-                        <Grid 
-                            Margin="0 0 5 0"
-                            DockPanel.Dock="Left"
-                            Name="excelGrid">
-                            <Button 
-                                Name="excelButton"
-                                Width="Auto"
-                                Style="{StaticResource EditButton}"
-                                Click="excelButton_Click"/>
-                            <materialDesign:PackIcon 
-                                Height="28"
-                                Width="28"
-                                Kind="FileExcelBox"
-                                Style="{StaticResource CardIconStyle}"/>
-                        </Grid>
-
-                        <Grid 
-                            DockPanel.Dock="Left" 
-                            Name="pdfGrid">
+                            <Grid 
+                                DockPanel.Dock="Left" 
+                                Name="pdfGrid">
                             <Button 
                                 Name="pdfButton"
                                 Width="Auto"
@@ -391,6 +374,7 @@
 
                             <!-- Облсть с выбранными услугами -->
                             <DockPanel 
+                                Grid.ColumnSpan="2"
                                 x:Name="priceBorder"
                                 Margin="10 0"
                                 Grid.Column="0">
@@ -464,9 +448,10 @@
 
                             <!-- Облсть с выбранными деталями -->
                             <DockPanel 
+                                Grid.ColumnSpan="2"
                                 Name="detailsBorder"
                                 Margin="10 0"
-                                Grid.Column="1">
+                                Grid.Column="0">
 
                                 <DockPanel
                                     LastChildFill="True"

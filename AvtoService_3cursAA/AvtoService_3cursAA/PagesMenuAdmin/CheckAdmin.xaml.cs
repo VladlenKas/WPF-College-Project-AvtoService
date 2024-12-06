@@ -141,7 +141,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             }
         }
 
-        private int bordersEnabled = 0; // Поле для хранения выбора оформления чека
+        private int bordersVisible = 0; // Поле для хранения выбора оформления чека
         public CheckAdmin(Employee employee)
         {
             InitializeComponent();
@@ -150,6 +150,10 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
             this._thisUser = employee;
             FinalCostTextBlock = CostForClient.ToString();
+
+            pricesRadioButton.IsChecked = true;
+            detailsBorder.Visibility = Visibility.Hidden;
+            bordersVisible = 1;
         }
 
         #region Методы для работы с данными для чека
@@ -214,42 +218,23 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                 RadioButton radioButton = sender as RadioButton;
                 if (radioButton.Name is "detailsRadioButton")
                 {
-                    priceBorder.Opacity = 0.5;
-                    priceBorder.IsEnabled = false;
-
-                    detailsBorder.Opacity = 1;
-                    detailsBorder.IsEnabled = true;
+                    priceBorder.Visibility = Visibility.Hidden;
+                    detailsBorder.Visibility = Visibility.Visible;
 
                     priceManager.ClearListView();
                     UpdateFinalCost();
 
-                    bordersEnabled = 2;
-                    VisibilityButtonAdd();
+                    bordersVisible = 2;
                 }
                 else if (radioButton.Name is "pricesRadioButton")
                 {
-                    detailsBorder.Opacity = 0.5;
-                    detailsBorder.IsEnabled = false;
-
-                    priceBorder.Opacity = 1;
-                    priceBorder.IsEnabled = true;
+                    detailsBorder.Visibility = Visibility.Hidden;
+                    priceBorder.Visibility = Visibility.Visible;
 
                     detailManager.ClearListView();
                     UpdateFinalCost();
 
-                    bordersEnabled = 1;
-                    VisibilityButtonAdd();
-                }
-                else
-                {
-                    detailsBorder.Opacity = 1;
-                    detailsBorder.IsEnabled = true;
-
-                    priceBorder.Opacity = 1;
-                    priceBorder.IsEnabled = true;
-
-                    bordersEnabled = 0;
-                    VisibilityButtonAdd();
+                    bordersVisible = 1;
                 }
             }
         }
@@ -278,22 +263,16 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                 List<Price> prices = new List<Price>(priceManager.ReturnPrices());
 
 
-                if (bordersEnabled == 1)
+                if (bordersVisible == 1)
                 {
                     ActionsData.AddOrderPrices(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
                                 prices, CostForClient, CostTotal);
                     ClearFields();
                 }
-                else if (bordersEnabled == 2)
+                else if (bordersVisible == 2)
                 {
                     ActionsData.AddOrderDetails(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
                                 details, CostForClient, CostTotal);
-                    ClearFields();
-                }
-                else
-                {
-                    ActionsData.AddOrderAll(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
-                                prices, details, CostForClient, CostTotal);
                     ClearFields();
                 }
             }
@@ -310,7 +289,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                 _selectTypeofrepair.Name is "Гарантийный случай" &&
                 TypeOfRepairComboBox.SelectedIndex != 0)
             {
-                FinalCostTextBlock = $"{CostForClient} руб + 20% скидка";
+                FinalCostTextBlock = $"{CostForClient} руб. (20% скидка)";
             }
             else
             {
@@ -343,6 +322,12 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             // Включаем или отключаем кнопку в зависимости от состояния полей
             if (allFieldsFilled)
             {
+                // Удаляем обработчик события, чтобы не возникало повторений
+                AddButton.Click -= AddButton_Click;
+                excelButton.Click -= excelButton_Click;
+                wordButton.Click -= wordButton_Click;
+                pdfButton.Click -= pdfButton_Click;
+
                 // Добавляем обработчик события
                 AddButton.Click += AddButton_Click;
                 excelButton.Click += excelButton_Click;
@@ -376,7 +361,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         // Проверка на то, что поля заполнены
         private bool CheckFields()
         {
-            if (bordersEnabled == 1)
+            if (bordersVisible == 1)
             {
                 // Если доступны только услуги
                 bool allFieldsFilled = SelectedClient != null &&
@@ -386,23 +371,12 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
                 return allFieldsFilled;
             }
-            else if (bordersEnabled == 2)
+            else 
             {
                 // Если доступны только детали
                 bool allFieldsFilled = SelectedClient != null &&
                                        SelectedCar != null &&
                                        TypeOfRepairComboBox.SelectedIndex != 0 &&
-                                       ListViewDetailItems.Items.Count != 0;
-
-                return allFieldsFilled;
-            }
-            else
-            {
-                // Если все поля доступны
-                bool allFieldsFilled = SelectedClient != null &&
-                                       SelectedCar != null &&
-                                       TypeOfRepairComboBox.SelectedIndex != 0 &&
-                                       ListViewPriceItems.Items.Count != 0 &&
                                        ListViewDetailItems.Items.Count != 0;
 
                 return allFieldsFilled;
@@ -416,152 +390,53 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         // Обработчик события для экспорта данных в Excel
         private void excelButton_Click(object sender, RoutedEventArgs e)
         {
-            ExcelSaveAll();
-        }
+            // Находим максимальный айди среди всех продаж для названия нового чека продажи
+            var lastSale = dbContext.Sales.OrderByDescending(s => s.IdSale).FirstOrDefault();
+            var idOrder = (lastSale?.IdSale ?? 0) + 1; // Если продаж еще не было, она становится первой
 
-        // Вывод для двух чеков
-        private void ExcelSaveAll()
-        {
-            using (var context = new Avtoservice3cursAaContext())
+            // Вызываем диалоговое окно для сохранения таблицы
+            SaveFileDialog saveFileDialog = new SaveFileDialog()
             {
-                // находим максимальный айдишник для нового чека
-                var lastSale = context.Sales.OrderByDescending(s => s.IdSale).FirstOrDefault();
-                var idOrder = (lastSale?.IdSale ?? 0) + 1; // Если продаж еще не было, она становится первой
+                Filter = "Excel Files|*.xlsx*",
+                Title = "Сохранить Excel файл",
+                FileName = $"Чек автосервис (номер {idOrder})"
+            };
 
-                // Вызываем диалоговое окно для сохранения таблицы
-                SaveFileDialog saveFileDialog = new SaveFileDialog()
+            // Если пользователь выбрал путь для сохранения чека
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string filePath = "";
+
+                // Чек для деталей
+                if (detailsBorder.Visibility == Visibility.Visible)
                 {
-                    Filter = "Excel Files|*.xlsx*",
-                    Title = "Сохранить Excel файл",
-                    FileName = $"Чек {idOrder}"
-                };
-
-                if (saveFileDialog.ShowDialog() == true)
+                    List<(int count, string Name, int Cost)> details = new(detailManager.GetDetailsForFile());
+                    filePath = FilesManager.ExcelDetails(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
+                        details, saveFileDialog, idOrder, CostForClient, CostTotal); 
+                }
+                // Чек для услуг
+                else
                 {
-                    // Устанавливаем контекст лицензии
-                    ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                    List<Price> prices = new(priceManager.ReturnPrices());
+                    filePath = FilesManager.ExcelPrices(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
+                        prices, saveFileDialog, idOrder, CostForClient, CostTotal);
+                }
 
-                    // Создаем новый Excel документ
-                    using (var excelDocument = new ExcelPackage())
+                // Открываем файл при желании
+                var result = MessageBox.Show("Чек успешно сохранен! Открыть его?", "Открыть?",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    Process.Start(new ProcessStartInfo
                     {
-                        // Создаем страницу и называем ее
-                        var worksheet = excelDocument.Workbook.Worksheets.Add("Чек для услуг и деталей");
-
-                        #region Чек для деталей
-                        // Заголовок чека
-                        worksheet.SetValue(1, 1, $"Чек {idOrder}");
-                        worksheet.Cells[1, 1, 1, 3].Merge = true; // Объединяем ячейки для заголовка
-                        worksheet.Cells[1, 1, 1, 3].Style.Font.Bold = true; // Делаем заголовок жирным
-
-                        // Заголовки столбцов 
-                        worksheet.SetValue(2, 1, "Наименование детали:");
-                        worksheet.SetValue(2, 2, "Количество:");
-                        worksheet.SetValue(2, 3, "Цена:");
-
-                        // Данные для заполнения ячеек
-                        int costDetails = 0;
-                        List<(int count, string Name, int Cost)> details = new(detailManager.GetDetailsForFile());
-
-                        int row = 3; // Начинаем заполнение с третьей линии
-                        foreach (var (count, name, cost) in details)
-                        {
-                            worksheet.SetValue(row, 1, name);
-                            worksheet.SetValue(row, 2, count);
-                            worksheet.SetValue(row, 3, cost);
-
-                            worksheet.Cells[row, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                            worksheet.Cells[row, 2].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                            worksheet.Cells[row, 3].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-
-                            costDetails += cost;
-                            row++;
-                        }
-
-                        // Итоговая сумма
-                        worksheet.SetValue(row, 2, "Итого к оплате:");
-                        if (_selectTypeofrepair.Name == "Гарантийный случай")
-                        {
-                            worksheet.SetValue(row, 3, costDetails * 0.8); // Итоговая сумма с учетом скидки
-                        }
-                        else
-                        {
-                            worksheet.SetValue(row, 3, costDetails); // Итоговая сумма без скидки
-                        }
-
-                        worksheet.Cells[row, 2].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                        worksheet.Cells[row, 3].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-
-                        row += 2; // Добавляем отступ после итоговой суммы
-
-                        // Кто оформлял, тип ремонта и дата
-                        worksheet.SetValue(row++, 1, $"Администратор: {_thisUser.FullName}");
-                        worksheet.SetValue(row++, 1, $"Тип ремонта: {_selectTypeofrepair.Name}");
-                        worksheet.SetValue(row++, 1, $"Дата оформления: {DateTime.Now}");
-
-                        row += 2; // Добавляем отступ перед следующим чеком
-                        #endregion
-
-                        #region Чек для услуг
-                        // Заголовок второго чека
-                        worksheet.SetValue(row++, 1, $"Чек {idOrder}");
-                        worksheet.Cells[row - 1, 1, row - 1, 2].Merge = true; // Объединяем ячейки для заголовка
-                        worksheet.Cells[row - 1, 1].Style.Font.Bold = true; // Делаем заголовок жирным
-
-                        // Заголовки столбцов 
-                        worksheet.SetValue(row, 1, "Наименование услуги:");
-                        worksheet.SetValue(row++, 2, "Цена:");
-
-                        // Данные для заполнения ячеек
-                        int costPrices = 0;
-                        List<Price> prices = new List<Price>(priceManager.ReturnPrices());
-
-                        foreach (var price in prices)
-                        {
-                            worksheet.SetValue(row, 1, price.Name);
-                            worksheet.SetValue(row, 2, price.Cost);
-
-                            worksheet.Cells[row, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                            worksheet.Cells[row, 2].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-
-                            costPrices += price.Cost;
-                            row++;
-                        }
-
-                        // Итоговая сумма 
-                        worksheet.SetValue(row, 1, "Итого к оплате:");
-                        worksheet.SetValue(row, 2, costPrices);
-
-                        worksheet.Cells[row, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                        worksheet.Cells[row, 2].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-                        row += 2;
-
-                        // Кто оформлял, тип ремонта и дата
-                        worksheet.SetValue(row++, 1, $"Администратор: {_thisUser.FullName}");
-                        worksheet.SetValue(row++, 1, $"Дата оформления: {DateTime.Now}");
-
-                        #endregion
-
-                        // Указываем путь до файла
-                        string filePath = @$"{saveFileDialog.FileName}.xlsx";
-                        excelDocument.SaveAs(filePath);
-
-                        // Открываем файл при желании
-                        var result = MessageBox.Show("Чек успешно сохранен! Открыть его?", "Открыть?",
-                            MessageBoxButton.YesNo, MessageBoxImage.Question);
-                        if (result == MessageBoxResult.Yes)
-                        {
-                            Process.Start(new ProcessStartInfo
-                            {
-                                FileName = filePath,
-                                UseShellExecute = true // Используем оболочку Windows для открытия файла
-                            });
-                        }
-                    }
+                        FileName = filePath,
+                        UseShellExecute = true // Используем оболочку Windows для открытия файла
+                    });
                 }
             }
         }
 
-        // Вывод для чека услуг
+        // Вывод для чека услуг 
         private void ExcelSavePrice()
         {
 

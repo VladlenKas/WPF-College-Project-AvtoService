@@ -70,12 +70,14 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
             }
         }
 
-        public ClientManager(ItemsControl listViewItems, ComboBox comboBoxClients, EditCar parentWindow, Car car)
+        TextBlock TextForCar;
+        public ClientManager(ItemsControl listViewItems, ComboBox comboBoxClients, EditCar parentWindow, TextBlock textForCar, Car car)
         {
             _listViewItems = listViewItems;
             _comboBoxClients = comboBoxClients;
             _parentWindow = parentWindow;
             _car = car;
+            TextForCar = textForCar;
 
             ClientManagerEditLoad();
         }
@@ -133,8 +135,17 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
         /// </summary>
         public void FillClients()
         {
-            _comboBoxClients.ItemsSource = Clients; // Присваиваем список клиентов
-            _comboBoxClients.DisplayMemberPath = "FullName"; // Устанавливаем отображаемое свойство
+            _comboBoxClients.DisplayMemberPath = "FullName"; // Устанавливаем отображаемое свойство 
+
+            if (Clients.Count != 0)
+            {
+                _comboBoxClients.ItemsSource = Clients; // Присваиваем список клиентов
+            }
+            else
+            {
+                var emptyMessage = new { FullName = "Ничего не найдено" };
+                _comboBoxClients.ItemsSource = new List<object> { emptyMessage };
+            }
         }
 
         /// <summary>
@@ -181,11 +192,11 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
                     }
                 }
             }
+            _comboBoxClients.DisplayMemberPath = "FullName"; // Устанавливаем отображаемое свойство 
 
             if (FilteredClients.Count != 0)
             {
                 _comboBoxClients.ItemsSource = FilteredClients; // Обновляем источник данных комбобокса
-                _comboBoxClients.DisplayMemberPath = "FullName"; // Устанавливаем отображаемое свойство 
             }
             else
             {
@@ -277,8 +288,16 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             FilterText = _searchTextBox.Text; // Вызываем метод фильтрации при изменении текста
-
             _comboBoxClients.IsDropDownOpen = true; // раскрываем комбобокс при вводе
+
+            if (FilterText == string.Empty)
+            {
+                TextForCar.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                TextForCar.Visibility = Visibility.Hidden;
+            }
         }
         #endregion
 
@@ -341,11 +360,13 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
             }
         }
 
-        public ClientsManagerForAdd(ItemsControl listViewItems, ComboBox comboBoxClients, AddCar parentWindow)
+        TextBlock TextForCar;
+        public ClientsManagerForAdd(ItemsControl listViewItems, ComboBox comboBoxClients, TextBlock textForCar, AddCar parentWindow)
         {
             _listViewItems = listViewItems;
             _comboBoxClients = comboBoxClients;
             _parentWindow = parentWindow;
+            TextForCar = textForCar;
 
             ClientManagerEdit_Load();
         }
@@ -389,8 +410,17 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
         /// </summary>
         public void FillClients()
         {
-            _comboBoxClients.ItemsSource = Clients; // Присваиваем список клиентов
-            _comboBoxClients.DisplayMemberPath = "FullName"; // Устанавливаем отображаемое свойство
+            _comboBoxClients.DisplayMemberPath = "FullName"; // Устанавливаем отображаемое свойство 
+            
+            if (Clients.Count != 0)
+            {
+                _comboBoxClients.ItemsSource = Clients; // Присваиваем список клиентов
+            }
+            else
+            {
+                var emptyMessage = new { FullName = "Ничего не найдено" };
+                _comboBoxClients.ItemsSource = new List<object> { emptyMessage };
+            }
         }
 
         /// <summary>
@@ -517,6 +547,15 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             FilterText = _searchTextBox.Text; // Вызываем метод фильтрации при изменении текста
+
+            if (FilterText == string.Empty)
+            {
+                TextForCar.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                TextForCar.Visibility = Visibility.Hidden;
+            }
         }
         #endregion
 

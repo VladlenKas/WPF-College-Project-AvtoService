@@ -60,7 +60,7 @@ namespace AvtoService_3cursAA.Actions.Cars
             dbContext = new();
             InitializeComponent();
 
-            clientManager = new ClientsManagerForAdd(ListSelectClients, ClientsComboBox, this);
+            clientManager = new ClientsManagerForAdd(ListSelectClients, ClientsComboBox, TextForCar, this);
         }
         public void DeletePriceInPriceView(Client client) => clientManager.DeleteClientInItemsView(client);
 
