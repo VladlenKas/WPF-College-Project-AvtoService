@@ -449,7 +449,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
 
                         // выводим выбранного пользователя в текстблок
                         _placeHolder.Visibility = Visibility.Visible;
-                        _placeHolder.Text = SelectedClient.FullName;
+                        _placeHolder.Text = SelectedCar.Title;
                     }
                     else
                     {

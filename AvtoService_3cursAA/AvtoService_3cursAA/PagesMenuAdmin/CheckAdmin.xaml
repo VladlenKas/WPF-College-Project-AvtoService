@@ -162,7 +162,7 @@
                                     Name="wordButton"
                                     Width="Auto"
                                     Style="{StaticResource WordButton}"
-                                    Click="wordButton_Click"/>
+                                    Click="SaveButton_Click"/>
                                 <materialDesign:PackIcon 
                                     Height="28"
                                     Width="28"
@@ -178,7 +178,7 @@
                                     Name="excelButton"
                                     Width="Auto"
                                     Style="{StaticResource EditButton}"
-                                    Click="excelButton_Click"/>
+                                    Click="SaveButton_Click"/>
                                 <materialDesign:PackIcon 
                                     Height="28"
                                     Width="28"
@@ -193,7 +193,7 @@
                                 Name="pdfButton"
                                 Width="Auto"
                                 Style="{StaticResource DeleteButton}"
-                                Click="pdfButton_Click"/>
+                                Click="SaveButton_Click"/>
                             <materialDesign:PackIcon 
                                 Height="28"
                                 Width="28"

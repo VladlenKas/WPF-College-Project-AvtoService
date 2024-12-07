@@ -25,6 +25,7 @@ using System.Windows.Shapes;
 using static AvtoService_3cursAA.PagesMenuAdmin.DataManagers.ClientsAndCarsManager;
 using OfficeOpenXml;
 using System.IO;
+using PdfSharp.Pdf.Filters;
 
 
 namespace AvtoService_3cursAA.PagesMenuAdmin
@@ -324,23 +325,23 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             {
                 // Удаляем обработчик события, чтобы не возникало повторений
                 AddButton.Click -= AddButton_Click;
-                excelButton.Click -= excelButton_Click;
-                wordButton.Click -= wordButton_Click;
-                pdfButton.Click -= pdfButton_Click;
+                excelButton.Click -= SaveButton_Click;
+                wordButton.Click -= SaveButton_Click;
+                pdfButton.Click -= SaveButton_Click;
 
                 // Добавляем обработчик события
                 AddButton.Click += AddButton_Click;
-                excelButton.Click += excelButton_Click;
-                wordButton.Click += wordButton_Click;
-                pdfButton.Click += pdfButton_Click;
+                excelButton.Click += SaveButton_Click;
+                wordButton.Click += SaveButton_Click;
+                pdfButton.Click += SaveButton_Click;
             }
             else
             {
                 // Удаляем обработчик события
                 AddButton.Click -= AddButton_Click;
-                excelButton.Click -= excelButton_Click;
-                wordButton.Click -= wordButton_Click;
-                pdfButton.Click -= pdfButton_Click;
+                excelButton.Click -= SaveButton_Click;
+                wordButton.Click -= SaveButton_Click;
+                pdfButton.Click -= SaveButton_Click;
             }
 
             // Устанавливаем подсказку для кнопки
@@ -385,42 +386,56 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
 
         #endregion
 
-        #region Вывод в Excel
+        #region Вывод в файл
 
-        // Обработчик события для экспорта данных в Excel
-        private void excelButton_Click(object sender, RoutedEventArgs e)
+        // Обработчик события для экспорта данных 
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            FileSave(sender);
+        }
+        #endregion
+
+        // Сохранение файла
+        private void FileSave(object sender)
         {
             // Находим максимальный айди среди всех продаж для названия нового чека продажи
             var lastSale = dbContext.Sales.OrderByDescending(s => s.IdSale).FirstOrDefault();
             var idOrder = (lastSale?.IdSale ?? 0) + 1; // Если продаж еще не было, она становится первой
 
+            // Определяем, во что вывести
+            string filter = "";
+            string title = "";
+
+            Button button = sender as Button;
+            switch (button.Name)
+            {
+                case "excelButton":
+                    filter = "Excel Files|*.xlsx*";
+                    title = "Сохранить Excel файл";
+                    break;
+
+                case "pdfButton":
+                    break;
+
+                case "wordButton":
+                    filter = "Word Files|*.docx*";
+                    title = "Сохранить Word файл";
+                    break;
+            }
+
+
             // Вызываем диалоговое окно для сохранения таблицы
             SaveFileDialog saveFileDialog = new SaveFileDialog()
             {
-                Filter = "Excel Files|*.xlsx*",
-                Title = "Сохранить Excel файл",
+                Filter = filter,
+                Title = title,
                 FileName = $"Чек автосервис (номер {idOrder})"
             };
 
             // Если пользователь выбрал путь для сохранения чека
             if (saveFileDialog.ShowDialog() == true)
             {
-                string filePath = "";
-
-                // Чек для деталей
-                if (detailsBorder.Visibility == Visibility.Visible)
-                {
-                    List<(int count, string Name, int Cost)> details = new(detailManager.GetDetailsForFile());
-                    filePath = FilesManager.ExcelDetails(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
-                        details, saveFileDialog, idOrder, CostForClient, CostTotal); 
-                }
-                // Чек для услуг
-                else
-                {
-                    List<Price> prices = new(priceManager.ReturnPrices());
-                    filePath = FilesManager.ExcelPrices(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
-                        prices, saveFileDialog, idOrder, CostForClient, CostTotal);
-                }
+                string filePath = SelectFileType(button, saveFileDialog, idOrder); // Путь для открытия файла
 
                 // Открываем файл при желании
                 var result = MessageBox.Show("Чек успешно сохранен! Открыть его?", "Открыть?",
@@ -436,37 +451,66 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             }
         }
 
-        // Вывод для чека услуг 
-        private void ExcelSavePrice()
+        // Выбор типа файла для сохранения
+        private string SelectFileType(Button button, SaveFileDialog saveFileDialog, int idOrder)
         {
+            bool isDetailsCheck = detailsBorder.Visibility == Visibility.Visible;
+            string filePath = "";
 
-        }
+            switch (button.Name)
+            {
+                case "excelButton":
+                {
+                    if (isDetailsCheck)
+                    {
+                        List<(int count, string Name, int Cost)> details = new(detailManager.GetDetailsForFile());
+                        filePath = FilesManager.ExcelDetails(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
+                            details, saveFileDialog, idOrder, CostForClient, CostTotal);
+                    }
+                    else
+                    {
+                        List<Price> prices = new(priceManager.ReturnPrices());
+                        filePath = FilesManager.ExcelPrices(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
+                            prices, saveFileDialog, idOrder, CostForClient, CostTotal);
+                    }
+                    break;
+                }
 
-        // Вывод для чека деталей
-        private void ExcelSaveDetail()
-        {
+                case "pdfButton":
+                {
+                    if (isDetailsCheck)
+                    {
+                        /*List<(int count, string Name, int Cost)> details = new(detailManager.GetDetailsForFile());
+                        filePath = FilesManager.PdfDetails(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
+                            details, saveFileDialog, idOrder, CostForClient, CostTotal);*/
+                    }
+                    else
+                    {
+                        List<Price> prices = new(priceManager.ReturnPrices());
+                        filePath = FilesManager.PdfPrices(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
+                            prices, saveFileDialog, idOrder, CostForClient, CostTotal);
+                    }
+                    break;
+                }
 
-        }
-        #endregion
-
-        private void pdfButton_Click(object sender, RoutedEventArgs e)
-        {
-            PdfSave();
-        }
-
-        private void wordButton_Click(object sender, RoutedEventArgs e)
-        {
-            WordSave();
-        }
-
-        private void PdfSave()
-        {
-
-        }
-
-        private void WordSave()
-        {
-
+                case "wordButton":
+                {
+                    if (isDetailsCheck)
+                    {
+                        List<(int count, string Name, int Cost)> details = new(detailManager.GetDetailsForFile());
+                        filePath = FilesManager.WordDetails(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
+                            details, saveFileDialog, idOrder, CostForClient, CostTotal);
+                    }
+                    else
+                    {
+                        List<Price> prices = new(priceManager.ReturnPrices());
+                        filePath = FilesManager.WordPrices(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
+                            prices, saveFileDialog, idOrder, CostForClient, CostTotal);
+                    }
+                    break;
+                }
+            }
+            return filePath;
         }
     }
 }

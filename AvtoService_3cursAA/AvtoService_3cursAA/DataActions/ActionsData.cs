@@ -608,19 +608,10 @@ namespace AvtoService_3cursAA.ActionsForEmployee
                 using (var stream = new MemoryStream())
                 {
                     encoder.Save(stream);
-                    bytes = stream.ToArray();
+                    bytes = stream.ToArray();   
                 }
             }
             return bytes;
-        }
-
-        public static string GetImageHash(byte[] imageBytes)
-        {
-            using (var sha256 = SHA256.Create())
-            {
-                byte[] hashBytes = sha256.ComputeHash(imageBytes);
-                return Convert.ToBase64String(hashBytes);
-            }
         }
 
         public static bool AreImagesEqual(ImageSource img1, ImageSource img2)

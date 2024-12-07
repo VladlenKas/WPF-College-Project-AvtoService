@@ -567,6 +567,6 @@ namespace AvtoService_3cursAA.PagesMenuOperator.DataManager
 
         // Событие, которое необходимо объявить при 
         // наследовании интерфейса INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }
