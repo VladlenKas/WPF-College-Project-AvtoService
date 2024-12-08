@@ -20,7 +20,7 @@ using System.Windows.Shapes;
 namespace AvtoService_3cursAA
 {
     /// <summary>
-    /// Логика взаимодействия для MenuManager.xaml
+    /// Логика взаимодействия для MenuAdmin.xaml
     /// </summary>
     public partial class MenuAdmin : Window
     {
@@ -60,7 +60,7 @@ namespace AvtoService_3cursAA
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.Title = $"Меню менеджера. Вы вошли как: {_employee.FullName}";
+            this.Title = $"Меню сотрудника {_employee.FullName}. Вы вошли как: {_employee.IdRoleNavigation.Name}";
         }
 
         private void Window_Closed(object sender, EventArgs e)

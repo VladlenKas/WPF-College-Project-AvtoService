@@ -144,8 +144,6 @@
                                 <materialDesign:PackIcon Kind="Money"/>
                             </Grid>
                         </StackPanel>
-
-
                     </StackPanel>
 
                     <Button 
@@ -156,7 +154,7 @@
                         Margin="40 20"
                         Style="{StaticResource AuythButtonExitAct}"/>
                     <Button 
-                        Content="Сохранить изменения"
+                        Content="Добавить новую услуги"
                         x:Name="ButtonAdd"
                         Click="ButtonAdd_Click"
                         DockPanel.Dock="Bottom"

@@ -4,6 +4,7 @@ using AvtoService_3cursAA.PagesMenuAdmin;
 using AvtoService_3cursAA.PagesMenuOperator;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static MaterialDesignThemes.Wpf.Theme.ToolBar;
 
 namespace AvtoService_3cursAA.UserControls.DetailUC
 {
@@ -24,6 +26,7 @@ namespace AvtoService_3cursAA.UserControls.DetailUC
     /// </summary>
     public partial class DetailCardEdit : UserControl
     {
+        public SolidColorBrush SolidColorBrush { get; set; }
         public Detail Detail { get; private set; }
 
         private Detail _detail;
@@ -32,10 +35,11 @@ namespace AvtoService_3cursAA.UserControls.DetailUC
 
         public event EventHandler<DetailEventArgs> RemoveDetailRequested; // Событие для удаления детали
 
-        public DetailCardEdit(Detail detail, DetailOperator detailAdmin)
+        public DetailCardEdit(Detail detail, DetailOperator detailOperator, SolidColorBrush solidColorBrush)
         {
+            SolidColorBrush = solidColorBrush;
             _detail = detail;
-            _parentWindow = detailAdmin;
+            _parentWindow = detailOperator;
 
             InitializeComponent();
             DataLoad();
@@ -53,7 +57,7 @@ namespace AvtoService_3cursAA.UserControls.DetailUC
         private void DataLoad()
         {
             dbContext = new();
-            _detail = dbContext.Details.First(r => r.IdDetail == _detail.IdDetail);
+            _detail = dbContext.Details.Single(r => r.IdDetail == _detail.IdDetail);
             DataContext = _detail;
 
             if (_detail.Photo == null)
@@ -61,6 +65,17 @@ namespace AvtoService_3cursAA.UserControls.DetailUC
                 string file = "pack://application:,,,/AvtoService_3cursAA;component/Images/NoImageDetail.jpg";
                 ImageBorder.ImageSource = new BitmapImage(new Uri(file, UriKind.Absolute));
             }
+
+            if (_detail.Count == 0)
+            {
+                SolidColorBrush = new SolidColorBrush(Colors.DarkRed);
+            }
+            else
+            {
+                SolidColorBrush = new SolidColorBrush(Colors.LightGray);
+            }
+
+            border.BorderBrush = SolidColorBrush;
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
@@ -77,7 +92,7 @@ namespace AvtoService_3cursAA.UserControls.DetailUC
         private void DeleteDetail()
         {
             dbContext = new();
-            var detailToRemove = dbContext.Details.First(d => d.IdDetail == _detail.IdDetail);
+            var detailToRemove = dbContext.Details.Single(d => d.IdDetail == _detail.IdDetail);
             if (detailToRemove != null)
             {
                 detailToRemove.IsDeleted = true;

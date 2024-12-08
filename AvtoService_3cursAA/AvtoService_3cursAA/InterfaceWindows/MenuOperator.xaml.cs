@@ -20,7 +20,7 @@ using System.Windows.Shapes;
 namespace AvtoService_3cursAA
 {
     /// <summary>
-    /// Логика взаимодействия для MenuPhotograph.xaml
+    /// Логика взаимодействия для MenuOperator.xaml
     /// </summary>
     public partial class MenuOperator : Window
     {
@@ -53,7 +53,7 @@ namespace AvtoService_3cursAA
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.Title = $"Меню фотографа. Вы вошли как: {_employee.FullName}";
+            this.Title = $"Меню сотрудника {_employee.FullName}. Вы вошли как: {_employee.IdRoleNavigation.Name}";
         }
 
         private void Window_Closed(object sender, EventArgs e)

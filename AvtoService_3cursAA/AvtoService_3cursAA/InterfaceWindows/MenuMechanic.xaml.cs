@@ -49,7 +49,7 @@ namespace AvtoService_3cursAA.InterfaceWindows
        
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.Title = $"Меню менеджера. Вы вошли как: {_employee.FullName}";
+            this.Title = $"Меню сотрудника {_employee.FullName}. Вы вошли как: {_employee.IdRoleNavigation.Name}";
         }
 
         private void Window_Closed(object sender, EventArgs e)

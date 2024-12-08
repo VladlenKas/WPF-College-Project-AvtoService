@@ -326,7 +326,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
             return _filePath;
         }
 
-        // Excel услуги
+        // Pdf услуги
         public static string PdfPrices(Employee employee, Client client, Car car, Typeofrepair typeofrepair,
             List<Price> pricesList, SaveFileDialog saveFileDialog, int idOrder, int costForClient, int costFinal)
         {
@@ -343,6 +343,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                 XGraphics gfx = XGraphics.FromPdfPage(page);
                 XFont titleFont = new XFont("Arial", 16, XFontStyleEx.Bold);
                 XFont regularFont = new XFont("Arial", 12, XFontStyleEx.Regular);
+                XFont regularFontBold = new XFont("Arial", 12, XFontStyleEx.Bold);
 
                 // Выравнивание по центру
                 double titleX = (page.Width - gfx.MeasureString(document.Info.Title, titleFont).Width) / 2;
@@ -353,9 +354,8 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                 double cellHeight = 20;
 
                 // Заголовки таблицы
-                gfx.DrawRectangle(XBrushes.LightGray, 50, tableY, 500, cellHeight);
-                gfx.DrawString("Наименование", regularFont, XBrushes.Black, 50 + 5, tableY + 5);
-                gfx.DrawString("Цена (руб.)", regularFont, XBrushes.Black, 300 + 5, tableY + 5);
+                gfx.DrawString("Наименование", regularFontBold, XBrushes.Black, 50, tableY + 5);
+                gfx.DrawString("Цена (руб.)", regularFontBold, XBrushes.Black, 300, tableY + 5);
 
                 tableY += cellHeight;
 
@@ -363,20 +363,21 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
                 foreach (var price in pricesList)
                 {
                     gfx.DrawRectangle(XBrushes.White, 50, tableY, 500, cellHeight);
-                    gfx.DrawString(price.Name, regularFont, XBrushes.Black, 50 + 5, tableY + 5);
-                    gfx.DrawString(price.Cost.ToString(), regularFont, XBrushes.Black, 300 + 5, tableY + 5);
+                    gfx.DrawString(price.Name, regularFont, XBrushes.Black, 50, tableY + 5);
+                    gfx.DrawString(price.Cost.ToString(), regularFont, XBrushes.Black, 300, tableY + 5);
                     tableY += cellHeight;
                 }
+                tableY += cellHeight;
 
                 // Вывод итоговой цены
-                gfx.DrawString($"Итого к оплате: {costFinal} руб.", regularFont, XBrushes.Black, 50, tableY);
+                gfx.DrawString($"Итого к оплате: {costFinal} руб.", regularFontBold, XBrushes.Black, 50, tableY);
 
                 if (typeofrepair.Name == "Гарантийный случай")
                 {
                     tableY += cellHeight;
-                    gfx.DrawString($"Скидка 20%", regularFont, XBrushes.Black, 50, tableY);
+                    gfx.DrawString($"Скидка 20%", regularFontBold, XBrushes.Black, 50, tableY);
                     tableY += cellHeight;
-                    gfx.DrawString($"Итого: {costForClient} руб.", regularFont, XBrushes.Black, 50, tableY);
+                    gfx.DrawString($"Итого: {costForClient} руб.", regularFontBold, XBrushes.Black, 50, tableY);
                 }
 
                 // Вывод данных о сотруднике и клиенте
@@ -406,5 +407,91 @@ namespace AvtoService_3cursAA.PagesMenuAdmin.DataManagers
 
             return _filePath;
         }
+
+        // Pdf детали
+        public static string PdfDetails(Employee employee, Client client, Car car, Typeofrepair typeofrepair,
+            List<(int Count, string Name, int Cost)> detailsList, SaveFileDialog saveFileDialog, int idOrder, int costForClient, int costFinal)
+        {
+            string _filePath = $"{saveFileDialog.FileName}.pdf";
+
+            // Создаем новый PDF документ
+            using (PdfDocument document = new PdfDocument())
+            {
+                // Устанавливаем заголовок документа
+                document.Info.Title = $"Чек по предоставлению услуг ({idOrder})";
+
+                // Создаем страницу
+                PdfPage page = document.AddPage();
+                XGraphics gfx = XGraphics.FromPdfPage(page);
+                XFont titleFont = new XFont("Arial", 16, XFontStyleEx.Bold);
+                XFont regularFont = new XFont("Arial", 12, XFontStyleEx.Regular);
+                XFont regularFontBold = new XFont("Arial", 12, XFontStyleEx.Bold);
+
+                // Выравнивание по центру
+                double titleX = (page.Width - gfx.MeasureString(document.Info.Title, titleFont).Width) / 2;
+                gfx.DrawString(document.Info.Title, titleFont, XBrushes.Black, titleX, 50);
+
+                // Рисуем таблицу
+                double tableY = 100;
+                double cellHeight = 20;
+
+                // Заголовки таблицы
+                gfx.DrawString("Наименование", regularFontBold, XBrushes.Black, 50, tableY + 5);
+                gfx.DrawString("Количество (шт.)", regularFontBold, XBrushes.Black, 250, tableY + 5);
+                gfx.DrawString("Цена (руб.)", regularFontBold, XBrushes.Black, 380, tableY + 5);
+
+                tableY += cellHeight;
+
+                // Заполнение элементов таблицы
+                foreach (var detail in detailsList)
+                {
+                    gfx.DrawRectangle(XBrushes.White, 50, tableY, 500, cellHeight);
+                    gfx.DrawString(detail.Name, regularFont, XBrushes.Black, 50, tableY + 5);
+                    gfx.DrawString(detail.Count.ToString(), regularFont, XBrushes.Black, 250, tableY + 5);
+                    gfx.DrawString(detail.Cost.ToString(), regularFont, XBrushes.Black, 380, tableY + 5);
+                    tableY += cellHeight;
+                }
+                tableY += cellHeight;
+
+                // Вывод итоговой цены
+                gfx.DrawString($"Итого к оплате: {costFinal} руб.", regularFontBold, XBrushes.Black, 50, tableY);
+
+                if (typeofrepair.Name == "Гарантийный случай")
+                {
+                    tableY += cellHeight;
+                    gfx.DrawString($"Скидка 20%", regularFontBold, XBrushes.Black, 50, tableY);
+                    tableY += cellHeight;
+                    gfx.DrawString($"Итого: {costForClient} руб.", regularFontBold, XBrushes.Black, 50, tableY);
+                }
+
+                // Вывод данных о сотруднике и клиенте
+                tableY += cellHeight * 2; // Пустая строка перед информацией
+                gfx.DrawString($"Администратор: {employee.FullName}", regularFont, XBrushes.Black, 50, tableY);
+                tableY += cellHeight;
+                gfx.DrawString($"Тип ремонта: {typeofrepair.Name}", regularFont, XBrushes.Black, 50, tableY);
+                tableY += cellHeight;
+                gfx.DrawString($"Дата оформления: {DateTime.Now}", regularFont, XBrushes.Black, 50, tableY);
+
+                // Информация о клиенте
+                tableY += cellHeight * 2; // Пустая строка перед информацией о клиенте
+                gfx.DrawString($"Клиент: {client.FullName}", regularFont, XBrushes.Black, 50, tableY);
+                tableY += cellHeight;
+                gfx.DrawString($"Обслуживаемый автомобиль: {car.Title}", regularFont, XBrushes.Black, 50, tableY);
+
+                // Завершение документа с сообщением благодарности
+                tableY += cellHeight * 2; // Пустая строка перед сообщением благодарности
+                gfx.DrawString("Спасибо за покупку! Приходите еще", titleFont,
+                    XBrushes.Black,
+                    (page.Width - gfx.MeasureString("Спасибо за покупку! Приходите еще", titleFont).Width) / 2,
+                    tableY);
+
+                // Сохранение документа
+                document.Save(_filePath);
+            }
+
+            return _filePath;
+        }
+
+
     }
 }

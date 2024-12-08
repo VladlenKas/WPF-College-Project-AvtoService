@@ -146,7 +146,7 @@
                         </StackPanel>
 
                         <StackPanel>
-                            <TextBlock Text="Количество *"/>
+                            <TextBlock Text="Количество (шт.)*"/>
                             <Grid>
                                 <TextBox 
                                     MaxLength="5"
@@ -167,7 +167,7 @@
                         Margin="40 20"
                         Style="{StaticResource AuythButtonExitAct}"/>
                     <Button 
-                        Content="Сохранить изменения"
+                        Content="Добавить новую деталь"
                         x:Name="ButtonAdd"
                         Click="ButtonAdd_Click"
                         DockPanel.Dock="Bottom"

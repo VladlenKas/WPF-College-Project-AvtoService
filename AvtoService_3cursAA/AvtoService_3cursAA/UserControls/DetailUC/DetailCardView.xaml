@@ -6,17 +6,8 @@
              xmlns:local="clr-namespace:AvtoService_3cursAA.UserControls.DetailUC"
              mc:Ignorable="d" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             
              Height="400" Width="350">
-    <UserControl.Resources>
-        <DropShadowEffect x:Key="dropShadowBorder" 
-                      ShadowDepth="5" 
-                      BlurRadius="20" 
-                      Color="#000000" 
-                      Opacity="0.1"
-                      Direction="90"/>
-    </UserControl.Resources>
-    
+             
     <Border
         Name="border"
         BorderThickness="2"

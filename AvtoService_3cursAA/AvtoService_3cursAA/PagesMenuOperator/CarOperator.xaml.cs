@@ -33,7 +33,7 @@ namespace AvtoService_3cursAA.PagesMenuOperator
         private Avtoservice3cursAaContext dbContext;
         private Employee _thisUser;
 
-        private CarFilter carFilter; // Изменено на CarFilter
+        private CarFilter carFilter;
 
         public CarOperator(Employee employee)
         {

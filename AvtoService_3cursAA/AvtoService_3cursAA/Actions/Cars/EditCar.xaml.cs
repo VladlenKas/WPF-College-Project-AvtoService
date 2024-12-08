@@ -231,12 +231,12 @@ namespace AvtoService_3cursAA.Actions.Cars
 
         private void DescriptionTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            ActionsTextBox.ValidateInputDescription(e);
+            ActionsTextBox.ValidateInputTitle(e);
         }
 
         private void DescriptionTextBox_Pasting(object sender, DataObjectPastingEventArgs e)
         {
-            ActionsTextBox.ValidatePasteDescription(e);
+            ActionsTextBox.ValidatePasteTitle(e);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

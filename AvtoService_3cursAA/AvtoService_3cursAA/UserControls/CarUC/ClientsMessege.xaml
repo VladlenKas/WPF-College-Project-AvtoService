@@ -23,10 +23,9 @@
 
         <Border
             Grid.Row="1"
-            Opacity="0.9"
             BorderBrush="#333335"
-            BorderThickness="0.5"
-            Background="White"
+            BorderThickness="1"
+            Background="#ffffff"
             CornerRadius="20">
 
             <Grid Margin="20">

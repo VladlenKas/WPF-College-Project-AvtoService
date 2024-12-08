@@ -199,7 +199,7 @@
                                 LastChildFill="True">
                                 <TextBlock 
                                     DockPanel.Dock="Top"
-                                    Text="Все клиенты (выбор)"/>
+                                    Text="Все клиенты (выбор) *"/>
                                 
                                 <Grid DockPanel.Dock="Top">
                                     <ComboBox 

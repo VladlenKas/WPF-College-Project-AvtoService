@@ -104,22 +104,22 @@ namespace AvtoService_3cursAA.Actions.Details
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            ActionsTextBox.ValidateInputCyrillic(e);
+            ActionsTextBox.ValidateInputTitle(e);
         }
 
         private void TextBox_Pasting(object sender, DataObjectPastingEventArgs e)
         {
-            ActionsTextBox.ValidatePasteCyrillic(e);
+            ActionsTextBox.ValidatePasteTitle(e);
         }
 
         private void NumberTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            ActionsTextBox.ValidateInputTitle(e);
+            ActionsTextBox.ValidateInputNumbers(e);
         }
 
         private void NumberTextBox_Pasting(object sender, DataObjectPastingEventArgs e)
         {
-            ActionsTextBox.ValidatePasteTitle(e);
+            ActionsTextBox.ValidatePasteNumbers(e);
         }
 
         private void ImageChange_Click(object sender, RoutedEventArgs e)

@@ -66,7 +66,8 @@ namespace AvtoService_3cursAA.PagesMenuOperator
                     brush = new SolidColorBrush(Colors.DarkRed);
                 }
 
-                var userControl = new DetailCardView(item, brush);
+                var userControl = new DetailCardEdit(item, this, brush);
+                userControl.RemoveDetailRequested += DetailCardEdit_RemoveDetailRequested;
                 ListViewItems.Items.Add(userControl);
             }
 

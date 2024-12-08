@@ -402,6 +402,22 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             var lastSale = dbContext.Sales.OrderByDescending(s => s.IdSale).FirstOrDefault();
             var idOrder = (lastSale?.IdSale ?? 0) + 1; // Если продаж еще не было, она становится первой
 
+            // Сохраняем имя клиента
+            string client = SelectedClient.FullName;
+
+            // Определяем тип чека
+            string typeSale = "";
+            bool isDetailsCheck = detailsBorder.Visibility == Visibility.Visible;
+            if (isDetailsCheck)
+            {
+                typeSale = "детали";
+            }
+            else
+            {
+                typeSale = "услуги";
+            }
+
+
             // Определяем, во что вывести
             string filter = "";
             string title = "";
@@ -415,6 +431,8 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                     break;
 
                 case "pdfButton":
+                    filter = "Pdf Files|*.pdf*";
+                    title = "Сохранить Pdf файл";
                     break;
 
                 case "wordButton":
@@ -429,7 +447,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             {
                 Filter = filter,
                 Title = title,
-                FileName = $"Чек автосервис (номер {idOrder})"
+                FileName = $"Чек ({idOrder}) {client} ({typeSale})"
             };
 
             // Если пользователь выбрал путь для сохранения чека
@@ -454,14 +472,13 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         // Выбор типа файла для сохранения
         private string SelectFileType(Button button, SaveFileDialog saveFileDialog, int idOrder)
         {
-            bool isDetailsCheck = detailsBorder.Visibility == Visibility.Visible;
+            bool isDetailsSale = detailsBorder.Visibility == Visibility.Visible;
             string filePath = "";
 
             switch (button.Name)
             {
                 case "excelButton":
-                {
-                    if (isDetailsCheck)
+                    if (isDetailsSale)
                     {
                         List<(int count, string Name, int Cost)> details = new(detailManager.GetDetailsForFile());
                         filePath = FilesManager.ExcelDetails(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
@@ -474,15 +491,13 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                             prices, saveFileDialog, idOrder, CostForClient, CostTotal);
                     }
                     break;
-                }
 
                 case "pdfButton":
-                {
-                    if (isDetailsCheck)
+                    if (isDetailsSale)
                     {
-                        /*List<(int count, string Name, int Cost)> details = new(detailManager.GetDetailsForFile());
+                        List<(int count, string Name, int Cost)> details = new(detailManager.GetDetailsForFile());
                         filePath = FilesManager.PdfDetails(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
-                            details, saveFileDialog, idOrder, CostForClient, CostTotal);*/
+                            details, saveFileDialog, idOrder, CostForClient, CostTotal);
                     }
                     else
                     {
@@ -491,11 +506,9 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                             prices, saveFileDialog, idOrder, CostForClient, CostTotal);
                     }
                     break;
-                }
 
                 case "wordButton":
-                {
-                    if (isDetailsCheck)
+                    if (isDetailsSale)
                     {
                         List<(int count, string Name, int Cost)> details = new(detailManager.GetDetailsForFile());
                         filePath = FilesManager.WordDetails(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
@@ -508,7 +521,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                             prices, saveFileDialog, idOrder, CostForClient, CostTotal);
                     }
                     break;
-                }
             }
             return filePath;
         }

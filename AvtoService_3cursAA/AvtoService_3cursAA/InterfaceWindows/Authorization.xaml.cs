@@ -18,7 +18,7 @@ using AvtoService_3cursAA.InterfaceWindows;
 namespace AvtoService_3cursAA
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for Authorization.xaml
     /// </summary>
     public partial class Authorization : Window
     {
