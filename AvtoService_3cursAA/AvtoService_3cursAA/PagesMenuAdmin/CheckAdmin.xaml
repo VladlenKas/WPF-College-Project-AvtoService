@@ -76,14 +76,16 @@
                     <DockPanel HorizontalAlignment="Left">
 
                         <RadioButton
-                                Margin="0 0 5 0"
-                                DockPanel.Dock="Left"
-                                VerticalAlignment="Center"
-                                Content="Деталей"
-                                Name="detailsRadioButton"
-                                Click="CheckingRadioButtonsClick"/>
+                            Width="130"
+                            Margin="0 0 5 0"
+                            DockPanel.Dock="Left"
+                            VerticalAlignment="Center"
+                            Content="Деталей"
+                            Name="detailsRadioButton"
+                            Click="CheckingRadioButtonsClick"/>
 
                         <RadioButton
+                            Width="130"
                             Margin="0 0 5 0"
                             DockPanel.Dock="Left"
                             VerticalAlignment="Center"
@@ -354,11 +356,11 @@
                                     </Grid>
 
                                     <Button 
-                                            Width="Auto"
-                                            DockPanel.Dock="Left"
-                                            x:Name="AddButton"
-                                            Click="AddButton_Click"
-                                            Style="{StaticResource AuthButton}">
+                                        Width="Auto"
+                                        DockPanel.Dock="Left"
+                                        x:Name="AddButton"
+                                        Click="AddButton_Click"
+                                        Style="{StaticResource AuthButton}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon 
                                                     Kind="Tick" 

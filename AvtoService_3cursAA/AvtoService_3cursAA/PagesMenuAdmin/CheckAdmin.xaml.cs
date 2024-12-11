@@ -112,7 +112,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             }
         }
 
-
         // Выранный клиент
         public Client? SelectedClient
         {
@@ -204,7 +203,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             if (comboBox != null && comboBox.SelectedIndex != 0)
             {
                 string type = comboBox.SelectedValue.ToString();
-                _selectTypeofrepair = dbContext.Typeofrepairs.First(c => c.Name == type);
+                _selectTypeofrepair = dbContext.Typeofrepairs.Single(c => c.Name == type);
             }
 
             UpdateFinalCost();
@@ -263,19 +262,37 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                 List<(int IdDetail, int count)> details = new(detailManager.GetDetails());
                 List<Price> prices = new List<Price>(priceManager.ReturnPrices());
 
-
                 if (bordersVisible == 1)
                 {
                     ActionsData.AddOrderPrices(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
                                 prices, CostForClient, CostTotal);
-                    ClearFields();
                 }
                 else if (bordersVisible == 2)
                 {
                     ActionsData.AddOrderDetails(_thisUser, SelectedClient, SelectedCar, _selectTypeofrepair,
                                 details, CostForClient, CostTotal);
-                    ClearFields();
                 }
+
+                // Делаеи кнопку недействительной для избежания дублирования чека
+                AddButton.Click -= AddButton_Click;
+                AddButton.Opacity = 0.5;
+                AddButton.ToolTip = "Осуществите вывод чека или начните заполнять новый для оформления.";
+
+                // Делаем выводы доступными
+                excelButton.Click += SaveButton_Click;
+                wordButton.Click += SaveButton_Click;
+                pdfButton.Click += SaveButton_Click;
+
+                // Делаем кнопки темнее для эффекта некликабельности
+                wordGrid.Opacity = 1;
+                excelGrid.Opacity = 1;
+                pdfGrid.Opacity = 1;
+
+                // Добавляем описание при наведении для ясности действий
+                string text = "Вывести чек в документ ";
+                wordButton.ToolTip = text + "Word.";
+                excelButton.ToolTip = text + "Excel.";
+                pdfButton.ToolTip = text + "Pdf.";
             }
         }
 
@@ -317,6 +334,21 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
         // Управляет видимостью кнопок
         internal void VisibilityButtonAdd()
         {
+            // Удаляем события для того, чтобы кнопки были доступны только 
+            // после оформления чека (они становятся доступными в другом методе)
+            excelButton.Click -= SaveButton_Click;
+            wordButton.Click -= SaveButton_Click;
+            pdfButton.Click -= SaveButton_Click;
+            // Делаем кнопки темнее для эффекта некликабельности
+            wordGrid.Opacity = 0.5;
+            excelGrid.Opacity = 0.5;
+            pdfGrid.Opacity = 0.6;
+
+            string text = "Для начала, оформите заказ перед выбором опции.";
+            wordButton.ToolTip = text;
+            excelButton.ToolTip = text;
+            pdfButton.ToolTip = text;
+
             // Проверяем, заполнены ли все необходимые поля
             bool allFieldsFilled = CheckFields();
 
@@ -325,35 +357,16 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
             {
                 // Удаляем обработчик события, чтобы не возникало повторений
                 AddButton.Click -= AddButton_Click;
-                excelButton.Click -= SaveButton_Click;
-                wordButton.Click -= SaveButton_Click;
-                pdfButton.Click -= SaveButton_Click;
 
                 // Добавляем обработчик события
                 AddButton.Click += AddButton_Click;
-                excelButton.Click += SaveButton_Click;
-                wordButton.Click += SaveButton_Click;
-                pdfButton.Click += SaveButton_Click;
             }
             else
             {
                 // Удаляем обработчик события
                 AddButton.Click -= AddButton_Click;
-                excelButton.Click -= SaveButton_Click;
-                wordButton.Click -= SaveButton_Click;
-                pdfButton.Click -= SaveButton_Click;
             }
 
-            // Устанавливаем подсказку для кнопки
-            wordGrid.Opacity = allFieldsFilled ? 1 : 0.5;
-            excelGrid.Opacity = allFieldsFilled ? 1 : 0.5;
-            pdfGrid.Opacity = allFieldsFilled ? 1 : 0.6;
-
-            string text = "Пожалуйста, заполните все поля перед выбором опции.";
-            string text2 = "Сохранить в ";
-            wordButton.ToolTip = allFieldsFilled ? text2 + "Word." : text;
-            excelButton.ToolTip = allFieldsFilled ? text2 + "Excel." : text;
-            pdfButton.ToolTip = allFieldsFilled ? text2 + "PDF." : text;
 
             AddButton.Opacity = allFieldsFilled ? 1 : 0.5;
             AddButton.ToolTip = allFieldsFilled ? null : "Пожалуйста, заполните все поля перед созданием заказа.";
@@ -466,6 +479,7 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                         UseShellExecute = true // Используем оболочку Windows для открытия файла
                     });
                 }
+                ClearFields();
             }
         }
 
