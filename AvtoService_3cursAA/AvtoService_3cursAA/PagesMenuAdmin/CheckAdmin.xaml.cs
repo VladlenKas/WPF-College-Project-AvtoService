@@ -367,7 +367,6 @@ namespace AvtoService_3cursAA.PagesMenuAdmin
                 AddButton.Click -= AddButton_Click;
             }
 
-
             AddButton.Opacity = allFieldsFilled ? 1 : 0.5;
             AddButton.ToolTip = allFieldsFilled ? null : "Пожалуйста, заполните все поля перед созданием заказа.";
         }
